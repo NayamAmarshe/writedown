@@ -6,9 +6,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "preline": "^1.7.0",
     "firebase": "^9.17.1",
     "next": "latest",
+    "preline": "^1.7.0",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1"
