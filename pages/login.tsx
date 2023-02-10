@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../components/Button";
-import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
+import { AiFillGithub } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import {
   useAuthState,
@@ -51,7 +52,6 @@ const LoginPage = () => {
       </div>
     );
   }
-
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-10 rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:shadow-slate-700/[.7] md:p-5">
@@ -64,16 +64,16 @@ const LoginPage = () => {
           <p className="text-center text-sm">
             Login with one of the following:
           </p>
-          <Button variant="primary" onClick={() => login("google")}>
-            <AiFillGoogleCircle /> Sign in with Google
+          <Button variant="white" onClick={() => login("google")}>
+            <FcGoogle /> Sign in with Google
           </Button>
-          <Button variant="outline" onClick={() => login("github")}>
+          <Button variant="black" onClick={() => login("github")}>
             <AiFillGithub /> Sign in with GitHub
           </Button>
         </div>
         <span className="flex justify-center gap-1">
-          <p className="">No account yet?</p>
-          <a href="/signup" className="font-bold hover:underline">
+          <p className="text-sm">No account yet?</p>
+          <a href="/signup" className="text-sm font-bold hover:underline">
             Sign Up
           </a>
         </span>
