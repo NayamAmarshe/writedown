@@ -1,13 +1,15 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 
-interface IProps {
-  type: "primary" | "outline" | "ghost";
-  children?: React.ReactNode;
-}
-
-const Button = ({ children, type }: IProps) => {
+const Button = ({
+  variant,
+  children,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant: "primary" | "outline" | "ghost";
+  children: React.ReactNode;
+}) => {
   const getButtonClass = () => {
-    switch (type) {
+    switch (variant) {
       case "primary":
         return "inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-blue-500 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800";
       case "outline":
@@ -20,7 +22,7 @@ const Button = ({ children, type }: IProps) => {
   };
 
   return (
-    <button type="button" className={getButtonClass()}>
+    <button type="button" className={getButtonClass()} {...rest}>
       {children}
     </button>
   );
