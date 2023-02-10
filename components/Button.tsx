@@ -4,8 +4,8 @@ interface Props {
     text: string;
     iconSrc?: string;
     iconStyle?: string;
-    customStyle?: string;
     type: "primary" | "secondary" | "custom";
+    customStyle?: string;
 }
 
 
