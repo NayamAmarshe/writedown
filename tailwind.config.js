@@ -9,5 +9,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("preline/plugin")],
+  darkMode: "class",
 };
