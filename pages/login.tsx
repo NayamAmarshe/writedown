@@ -52,16 +52,6 @@ const LoginPage = () => {
       </div>
     );
   }
-  // | "primary"
-  // | "outline"
-  // | "ghost"
-  // | "danger"
-  // | "warning"
-  // | "success"
-  // | "info"
-  // | "black"
-  // | "gray"
-  // | "white";
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-10 rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:shadow-slate-700/[.7] md:p-5">
