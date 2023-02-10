@@ -9,15 +9,48 @@ import {
 } from "react-firebase-hooks/auth";
 import { firebaseApp } from "@/lib/firebase";
 
+const auth = getAuth(firebaseApp);
+
 const LoginPage = () => {
-  const auth = getAuth(firebaseApp);
+  // GOOGLE SIGN IN HOOK
+  const [signInWithGoogle, googleUser, googleLoading, googleError] =
+    useSignInWithGoogle(auth);
+  // GITHUB SIGN IN HOOK
+  const [signInWithGithub, githubUser, githubLoading, githubError] =
+    useSignInWithGithub(auth);
+
+  // AUTH STATE HOOK
+  const [authUser, authLoading, authError] = useAuthState(auth, {
+    onUserChanged: async (user) => {
+      console.log(user);
+    },
+  });
+
   const login = (type: "google" | "github") => {
     if (type === "google") {
-      useSignInWithGoogle(auth);
+      signInWithGoogle();
     } else if (type === "github") {
       useSignInWithGithub(auth);
     }
   };
+
+  if (authError) {
+    return (
+      <div>
+        <p>Error: {authError.message}</p>
+      </div>
+    );
+  }
+  if (authLoading) {
+    return <p>Loading...</p>;
+  }
+  if (authUser) {
+    return (
+      <div>
+        <p>Signed In User: {authUser.email}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
@@ -31,11 +64,11 @@ const LoginPage = () => {
           <p className="text-center text-sm">
             Login with one of the following:
           </p>
-          <Button variant="primary">
-            <AiFillGithub /> Sign in with GitHub
-          </Button>
-          <Button variant="outline">
+          <Button variant="primary" onClick={() => login("google")}>
             <AiFillGoogleCircle /> Sign in with Google
+          </Button>
+          <Button variant="outline" onClick={() => login("github")}>
+            <AiFillGithub /> Sign in with GitHub
           </Button>
         </div>
         <span className="flex justify-center gap-1">
