@@ -4,19 +4,19 @@ import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 
 const login = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <div className="bg-white shadow-sm border py-24 px-10 mx-5 rounded-xl">
-        <h4 className="text-center mb-4 text-sm">
-          Login with one of the following:
-        </h4>
-        <Button type="primary">
-          <AiFillGithub /> Sign in with GitHub
-        </Button>
-        <Button type="secondary">
-          <AiFillGoogleCircle />
-        </Button>
-        <span className="flex justify-center text-sm mt-10">
-          <h4 className="mr-2">No account yet?</h4>
+    <div className="flex h-screen w-screen flex-col items-center justify-center">
+      <div className="flex flex-col gap-10 rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:shadow-slate-700/[.7] md:p-5">
+        <p className="text-center">Login with one of the following:</p>
+        <div className="flex flex-col gap-2">
+          <Button type="primary">
+            <AiFillGithub /> Sign in with GitHub
+          </Button>
+          <Button type="outline">
+            <AiFillGoogleCircle /> Sign in with Google
+          </Button>
+        </div>
+        <span className="flex justify-center gap-1">
+          <p className="">No account yet?</p>
           <a href="/signup" className="font-bold hover:underline">
             Sign Up
           </a>
