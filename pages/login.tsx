@@ -31,7 +31,7 @@ const LoginPage = () => {
     if (type === "google") {
       signInWithGoogle();
     } else if (type === "github") {
-      useSignInWithGithub(auth);
+      signInWithGithub();
     }
   };
 
