@@ -5,11 +5,17 @@ import {
   AiOutlineSetting,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
+import Button from "./Button";
+import Modal from "./Modal";
 import React from "react";
 
 const Sidebar = () => {
   return (
     <div className="flex max-h-screen w-3/12 flex-col justify-between overflow-hidden bg-gray-100 p-4">
+      <Modal id="add-new-channel">
+        <input type="text" />
+        <input type="text" />
+      </Modal>
       {/* TOP BAR */}
       <div className="flex w-full flex-row items-center justify-between">
         {/* LOGO */}
@@ -24,10 +30,14 @@ const Sidebar = () => {
         {/* CHANNELS HEADING */}
         <h4 className="mt-4 text-sm font-medium text-gray-600">CHANNELS</h4>
         {/* NEW CHANNEL BUTTON */}
-        <button className="flex w-full flex-row items-center justify-center gap-2 rounded-full bg-gray-200 p-2">
+        <button
+          className="flex w-full flex-row items-center justify-center gap-2 rounded-full bg-gray-200 p-2"
+          data-hs-overlay="#add-new-channel"
+        >
           <AiFillPlusCircle className="text-xl" />
           New Channel
         </button>
+
         {/* CHANNEL LIST */}
         <div className="flex flex-col gap-5 overflow-auto">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((item, index) => {
