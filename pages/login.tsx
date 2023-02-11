@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/router";
 import { auth } from "./_app";
+import Link from "next/link";
 import React from "react";
 
 const LoginPage = () => {
@@ -71,9 +72,9 @@ const LoginPage = () => {
         </div>
         <span className="flex justify-center gap-1">
           <p className="text-sm">No account yet?</p>
-          <a href="/signup" className="text-sm font-bold hover:underline">
+          <Link href="/signup" className="text-sm font-bold hover:underline">
             Sign Up
-          </a>
+          </Link>
         </span>
       </div>
     </div>
