@@ -64,10 +64,10 @@ const LoginPage = () => {
           <p className="text-center text-sm">
             Login with one of the following:
           </p>
-          <Button variant="white" onClick={() => login("google")}>
+          <Button variant="outline" onClick={() => login("google")}>
             <FcGoogle /> Sign in with Google
           </Button>
-          <Button variant="black" onClick={() => login("github")}>
+          <Button variant="solid-black" onClick={() => login("github")}>
             <AiFillGithub /> Sign in with GitHub
           </Button>
         </div>
