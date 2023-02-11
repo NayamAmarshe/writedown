@@ -12,12 +12,12 @@ const Modal = ({ id, children }: ModalProps) => {
       id={id}
       className="hs-overlay fixed top-0 left-0 z-[60] hidden h-full w-full overflow-y-auto overflow-x-hidden"
     >
-      <div className="m-3 mt-0 flex min-h-[calc(100%-3.5rem)] items-center opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
-        <div className="flex flex-col rounded-xl border bg-gray-200 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]">
+      <div className="m-3 mt-0 flex min-h-[calc(100%-3.5rem)] items-center justify-center opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
+        <div className="flex flex-col rounded-xl border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]">
           <div className="flex items-center justify-between border-b py-3 px-4 dark:border-gray-700">
             <h3 className="font-bold text-gray-800 dark:text-white">Add New Channel</h3>
             <Button
-              variant="primary"
+              variant="solid"
               type="button"
               className="hs-dropdown-toggle inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md text-sm text-gray-500 transition-all hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800"
               data-hs-overlay={`#${id}`}
@@ -43,7 +43,7 @@ const Modal = ({ id, children }: ModalProps) => {
             <Button variant="solid-red" type="button" data-hs-overlay={`#${id}`}>
               Close
             </Button>
-            <Button variant="solid-gray">Save changes</Button>
+            <Button variant="primary">Save changes</Button>
           </div>
         </div>
       </div>

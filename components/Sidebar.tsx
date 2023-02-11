@@ -1,20 +1,24 @@
-import {
-  AiFillPlusCircle,
-  AiFillSetting,
-  AiOutlineLogout,
-  AiOutlineSetting,
-  AiOutlineUserSwitch,
-} from "react-icons/ai";
-import Button from "./Button";
+import { AiFillPlusCircle, AiOutlineLogout, AiOutlineSetting } from "react-icons/ai";
+import React, { useState } from "react";
 import Modal from "./Modal";
-import React from "react";
+import Input from "./Input";
 
 const Sidebar = () => {
+  const [channelName, setChannelName] = useState("");
+
   return (
     <div className="flex max-h-screen w-3/12 flex-col justify-between overflow-hidden bg-gray-100 p-4">
       <Modal id="add-new-channel">
-        <input type="text" />
-        <input type="text" />
+        <Input
+          id="channel-name"
+          label="Channel Name"
+          type="text"
+          value={channelName}
+          placeholder="Enter Channel Name"
+          onChange={(e) => {
+            setChannelName(e.target.value);
+          }}
+        />
       </Modal>
       {/* TOP BAR */}
       <div className="flex w-full flex-row items-center justify-between">
