@@ -1,24 +1,35 @@
 import { useAuthState, useSignInWithGithub, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
+import { collection, getFirestore } from "firebase/firestore";
+import { createUser } from "@/utils/operations";
 import { AiFillGithub } from "react-icons/ai";
 import { firebaseApp } from "@/lib/firebase";
 import Button from "../components/Button";
 import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/router";
+import { auth } from "./_app";
 import React from "react";
 
-const auth = getAuth(firebaseApp);
-
 const LoginPage = () => {
+  // NEXT ROUTER
+  const router = useRouter();
+
   // GOOGLE SIGN IN HOOK
   const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
   // GITHUB SIGN IN HOOK
   const [signInWithGithub, githubUser, githubLoading, githubError] = useSignInWithGithub(auth);
 
+  // FIRESTORE HOOK
+  const [value, loading, error] = useCollection(collection(getFirestore(firebaseApp), "users"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
+
   // AUTH STATE HOOK
   const [authUser, authLoading, authError] = useAuthState(auth, {
     onUserChanged: async (user) => {
-      console.log(user);
+      if (!user) return;
+      createUser(user);
     },
   });
 
@@ -41,11 +52,7 @@ const LoginPage = () => {
     return <p>Loading...</p>;
   }
   if (authUser) {
-    return (
-      <div>
-        <p>Signed In User: {authUser.email}</p>
-      </div>
-    );
+    router.push("/dashboard");
   }
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
