@@ -48,7 +48,7 @@ const Button = ({
 
   return (
     <button type="button" className={getButtonClass()} {...rest}>
-      {children ? children : "Button"}
+      {children}
     </button>
   );
 };
