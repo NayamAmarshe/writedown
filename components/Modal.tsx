@@ -1,3 +1,5 @@
+import { useState, ChangeEvent } from "react";
+import Input from "@/components/Input";
 import Button from "./Button";
 import React from "react";
 
@@ -7,6 +9,14 @@ interface ModalProps {
 }
 
 const Modal = ({ id, children }: ModalProps) => {
+  const [savedInput, setSavedInput] = useState("");
+  const save = () => {
+    alert(savedInput);
+  };
+  const listen = (listener: ChangeEvent<HTMLInputElement>) => {
+    const listenerOutput = listener.target.value;
+    setSavedInput(listenerOutput);
+  };
   return (
     <div
       id={id}
@@ -38,12 +48,16 @@ const Modal = ({ id, children }: ModalProps) => {
               </svg>
             </Button>
           </div>
-          <div className="overflow-y-auto p-4">{children}</div>
-          <div className="flex items-center justify-end gap-x-2 border-t py-3 px-4 dark:border-gray-700">
-            <Button variant="solid-red" type="button" data-hs-overlay={`#${id}`}>
-              Close
-            </Button>
-            <Button variant="solid-gray">Save changes</Button>
+          <div className="p-3">
+            <Input onChange={listen}></Input>
+            <div className="flex items-center justify-end gap-x-2 border-t py-3 px-4 dark:border-gray-700">
+              <Button variant="solid-red" type="button" data-hs-overlay={`#${id}`}>
+                Close
+              </Button>
+              <Button onClick={save} variant="solid-gray">
+                Save changes
+              </Button>
+            </div>
           </div>
         </div>
       </div>
