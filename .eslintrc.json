@@ -8,5 +8,8 @@
     "prettier",
     "next/core-web-vitals"
   ],
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@typescript-eslint/no-var-requires": "off"
+  }
 }
