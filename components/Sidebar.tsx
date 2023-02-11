@@ -5,16 +5,28 @@ import {
   AiOutlineSetting,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
+import { useState, ChangeEvent } from "react";
+import Input from "@/components/Input";
 import Button from "./Button";
 import Modal from "./Modal";
 import React from "react";
 
 const Sidebar = () => {
+  //Text saving function
+  const [channelName, setChannelName] = useState("");
+
   return (
     <div className="flex max-h-screen w-3/12 flex-col justify-between overflow-hidden bg-gray-100 p-4">
       <Modal id="add-new-channel">
-        <input type="text" />
-        <input type="text" />
+        <Input
+          id="channel-name"
+          type="text"
+          value={channelName}
+          placeholder="Enter Channel Name"
+          onChange={(e) => {
+            setChannelName(e.target.value);
+          }}
+        ></Input>
       </Modal>
       {/* TOP BAR */}
       <div className="flex w-full flex-row items-center justify-between">
