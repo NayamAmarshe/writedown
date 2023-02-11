@@ -6,10 +6,10 @@ const Home: NextPage = () => {
   return (
     <div className="flex min-h-screen flex-row items-center justify-center gap-5 py-2">
       <Link href="/login">
-        <Button variant="black">Login</Button>
+        <Button variant="solid-black">Login</Button>
       </Link>
       <Link href="/signup">
-        <Button variant="gray">Sign Up</Button>
+        <Button variant="solid-gray">Sign Up</Button>
       </Link>
     </div>
   );
