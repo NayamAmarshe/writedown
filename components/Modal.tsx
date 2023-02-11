@@ -9,6 +9,7 @@ interface ModalProps {
 }
 
 const Modal = ({ id, children }: ModalProps) => {
+  //Text saving function
   const [savedInput, setSavedInput] = useState("");
   const save = () => {
     alert(savedInput);
