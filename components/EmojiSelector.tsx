@@ -7,7 +7,7 @@ const EmojiSelector = () => {
   const defaultEmoji = {
     native: "🙂",
   };
-  const emojiBackgroundVarient = [
+  const emojiBackgroundVariant = [
     "bg-gradient-to-l from-teal-400 to-blue-500",
     "bg-gradient-to-tl from-sky-500 to-indigo-600",
     "bg-gradient-to-bl from-violet-500 to-fuchsia-500",
@@ -16,10 +16,10 @@ const EmojiSelector = () => {
     "bg-gradient-to-bl from-orange-400 to-yellow-200 ",
   ];
 
-  const [showPicker, setPickerState] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
   const [selectEmoji, setSelectEmoji] = useState(defaultEmoji);
   const [emojiBackground, setEmojiBackground] = useState(
-    emojiBackgroundVarient[0]
+    emojiBackgroundVariant[0]
   );
 
   const EmojiBackground = `m-auto rounded-full p-6 border  ${emojiBackground}`;
@@ -27,49 +27,47 @@ const EmojiSelector = () => {
     return `h-7 w-7 rounded-full border cursor-pointer ${color}`;
   };
 
-  const emojiPicker = () => {
-    setPickerState(!showPicker);
-  };
   return (
     <div className="bg-whtie flex flex-col gap-3 transition-all">
       {showPicker && (
-        <div className={EmojiBackground}>
-          <span className="text-4xl">{selectEmoji.native}</span>
-        </div>
-      )}
-      {showPicker && (
-        <div className="style-none flex justify-evenly gap-1 rounded-full bg-white py-2 shadow-md">
-          <span
-            className={PickerColors(emojiBackgroundVarient[0])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[0])}
-          ></span>
-          <span
-            className={PickerColors(emojiBackgroundVarient[1])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[1])}
-          ></span>
-          <span
-            className={PickerColors(emojiBackgroundVarient[2])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[2])}
-          ></span>
-          <span
-            className={PickerColors(emojiBackgroundVarient[3])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[3])}
-          ></span>
-          <span
-            className={PickerColors(emojiBackgroundVarient[4])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[4])}
-          ></span>
-          <span
-            className={PickerColors(emojiBackgroundVarient[5])}
-            onClick={() => setEmojiBackground(emojiBackgroundVarient[5])}
-          ></span>
-        </div>
+        <>
+          <div className={EmojiBackground}>
+            <span className="text-4xl">{selectEmoji.native}</span>
+          </div>
+
+          <div className="style-none flex justify-evenly gap-1 rounded-full bg-white py-2 shadow-md">
+            <span
+              className={PickerColors(emojiBackgroundVariant[0])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[0])}
+            ></span>
+            <span
+              className={PickerColors(emojiBackgroundVariant[1])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[1])}
+            ></span>
+            <span
+              className={PickerColors(emojiBackgroundVariant[2])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[2])}
+            ></span>
+            <span
+              className={PickerColors(emojiBackgroundVariant[3])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[3])}
+            ></span>
+            <span
+              className={PickerColors(emojiBackgroundVariant[4])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[4])}
+            ></span>
+            <span
+              className={PickerColors(emojiBackgroundVariant[5])}
+              onClick={() => setEmojiBackground(emojiBackgroundVariant[5])}
+            ></span>
+          </div>
+        </>
       )}
       <div className="flex gap-2 ">
         <Input id="emoji-selector" placeholder="Enter your channel name" />
         <span
           className="m-auto cursor-pointer rounded-md bg-white p-[.8rem] hover:bg-gray-100"
-          onClick={emojiPicker}
+          onClick={() => setShowPicker(!showPicker)}
         >
           🙂
         </span>
