@@ -1,5 +1,14 @@
 // Firebase v9 function to store data in users collection
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { IChannelData } from "@/types/utils/operations";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -18,27 +27,49 @@ export const createUser = async (user: User) => {
 export const getChannelsByUserId = async (userId: string) => {
   if (!userId) return;
 
-  // Get channels with userId as id
-  const channels = await getDocs(collection(db, "channels", userId));
+  const channelsRef = doc(db, "channels", userId);
+  const channelsSnap = await getDoc(channelsRef);
 
-  return channels.docs.map((channel) => channel.data() as IChannelData);
+  if (channelsSnap.exists()) {
+    console.log("Document data:", channelsSnap.data());
+    return channelsSnap.data();
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+    await setDoc(channelsRef, []);
+  }
+
+  // return channels.docs.map((channel) => channel.data() as IChannelData);
+  return [];
 };
 
 export const createChannel = async (
   userId: string,
-  channelData: {
-    name: string;
-  }
+  channelData: IChannelData
 ) => {
   if (!userId) return;
 
-  // Get channels
-  const channels = await getChannelsByUserId(userId);
-  console.log("🚀 => file: operations.ts:37 => channels", channels);
+  const channelsRef = doc(db, "users", userId, "channels", channelData.id);
+  const channelsSnap = await getDoc(channelsRef);
+  console.log("🚀 => file: operations.ts:54 => channelsSnap", channelsSnap);
 
-  // Store channel data in channels collection
-  await setDoc(doc(db, "channels", userId), {
-    ...channelData,
-    createdAt: new Date().toISOString(),
-  });
+  try {
+    // Create a document inside channelsRef array
+    await setDoc(
+      channelsRef,
+      {
+        id: channelData.id,
+        createdAt: serverTimestamp(),
+        name: channelData.name,
+        emoji: channelData.emoji,
+        emojiBackground: channelData.emojiBackground,
+        messages: [],
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
+
+  // console.log("🚀 => file: operations.ts:37 => channels", channels);
 };
