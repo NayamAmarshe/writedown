@@ -10,19 +10,19 @@ import { auth } from "./_app";
 
 const Dashboard = () => {
   // AUTH STATE HOOK
-  const [authUser, authLoading, authError] = useAuthState(auth, {});
+  const [authUser] = useAuthState(auth, {});
   const [showSidebar, setShowSidebar] = useState(false);
 
   return (
     <div className="flex h-screen w-screen flex-row">
-      <Sidebar
-        id="sidebar"
-        showSidebar={showSidebar}
-        setShowSidebar={setShowSidebar}
-        user={authUser}
-        userError={authError}
-        userLoading={authLoading}
-      />
+      {authUser && (
+        <Sidebar
+          id="sidebar"
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          user={authUser}
+        />
+      )}
       <ChatList />
     </div>
   );
