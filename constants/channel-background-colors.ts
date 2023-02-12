@@ -4,5 +4,5 @@ export const channelBackgroundColors = [
   "from-violet-500 to-fuchsia-500",
   "from-purple-500 to-pink-500",
   "from-green-700 to-green-400",
-  "from-orange-400 to-yellow-200 ",
+  "from-orange-400 to-yellow-200",
 ];

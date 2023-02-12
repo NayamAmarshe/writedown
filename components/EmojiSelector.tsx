@@ -44,8 +44,11 @@ const EmojiSelector = ({
           ></span>
         ))}
       </div>
-      <Button variant="outline-gray" onClick={() => setShowPicker(!showPicker)}>
-        Select Emoji {selectEmoji.native}
+      <Button
+        variant={showPicker ? "outline-red" : "outline-gray"}
+        onClick={() => setShowPicker(!showPicker)}
+      >
+        {showPicker ? "Close" : `Select Channel Icon ${selectEmoji.native}`}
       </Button>
       {showPicker && (
         <Picker
