@@ -1,14 +1,52 @@
-import { AiFillPlusCircle, AiOutlineLogout, AiOutlineSetting } from "react-icons/ai";
+import {
+  AiFillPlusCircle,
+  AiOutlineLogout,
+  AiOutlineSetting,
+} from "react-icons/ai";
+import { createChannel, getChannelsByUserId } from "@/utils/operations";
+import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection, getFirestore } from "firebase/firestore";
+import { firebaseApp } from "@/lib/firebase";
 import React, { useState } from "react";
 import Modal from "./Modal";
 import Input from "./Input";
 
-const Sidebar = () => {
+interface SidebarProps {
+  id: string;
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar = ({
+  id,
+  setShowSidebar,
+  userLoading,
+  userError,
+  user,
+}: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
 
+  const [channels, channelsLoading, channelsError] = useCollection(
+    collection(getFirestore(firebaseApp), "channels"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
   return (
-    <div className="flex max-h-screen w-3/12 flex-col justify-between overflow-hidden bg-gray-100 p-4">
-      <Modal id="add-new-channel">
+    <div className="flex max-h-screen flex-col justify-between overflow-hidden bg-gray-100 p-4 md:w-6/12 lg:w-4/12">
+      <Modal
+        id="add-new-channel"
+        saveHandler={() => {
+          if (user) {
+            createChannel(user.uid, {
+              name: channelName,
+            });
+            getChannelsByUserId(user.uid);
+          }
+        }}
+      >
         <Input
           id="channel-name"
           label="Channel Name"
@@ -43,27 +81,34 @@ const Sidebar = () => {
         </button>
 
         {/* CHANNEL LIST */}
-        <div className="flex flex-col gap-5 overflow-auto">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((item, index) => {
-            return (
-              <div key={index} className="flex flex-row items-center justify-center gap-5">
-                {/* CHANNEL PIC */}
-                <div className="rounded-full bg-gray-300 p-5"></div>
-                {/* CHANNEL INFO */}
-                <div className="flex w-full flex-col">
-                  {/* CHANNEL HEADING */}
-                  <div className="flex w-full flex-row justify-between">
-                    {/* CHANNEL NAME */}
-                    <h4 className="font-medium text-gray-700">General</h4>
-                    {/* CHANNEL TIME */}
-                    <h4 className="text-xs text-gray-400">9:43 PM</h4>
+        <div className="flex flex-col gap-5 overflow-auto p-2">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(
+            (item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-row items-center justify-center gap-5"
+                >
+                  {/* CHANNEL PIC */}
+                  <div className="rounded-full bg-gray-300 p-5"></div>
+                  {/* CHANNEL INFO */}
+                  <div className="flex w-full flex-col">
+                    {/* CHANNEL HEADING */}
+                    <div className="flex w-full flex-row justify-between">
+                      {/* CHANNEL NAME */}
+                      <h4 className="font-medium text-gray-700">General</h4>
+                      {/* CHANNEL TIME */}
+                      <h4 className="text-xs text-gray-400">9:43 PM</h4>
+                    </div>
+                    {/* CHANNEL CHAT */}
+                    <p className="text-sm text-gray-400">
+                      Lorem ipsum dolor sit amet...
+                    </p>
                   </div>
-                  {/* CHANNEL CHAT */}
-                  <p className="text-sm text-gray-400">Lorem ipsum dolor sit amet...</p>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
       </div>
 
