@@ -1,28 +1,18 @@
 import {
-  useCollection,
-  useCollectionData,
-  useDocument,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
-import {
-  collection,
-  doc,
-  documentId,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
-import {
   AiFillPlusCircle,
   AiOutlineLogout,
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { createChannel, getChannelsByUserId } from "@/utils/operations";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import ChannelCard from "./dashboard/sidebar/ChannelCard";
 import { IChannelData } from "@/types/utils/operations";
+import { collection, query } from "firebase/firestore";
+import { createChannel } from "@/utils/operations";
 import React, { useEffect, useState } from "react";
-import { firebaseApp } from "@/lib/firebase";
+import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "react-loading-skeleton";
 import EmojiSelector from "./EmojiSelector";
 import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
@@ -35,11 +25,7 @@ interface SidebarProps {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar = ({
-  id,
-  setShowSidebar,
-  user,
-}: SidebarProps & IFirebaseAuth) => {
+const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [selectEmoji, setSelectEmoji] = useState({
@@ -130,39 +116,14 @@ const Sidebar = ({
         </button>
 
         {/* CHANNEL LIST */}
-        <div className="flex flex-col gap-5 overflow-auto p-2">
-          {channels?.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className="flex flex-row items-center justify-center gap-5"
-              >
-                {/* CHANNEL PIC */}
-                <div
-                  className={
-                    "flex h-12 w-12 shrink-0 grow-0 items-center justify-center rounded-full bg-gradient-to-b text-xl " +
-                    item.emojiBackground
-                  }
-                >
-                  {item.emoji}
-                </div>
-                {/* CHANNEL INFO */}
-                <div className="flex w-full flex-col">
-                  {/* CHANNEL HEADING */}
-                  <div className="flex w-full flex-row justify-between">
-                    {/* CHANNEL NAME */}
-                    <h4 className="font-medium text-gray-700">{item.name}</h4>
-                    {/* CHANNEL TIME */}
-                    <h4 className="text-xs text-gray-400">9:43 PM</h4>
-                  </div>
-                  {/* CHANNEL CHAT */}
-                  <p className="text-sm text-gray-400">
-                    Lorem ipsum dolor sit amet...
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="flex h-full flex-col gap-5 overflow-auto p-2">
+          {channels ? (
+            channels.map((item) => {
+              return <ChannelCard key={item.id} item={item as IChannelData} />;
+            })
+          ) : (
+            <Skeleton count={5} height="50px" />
+          )}
         </div>
       </div>
 
