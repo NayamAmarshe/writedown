@@ -1,15 +1,8 @@
 // Firebase v9 function to store data in users collection
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { IChannelData } from "@/types/utils/operations";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { IMessageData } from "@/types/utils/firebase-operations.d";
+import { IChannelData } from "@/types/utils/firebase-operations";
+import { uuidv4 } from "@firebase/util";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 
@@ -63,13 +56,40 @@ export const createChannel = async (
         name: channelData.name,
         emoji: channelData.emoji,
         emojiBackground: channelData.emojiBackground,
-        messages: [],
       },
       { merge: true }
     );
+
+    await createNewMessage(channelData.id, userId, {
+      id: uuidv4(),
+      text: "New Channel Created!",
+      type: "info",
+      createdAt: serverTimestamp(),
+    });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
   }
+};
 
-  // console.log("🚀 => file: operations.ts:37 => channels", channels);
+const createNewMessage = async (
+  channelId: string,
+  userId: string,
+  messageData: IMessageData
+) => {
+  const messagesRef = doc(
+    db,
+    "users",
+    userId,
+    "channels",
+    channelId,
+    "messages",
+    uuidv4()
+  );
+
+  try {
+    // Create a document inside channelsRef array
+    await setDoc(messagesRef, messageData, { merge: true });
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
 };

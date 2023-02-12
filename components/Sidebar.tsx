@@ -6,10 +6,10 @@ import {
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { IChannelData } from "@/types/utils/firebase-operations";
+import { createChannel } from "@/utils/firebase-operations";
 import ChannelCard from "./dashboard/sidebar/ChannelCard";
-import { IChannelData } from "@/types/utils/operations";
 import { collection, query } from "firebase/firestore";
-import { createChannel } from "@/utils/operations";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
@@ -123,6 +123,11 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
             })
           ) : (
             <Skeleton count={5} height="50px" />
+          )}
+          {channels && channels.length === 0 && (
+            <p className="text-center text-gray-500">
+              No Channels to show. Start by creating one 🤓
+            </p>
           )}
         </div>
       </div>
