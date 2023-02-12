@@ -1,8 +1,5 @@
-import { BsEmojiSmile } from "react-icons/bs";
-import React, { useState } from "react";
-import Picker from "@emoji-mart/react";
-import data from "@emoji-mart/data";
 import Button from "./Button";
+import React from "react";
 
 interface ModalProps {
   id: string;
@@ -11,10 +8,6 @@ interface ModalProps {
 }
 
 const Modal = ({ id, saveHandler, children }: ModalProps) => {
-  const [showPicker, setPickerState] = useState(false);
-  const emojiPicker = () => {
-    setPickerState(!showPicker);
-  };
   return (
     <div
       id={id}
@@ -50,12 +43,6 @@ const Modal = ({ id, saveHandler, children }: ModalProps) => {
           </div>
           <div className="overflow-y-auto p-4">{children}</div>
           <div className="flex items-center justify-end gap-x-2 border-t py-3 px-4 dark:border-gray-700">
-            <div
-              onClick={emojiPicker}
-              className="mr-auto cursor-pointer rounded-full bg-gray-100 p-[.6rem] shadow-md"
-            >
-              <BsEmojiSmile />
-            </div>
             <Button
               variant="solid-red"
               type="button"
@@ -71,7 +58,6 @@ const Modal = ({ id, saveHandler, children }: ModalProps) => {
               Save changes
             </Button>
           </div>
-          {showPicker && <Picker data={data} theme="light" />}
         </div>
       </div>
     </div>
