@@ -1,4 +1,4 @@
-import { IChannelData } from "@/types/utils/operations";
+import { IChannelData } from "@/types/utils/firebase-operations";
 import React from "react";
 
 const ChannelCard = ({ item }: { item: IChannelData }) => {
