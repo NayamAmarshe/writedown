@@ -7,9 +7,10 @@ import Button from "./Button";
 interface ModalProps {
   id: string;
   children?: React.ReactNode;
+  saveHandler: () => void;
 }
 
-const Modal = ({ id, children }: ModalProps) => {
+const Modal = ({ id, saveHandler, children }: ModalProps) => {
   const [showPicker, setPickerState] = useState(false);
   const emojiPicker = () => {
     setPickerState(!showPicker);
@@ -22,7 +23,9 @@ const Modal = ({ id, children }: ModalProps) => {
       <div className="m-3 mt-0 flex min-h-[calc(100%-3.5rem)] items-center justify-center opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
         <div className="flex flex-col rounded-xl border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]">
           <div className="flex items-center justify-between border-b py-3 px-4 dark:border-gray-700">
-            <h3 className="font-bold text-gray-800 dark:text-white">Add New Channel</h3>
+            <h3 className="font-bold text-gray-800 dark:text-white">
+              Add New Channel
+            </h3>
             <Button
               variant="solid"
               type="button"
@@ -53,10 +56,20 @@ const Modal = ({ id, children }: ModalProps) => {
             >
               <BsEmojiSmile />
             </div>
-            <Button variant="solid-red" type="button" data-hs-overlay={`#${id}`}>
+            <Button
+              variant="solid-red"
+              type="button"
+              data-hs-overlay={`#${id}`}
+            >
               Close
             </Button>
-            <Button variant="primary">Save changes</Button>
+            <Button
+              variant="primary"
+              onClick={saveHandler}
+              data-hs-overlay={`#${id}`}
+            >
+              Save changes
+            </Button>
           </div>
           {showPicker && <Picker data={data} theme="light" />}
         </div>
