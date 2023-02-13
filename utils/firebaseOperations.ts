@@ -4,6 +4,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -103,7 +104,7 @@ export const createNewMessage = async (
   try {
     // Create a document inside channelsRef array
     await setDoc(messagesRef, messageData, { merge: true });
-    await getMessagesByChannelId(channelId, userId);
+    // await getMessagesByChannelId(channelId, userId);
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
   }
@@ -124,7 +125,9 @@ export const getMessagesByChannelId = async (
     "messages"
   );
 
-  const messagesSnap = await getDocs(query(messagesRef));
+  const messagesSnap = await getDocs(
+    query(messagesRef, where("channelId", "==", channelId), limit(10))
+  );
 
   if (messagesSnap) {
     return messagesSnap.docs;

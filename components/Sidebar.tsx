@@ -4,13 +4,13 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
+import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
 import ChannelCard from "./dashboard/sidebar/ChannelCard";
 import { collection, query } from "firebase/firestore";
-import { selectedChannelIdAtom } from "@/atoms/state";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
@@ -35,7 +35,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   });
   const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
 
-  const [selectedChannelId, setSelectedChannelId] = useState(
+  const [selectedChannelId, setSelectedChannelId] = useAtom(
     selectedChannelIdAtom
   );
 

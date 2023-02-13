@@ -11,16 +11,6 @@ const ChannelCard = ({
   channel: IChannelData;
   highlight: boolean;
 } & HTMLAttributes<HTMLDivElement>) => {
-  const [message, setMessage] = React.useState("");
-
-  useEffect(() => {
-    getMessagesByChannelId(channel.id, channel.userId).then((data) => {
-      if (data && data[0]) {
-        setMessage(data[0].data().text);
-      }
-    });
-  }, [channel.id, channel.userId]);
-
   return (
     <div
       key={channel.id}
@@ -50,7 +40,7 @@ const ChannelCard = ({
           <h4 className="text-xs text-gray-400">{<Skeleton />}</h4>
         </div>
         {/* CHANNEL CHAT */}
-        <p className="text-sm text-gray-400">{message || <Skeleton />}</p>
+        <p className="text-sm text-gray-400">{"HHEHE" || <Skeleton />}</p>
       </div>
     </div>
   );
