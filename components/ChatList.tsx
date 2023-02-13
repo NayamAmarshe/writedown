@@ -30,7 +30,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           "users",
           user.uid,
           "channels",
-          channels[2].id,
+          channels[0].id,
           "messages"
         ),
         orderBy("createdAt"),
@@ -63,12 +63,12 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         <button
           onClick={() => {
             if (!channels || !user) return;
-            createNewMessage(channels[2].id, user?.uid, {
+            createNewMessage(channels[0].id, user?.uid, {
               id: uuidv4(),
               text: input,
               type: "info",
               createdAt: serverTimestamp(),
-              channelId: channels[2].id,
+              channelId: channels[0].id,
             });
             setInput("");
           }}
