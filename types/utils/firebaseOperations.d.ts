@@ -1,4 +1,4 @@
-import { FieldValue } from "firebase/firestore";
+import { FieldValue, Timestamp } from "firebase/firestore";
 
 export interface IChannelData {
   id: string;
@@ -12,8 +12,8 @@ export interface IChannelData {
 
 export interface IMessageData {
   id: string;
-  createdAt?: FieldValue;
+  createdAt?: Timestamp;
   text: string;
-  type: string;
+  type: "info" | "message";
   channelId: string;
 }

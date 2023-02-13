@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
 import { Provider } from "jotai";
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
 export const auth = getAuth(firebaseApp);
 
