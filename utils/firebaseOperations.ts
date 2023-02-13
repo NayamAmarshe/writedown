@@ -7,6 +7,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
@@ -87,6 +88,8 @@ export const createNewMessage = async (
   userId: string,
   messageData: IMessageData
 ) => {
+  if (!channelId || !userId) return;
+
   const messagesRef = doc(
     db,
     "users",
@@ -110,14 +113,18 @@ export const getMessagesByChannelId = async (
   channelId: string,
   userId: string
 ) => {
-  if (!channelId) return;
+  if (!channelId || !userId) return;
 
-  const messagesRef = query(
-    collection(db, "users", userId, "channels", channelId, "messages"),
-    limit(10)
+  const messagesRef = collection(
+    db,
+    "users",
+    userId,
+    "channels",
+    channelId,
+    "messages"
   );
 
-  const messagesSnap = await getDocs(messagesRef);
+  const messagesSnap = await getDocs(query(messagesRef));
 
   if (messagesSnap) {
     return messagesSnap.docs;
