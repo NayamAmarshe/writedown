@@ -4,18 +4,20 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { collection, collectionGroup, query, where } from "firebase/firestore";
+import { selectedChannelIndexAtom, selectedChannelIdAtom } from "@/atoms/state";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
 import ChannelCard from "./dashboard/sidebar/ChannelCard";
+import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
 import EmojiSelector from "./EmojiSelector";
 import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
+import { useAtom } from "jotai";
 import Modal from "./Modal";
 import Input from "./Input";
 
@@ -32,10 +34,12 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     native: "🙂",
   });
   const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
-
-  // const [channels] = useDocumentData(doc(db, "channels/" + userId), {
-  //   initialValue: [],
-  // });
+  const [selectedChannelIndex, setSelectedChannelIndex] = useAtom(
+    selectedChannelIndexAtom
+  );
+  const [selectedChannelId, setSelectedChannelId] = useState(
+    selectedChannelIdAtom
+  );
 
   const [channels] = useCollectionData(
     user && query(collection(db, "users", user.uid, "channels"))
@@ -46,13 +50,15 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   );
 
   useEffect(() => {
-    if (channels) {
-      console.log("🚀 => file: Sidebar.tsx:60 => channels[0]", channels);
-    }
-    if (messages) {
-      console.log("🚀 => file: Sidebar.tsx:62 => messages", messages);
+    console.log("🚀 => file: Sidebar.tsx:54 => channels", channels);
+    if (channels && channels.length > 0) {
+      setSelectedChannelId(channels[0].id);
     }
   }, [channels, messages]);
+
+  useEffect(() => {
+    console.log("selectedChannelId: ", selectedChannelId);
+  }, [selectedChannelId]);
 
   const resetAddChannelForm = () => {
     setChannelName("");
@@ -124,11 +130,19 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         </button>
 
         {/* CHANNEL LIST */}
-        <div className="flex h-full flex-col gap-5 overflow-auto p-2">
+        <div className="flex h-full flex-col gap-5 overflow-auto">
           {channels ? (
-            channels.map((item) => {
+            channels.map((item, index) => {
               return (
-                <ChannelCard key={item.id} channel={item as IChannelData} />
+                <ChannelCard
+                  key={item.id}
+                  highlight={selectedChannelId === item.id}
+                  channel={item as IChannelData}
+                  onClick={() => {
+                    setSelectedChannelIndex(index);
+                    setSelectedChannelId(item.id);
+                  }}
+                />
               );
             })
           ) : (

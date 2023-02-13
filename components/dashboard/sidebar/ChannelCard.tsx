@@ -1,10 +1,18 @@
 import { getMessagesByChannelId } from "@/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
+import React, { HTMLAttributes, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
-import React, { useEffect } from "react";
 
-const ChannelCard = ({ channel }: { channel: IChannelData }) => {
+const ChannelCard = ({
+  channel,
+  highlight,
+  ...rest
+}: {
+  channel: IChannelData;
+  highlight: boolean;
+} & HTMLAttributes<HTMLDivElement>) => {
   const [message, setMessage] = React.useState("");
+
   useEffect(() => {
     getMessagesByChannelId(channel.id, channel.userId).then((data) => {
       if (data && data[0]) {
@@ -16,7 +24,10 @@ const ChannelCard = ({ channel }: { channel: IChannelData }) => {
   return (
     <div
       key={channel.id}
-      className="flex flex-row items-center justify-center gap-5"
+      className={`flex cursor-pointer flex-row items-center justify-center gap-5 p-2 ${
+        highlight && "rounded-full bg-gray-300"
+      }`}
+      {...rest}
     >
       {/* CHANNEL PIC */}
       <div

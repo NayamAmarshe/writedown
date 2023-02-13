@@ -120,12 +120,6 @@ export const getMessagesByChannelId = async (
   const messagesSnap = await getDocs(messagesRef);
 
   if (messagesSnap) {
-    console.log(
-      "Document data:",
-      messagesSnap.docs
-        .map((doc) => doc.data())
-        .sort((x, y) => x.createdAt?.seconds - y.createdAt?.seconds)
-    );
     return messagesSnap.docs;
   } else {
     console.log("No such document!");
