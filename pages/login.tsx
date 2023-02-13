@@ -6,7 +6,7 @@ import {
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, getFirestore } from "firebase/firestore";
-import { createUser } from "@/utils/firebase-operations";
+import { createUser } from "@/utils/firebaseOperations";
 import { AiFillGithub } from "react-icons/ai";
 import { firebaseApp } from "@/lib/firebase";
 import Button from "../components/Button";
