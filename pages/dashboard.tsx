@@ -33,7 +33,7 @@ const Dashboard = () => {
           user={authUser}
         />
       )}
-      <ChatList />
+      <ChatList user={authUser} />
     </div>
   );
 };
