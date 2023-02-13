@@ -12,6 +12,7 @@
     "@emoji-mart/react": "^1.1.1",
     "emoji-mart": "^5.5.2",
     "firebase": "^9.17.1",
+    "jotai": "^2.0.1",
     "next": "latest",
     "preline": "^1.7.0",
     "react": "^18.2.0",

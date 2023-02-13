@@ -1,5 +1,6 @@
 import {
   collection,
+  doc,
   limit,
   orderBy,
   query,
@@ -9,34 +10,57 @@ import {
   getMessagesByChannelId,
   createNewMessage,
 } from "@/utils/firebaseOperations";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
+import { selectedChannelIndexAtom, selectedChannelIdAtom } from "@/atoms/state";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { IMessageData } from "@/types/utils/firebaseOperations";
 import React, { useEffect, useState } from "react";
 import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
+import { useAtom } from "jotai";
+import Button from "./Button";
 
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
-  const [channels] = useCollectionData(
-    user && query(collection(db, "users", user.uid, "channels"))
-  ); //SHOULD USE A GLOBAL STATE TO GET THE SELECTED CHANNEL
-  const [messages] = useCollectionData(
-    user &&
-      channels &&
-      query(
-        collection(
-          db,
-          "users",
-          user.uid,
-          "channels",
-          channels[0].id,
-          "messages"
-        ),
-        orderBy("createdAt"),
-        limit(10)
-      )
+  const [selectedChannelIndex, setSelectedChannelIndex] = useAtom(
+    selectedChannelIndexAtom
   );
+  const [selectedChannelId, setSelectedChannelId] = useAtom(
+    selectedChannelIdAtom
+  );
+
+  const [channel] = useDocumentData(
+    user && selectedChannelId.length > 0
+      ? doc(db, "users", user.uid, "channels", selectedChannelId)
+      : null,
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
+  const [messages] = useCollectionData(
+    user && selectedChannelId
+      ? query(
+          collection(
+            db,
+            "users",
+            user.uid,
+            "channels",
+            selectedChannelId,
+            "messages"
+          ),
+          orderBy("createdAt"),
+          limit(10)
+        )
+      : null
+  );
+
+  useEffect(() => {
+    console.log("messages: ", messages);
+    console.log("channel: ", channel);
+  }, [messages, channel]);
 
   return (
     <div className="flex h-full w-full flex-col p-5">
@@ -60,21 +84,23 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           className="w-full rounded-full bg-gray-200 p-5"
           onChange={(e) => setInput(e.target.value)}
         />
-        <button
+        <Button
+          variant="solid-black"
           onClick={() => {
-            if (!channels || !user) return;
-            createNewMessage(channels[0].id, user?.uid, {
+            if (!channel || !user) return;
+
+            createNewMessage(selectedChannelId, user?.uid, {
               id: uuidv4(),
               text: input,
               type: "info",
               createdAt: serverTimestamp(),
-              channelId: channels[0].id,
+              channelId: selectedChannelId,
             });
             setInput("");
           }}
         >
-          submit
-        </button>
+          Submit
+        </Button>
       </div>
     </div>
   );
