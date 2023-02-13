@@ -1,8 +1,14 @@
 import {
+  collection,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
+import {
   getMessagesByChannelId,
   createNewMessage,
 } from "@/utils/firebaseOperations";
-import { collection, query, serverTimestamp } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IMessageData } from "@/types/utils/firebaseOperations";
@@ -11,35 +17,31 @@ import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
 
 const ChatList = ({ user }: IFirebaseAuth) => {
-  const [message, setMessage] = useState<IMessageData[]>([]);
   const [input, setInput] = useState("");
   const [channels] = useCollectionData(
     user && query(collection(db, "users", user.uid, "channels"))
   ); //SHOULD USE A GLOBAL STATE TO GET THE SELECTED CHANNEL
-  const getMessages = async () => {
-    if (!channels || !user) return;
-    const allMessagesFromServer = await getMessagesByChannelId(
-      channels[0].id, //USING ONLY THE FIRST CHANNEL
-      user.uid
-    );
-    if (!allMessagesFromServer) return;
-    setMessage(
-      allMessagesFromServer
-        .map((x) => x.data())
-        .sort(
-          (x, y) => x.createdAt?.seconds - y.createdAt?.seconds //SORTING DOESN'T PROPERLY WORK
-        ) as IMessageData[]
-    );
-  };
-  //USEEFFECT BEING USED AS SETSTATE FUNCTIONS DONT WORK PROPERLY IN ASYNC FUNCTION CALLS APPARENTLY
-  useEffect(() => {
-    getMessages();
-  }, [user, channels]);
+  const [messages] = useCollectionData(
+    user &&
+      channels &&
+      query(
+        collection(
+          db,
+          "users",
+          user.uid,
+          "channels",
+          channels[2].id,
+          "messages"
+        ),
+        orderBy("createdAt"),
+        limit(10)
+      )
+  );
 
   return (
     <div className="flex h-full w-full flex-col p-5">
-      <div className="m-5 flex flex-col gap-y-10" onLoad={getMessages}>
-        {message.map((messageObject: IMessageData) => {
+      <div className="m-5 flex flex-col gap-y-10">
+        {messages?.map((messageObject) => {
           return (
             <div
               key={messageObject.id}
@@ -54,20 +56,21 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       <div className="">
         <input
           type="text"
+          value={input}
           className="w-full rounded-full bg-gray-200 p-5"
           onChange={(e) => setInput(e.target.value)}
         />
         <button
           onClick={() => {
             if (!channels || !user) return;
-            createNewMessage(channels[0].id, user?.uid, {
+            createNewMessage(channels[2].id, user?.uid, {
               id: uuidv4(),
               text: input,
               type: "info",
               createdAt: serverTimestamp(),
-              channelId: channels[0].id,
+              channelId: channels[2].id,
             });
-            getMessages();
+            setInput("");
           }}
         >
           submit
