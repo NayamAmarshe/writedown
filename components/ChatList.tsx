@@ -5,6 +5,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  where,
 } from "firebase/firestore";
 import {
   getMessagesByChannelId,
@@ -32,7 +33,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   );
 
   const [channel] = useDocumentData(
-    user && selectedChannelId.length > 0
+    user && selectedChannelId
       ? doc(db, "users", user.uid, "channels", selectedChannelId)
       : null,
     {
@@ -87,7 +88,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         <Button
           variant="solid-black"
           onClick={() => {
-            if (!channel || !user) return;
+            if (!user) return;
 
             createNewMessage(selectedChannelId, user?.uid, {
               id: uuidv4(),
