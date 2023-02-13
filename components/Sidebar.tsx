@@ -4,13 +4,13 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { selectedChannelIndexAtom, selectedChannelIdAtom } from "@/atoms/state";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
 import ChannelCard from "./dashboard/sidebar/ChannelCard";
 import { collection, query } from "firebase/firestore";
+import { selectedChannelIdAtom } from "@/atoms/state";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
@@ -34,9 +34,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     native: "🙂",
   });
   const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
-  const [selectedChannelIndex, setSelectedChannelIndex] = useAtom(
-    selectedChannelIndexAtom
-  );
+
   const [selectedChannelId, setSelectedChannelId] = useState(
     selectedChannelIdAtom
   );
@@ -50,14 +48,13 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   );
 
   useEffect(() => {
-    console.log("🚀 => file: Sidebar.tsx:54 => channels", channels);
     if (channels && channels.length > 0) {
       setSelectedChannelId(channels[0].id);
     }
   }, [channels, messages]);
 
   useEffect(() => {
-    console.log("selectedChannelId: ", selectedChannelId);
+    console.log("Sidebar -> selectedChannelId: ", selectedChannelId);
   }, [selectedChannelId]);
 
   const resetAddChannelForm = () => {
@@ -139,7 +136,6 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
                   highlight={selectedChannelId === item.id}
                   channel={item as IChannelData}
                   onClick={() => {
-                    setSelectedChannelIndex(index);
                     setSelectedChannelId(item.id);
                   }}
                 />
