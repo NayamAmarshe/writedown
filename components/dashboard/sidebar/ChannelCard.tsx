@@ -36,7 +36,7 @@ const ChannelCard = ({
           channel.emojiBackground
         }
       >
-        {channel.emoji}
+        {channel.emoji || <Skeleton />}
       </div>
       {/* CHANNEL INFO */}
       <div className="flex w-full flex-col">
