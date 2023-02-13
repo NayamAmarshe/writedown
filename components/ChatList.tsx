@@ -5,18 +5,14 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  where,
 } from "firebase/firestore";
-import {
-  getMessagesByChannelId,
-  createNewMessage,
-} from "@/utils/firebaseOperations";
 import {
   useCollectionData,
   useDocumentData,
 } from "react-firebase-hooks/firestore";
-import { selectedChannelIndexAtom, selectedChannelIdAtom } from "@/atoms/state";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { createNewMessage } from "@/utils/firebaseOperations";
+import { selectedChannelIdAtom } from "@/atoms/state";
 import React, { useEffect, useState } from "react";
 import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
@@ -25,18 +21,14 @@ import Button from "./Button";
 
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
-  const [selectedChannelIndex, setSelectedChannelIndex] = useAtom(
-    selectedChannelIndexAtom
-  );
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
-  );
+  const [selectedChannelId] = useAtom(selectedChannelIdAtom);
 
   const [channel] = useDocumentData(
-    user && selectedChannelId
+    selectedChannelId && user
       ? doc(db, "users", user.uid, "channels", selectedChannelId)
       : null,
     {
+      initialValue: {},
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
@@ -55,13 +47,18 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           orderBy("createdAt"),
           limit(10)
         )
-      : null
+      : null,
+    {
+      initialValue: [],
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
   );
 
   useEffect(() => {
-    console.log("messages: ", messages);
-    console.log("channel: ", channel);
-  }, [messages, channel]);
+    console.log("ChatList -> messages: ", messages);
+    console.log("ChatList -> channel: ", channel);
+    console.log("ChatList -> selectedChannelId: ", selectedChannelId);
+  }, [messages, channel, selectedChannelId]);
 
   return (
     <div className="flex h-full w-full flex-col p-5">
@@ -88,7 +85,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         <Button
           variant="solid-black"
           onClick={() => {
-            if (!user) return;
+            if (!user || !selectedChannelId) return;
 
             createNewMessage(selectedChannelId, user?.uid, {
               id: uuidv4(),
