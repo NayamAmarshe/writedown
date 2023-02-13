@@ -4,12 +4,12 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
+import { collection, collectionGroup, query, where } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { IChannelData } from "@/types/utils/firebase-operations";
-import { createChannel } from "@/utils/firebase-operations";
+import { IChannelData } from "@/types/utils/firebaseOperations";
+import { createChannel } from "@/utils/firebaseOperations";
 import ChannelCard from "./dashboard/sidebar/ChannelCard";
-import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
@@ -41,11 +41,18 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     user && query(collection(db, "users", user.uid, "channels"))
   );
 
+  const [messages] = useCollectionData(
+    user && query(collection(db, "messages"))
+  );
+
   useEffect(() => {
     if (channels) {
       console.log("🚀 => file: Sidebar.tsx:60 => channels[0]", channels);
     }
-  }, [channels]);
+    if (messages) {
+      console.log("🚀 => file: Sidebar.tsx:62 => messages", messages);
+    }
+  }, [channels, messages]);
 
   const resetAddChannelForm = () => {
     setChannelName("");
@@ -62,12 +69,13 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         saveHandler={() => {
           if (!user) return;
 
-          createChannel(user?.uid, {
+          createChannel(user.uid, {
             name: channelName,
             emoji: selectEmoji.native,
             emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
             id: uuidv4(),
             messages: [],
+            userId: user.uid,
           });
           resetAddChannelForm();
         }}
@@ -119,7 +127,9 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         <div className="flex h-full flex-col gap-5 overflow-auto p-2">
           {channels ? (
             channels.map((item) => {
-              return <ChannelCard key={item.id} item={item as IChannelData} />;
+              return (
+                <ChannelCard key={item.id} channel={item as IChannelData} />
+              );
             })
           ) : (
             <Skeleton count={5} height="50px" />

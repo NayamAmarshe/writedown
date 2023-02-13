@@ -2,6 +2,7 @@ import { FieldValue } from "firebase/firestore";
 
 export interface IChannelData {
   id: string;
+  userId: string;
   createdAt?: FieldValue;
   name: string;
   emoji: string;
@@ -14,4 +15,5 @@ export interface IMessageData {
   createdAt?: FieldValue;
   text: string;
   type: string;
+  channelId: string;
 }

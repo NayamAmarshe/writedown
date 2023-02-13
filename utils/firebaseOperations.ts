@@ -1,7 +1,16 @@
 // Firebase v9 function to store data in users collection
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-import { IMessageData } from "@/types/utils/firebase-operations.d";
-import { IChannelData } from "@/types/utils/firebase-operations";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { IMessageData } from "@/types/utils/firebaseOperations";
+import { IChannelData } from "@/types/utils/firebaseOperations";
+import { collection } from "firebase/firestore";
 import { uuidv4 } from "@firebase/util";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -56,6 +65,7 @@ export const createChannel = async (
         name: channelData.name,
         emoji: channelData.emoji,
         emojiBackground: channelData.emojiBackground,
+        userId: userId,
       },
       { merge: true }
     );
@@ -65,6 +75,7 @@ export const createChannel = async (
       text: "New Channel Created!",
       type: "info",
       createdAt: serverTimestamp(),
+      channelId: channelData.id,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
@@ -83,13 +94,40 @@ const createNewMessage = async (
     "channels",
     channelId,
     "messages",
-    uuidv4()
+    messageData.id
   );
 
   try {
     // Create a document inside channelsRef array
     await setDoc(messagesRef, messageData, { merge: true });
+    await getMessagesByChannelId(channelId, userId);
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
   }
+};
+
+export const getMessagesByChannelId = async (
+  channelId: string,
+  userId: string
+) => {
+  if (!channelId) return;
+
+  const messagesRef = query(
+    collection(db, "users", userId, "channels", channelId, "messages"),
+    limit(10)
+  );
+
+  const messagesSnap = await getDocs(messagesRef);
+
+  if (messagesSnap) {
+    console.log(
+      "Document data:",
+      messagesSnap.docs.map((doc) => doc.data())
+    );
+    return messagesSnap.docs;
+  } else {
+    console.log("No such document!");
+  }
+
+  return [];
 };
