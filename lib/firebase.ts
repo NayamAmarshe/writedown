@@ -17,22 +17,11 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
 
-try {
-  enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code == "failed-precondition") {
-      // Multiple tabs open, persistence can only be enabled
-      // in one tab at a a time.
-      // ...
-    } else if (err.code == "unimplemented") {
-      // The current browser does not support all of the
-      // features required to enable persistence
-      // ...
-    } else {
-      console.log("ENABLED");
-    }
+if (!(db as any)._firestoreClient) {
+  enableIndexedDbPersistence(db, {
+    forceOwnership: true,
   });
-} catch (error) {
-  console.log("ERROR", error);
+  console.log("persistence enabled");
 }
 
 export { db, firebaseApp };
