@@ -13,6 +13,7 @@ import {
 import { IMessageData } from "@/types/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { collection } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { uuidv4 } from "@firebase/util";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -76,7 +77,7 @@ export const createChannel = async (
       id: uuidv4(),
       text: "New Channel Created!",
       type: "info",
-      createdAt: serverTimestamp(),
+      createdAt: serverTimestamp() as Timestamp,
       channelId: channelData.id,
     });
   } catch (error) {
