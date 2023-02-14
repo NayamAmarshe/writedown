@@ -12,6 +12,7 @@
     "@ckeditor/ckeditor5-react": "^5.0.6",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
+    "@types/ckeditor__ckeditor5-build-classic": "^29.0.1",
     "emoji-mart": "^5.5.2",
     "firebase": "^9.17.1",
     "jotai": "^2.0.1",
