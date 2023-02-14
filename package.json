@@ -8,10 +8,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@bangle.dev/base-components": "^0.31.6",
-    "@bangle.dev/core": "^0.31.6",
-    "@bangle.dev/pm": "^0.31.6",
-    "@bangle.dev/react": "^0.31.6",
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
+    "@ckeditor/ckeditor5-react": "^5.0.6",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "emoji-mart": "^5.5.2",
