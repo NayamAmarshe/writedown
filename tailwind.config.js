@@ -23,6 +23,10 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require("preline/plugin"), require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("preline/plugin"),
+    require("@tailwindcss/forms"),
+  ],
   darkMode: "class",
 };

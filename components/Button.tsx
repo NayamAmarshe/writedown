@@ -1,24 +1,30 @@
 import React, { ButtonHTMLAttributes } from "react";
 
+interface ButtonProps {
+  extraClasses?: string;
+}
+
 const Button = ({
   variant,
   children,
+  extraClasses,
   ...rest
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant:
-    | "primary"
-    | "outline"
-    | "solid"
-    | "ghost"
-    | "solid-black"
-    | "solid-gray"
-    | "solid-red"
-    | "outline-black"
-    | "outline-gray"
-    | "outline-red";
+}: ButtonProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant:
+      | "primary"
+      | "outline"
+      | "solid"
+      | "ghost"
+      | "solid-black"
+      | "solid-gray"
+      | "solid-red"
+      | "outline-black"
+      | "outline-gray"
+      | "outline-red";
 
-  children: React.ReactNode;
-}) => {
+    children: React.ReactNode;
+  }) => {
   const getButtonClass = () => {
     switch (variant) {
       case "primary":
@@ -47,7 +53,11 @@ const Button = ({
   };
 
   return (
-    <button type="button" className={getButtonClass()} {...rest}>
+    <button
+      type="button"
+      className={getButtonClass() + " " + extraClasses}
+      {...rest}
+    >
       {children}
     </button>
   );

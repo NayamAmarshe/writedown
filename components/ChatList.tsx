@@ -13,18 +13,16 @@ import {
 } from "react-firebase-hooks/firestore";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import { converter } from "@/utils/firestoreDataConverter";
 import ChatBubble from "./dashboard/chatList/ChatBubble";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import React, { FormEvent, useState } from "react";
 import { uuidv4 } from "@firebase/util";
 import { db } from "@/lib/firebase";
 import { useAtom } from "jotai";
 import Button from "./Button";
-import Input from "./Input";
+import Tiptap from "./Tiptap";
 
 const channelConverter = converter<IChannelData>();
 const messagesConverter = converter<IMessageData>();
@@ -32,18 +30,6 @@ const messagesConverter = converter<IMessageData>();
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
   const [selectedChannelId] = useAtom(selectedChannelIdAtom);
-
-  const editorRef = useRef<any>();
-  const [editorLoaded, setEditorLoaded] = useState(false);
-  const { CKEditor, ClassicEditor } = editorRef.current || {};
-
-  useEffect(() => {
-    editorRef.current = {
-      CKEditor: require("@ckeditor/ckeditor5-react").CKEditor, // v3+
-      ClassicEditor: require("@ckeditor/ckeditor5-build-classic"),
-    };
-    setEditorLoaded(true);
-  }, []);
 
   const [channel] = useDocumentData(
     selectedChannelId && user
@@ -107,25 +93,22 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       </div>
 
       {/* BOTTOM BAR */}
-      <form className="flex flex-row gap-2" onSubmit={messageSubmitHandler}>
-        {editorLoaded && (
-          <CKEditor
-            editor={ClassicEditor}
-            onChange={(event: any, editor: any) => {
-              const data = editor.getData();
-              setInput(data);
-
-              console.log({ event, editor, data });
-            }}
-          />
-        )}
+      <form
+        className="flex flex-row items-end justify-end gap-2"
+        onSubmit={messageSubmitHandler}
+      >
         {/* <Input
           id="message-input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         /> */}
-        <Button variant="solid-black">Submit</Button>
+        {channel && (
+          <Tiptap channelData={channel} input={input} setInput={setInput} />
+        )}
+        <Button variant="solid-black" type="submit">
+          Submit
+        </Button>
       </form>
     </div>
   );
