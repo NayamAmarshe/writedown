@@ -22,14 +22,14 @@ const ChannelCard = ({
       {/* CHANNEL PIC */}
       <div
         className={
-          "flex h-12 w-12 shrink-0 grow-0 items-center justify-center rounded-full bg-gradient-to-b text-xl " +
+          " flex h-12 w-12 shrink-0 grow-0 items-center justify-center rounded-full bg-gradient-to-b text-xl " +
           channel.emojiBackground
         }
       >
         {channel.emoji || <Skeleton />}
       </div>
       {/* CHANNEL INFO */}
-      <div className="flex w-full flex-col">
+      <div className="hidden w-full lg:flex lg:flex-col">
         {/* CHANNEL HEADING */}
         <div className="flex w-full flex-row justify-between">
           {/* CHANNEL NAME */}
