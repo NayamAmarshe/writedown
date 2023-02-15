@@ -35,7 +35,7 @@ const Dashboard = () => {
           />
         )}
       </div>
-      <div>{/* <ChatList user={authUser} /> */}</div>
+      <ChatList user={authUser} />
     </div>
   );
 };
