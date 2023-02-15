@@ -25,15 +25,17 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen w-screen flex-row">
-      {authUser && (
-        <Sidebar
-          id="sidebar"
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-          user={authUser}
-        />
-      )}
-      <ChatList user={authUser} />
+      <div className=" lg:w-96">
+        {authUser && (
+          <Sidebar
+            id="sidebar"
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+            user={authUser}
+          />
+        )}
+      </div>
+      <div>{/* <ChatList user={authUser} /> */}</div>
     </div>
   );
 };
