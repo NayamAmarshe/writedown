@@ -66,7 +66,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   };
 
   return (
-    <div className="flex max-h-screen flex-col justify-between overflow-hidden bg-gray-100 p-4 md:w-6/12 lg:w-4/12">
+    <div className="flex h-full flex-col justify-between overflow-hidden bg-gray-100 py-4">
       <Modal
         id="add-new-channel"
         saveHandler={() => {
@@ -105,25 +105,27 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         </div>
       </Modal>
       {/* TOP BAR */}
-      <div className="flex w-full flex-row items-center justify-between">
+      <div className="flex w-full flex-row items-center justify-center px-2 lg:justify-between">
         {/* LOGO */}
-        <h4 className="flex flex-row items-center gap-2 text-xl font-semibold">
-          <img src="/logo.svg" alt="Logo" className="w-8" />
-          WriteDown
+        <h4 className="flex flex-row items-center gap-2  pb-4 text-xl font-semibold lg:border-none lg:pb-0">
+          <img src="/logo.svg" alt="Logo" className="w-12 lg:w-8" />
+          <span className="hidden lg:block">WriteDown</span>
         </h4>
       </div>
 
       {/* CHANNELS SECTION */}
       <div className="flex h-2 basis-full flex-col gap-3 p-3">
         {/* CHANNELS HEADING */}
-        <h4 className="mt-4 text-sm font-medium text-gray-600">CHANNELS</h4>
+        <h4 className="mt-4 hidden text-sm font-medium text-gray-600 lg:block">
+          CHANNELS
+        </h4>
         {/* NEW CHANNEL BUTTON */}
         <button
-          className="flex w-full flex-row items-center justify-center gap-2 rounded-full bg-gray-200 p-2"
+          className="flex h-16 w-full flex-row items-center justify-center gap-2 rounded-full bg-gray-200 p-2 lg:h-auto"
           data-hs-overlay="#add-new-channel"
         >
           <AiFillPlusCircle className="text-xl" />
-          New Channel
+          <span className="hidden lg:block">New Channel</span>
         </button>
 
         {/* CHANNEL LIST */}
@@ -153,7 +155,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
       </div>
 
       {/* BOTTOM BAR */}
-      <div className="flex w-full flex-row justify-around p-5">
+      <div className="gap- flex w-full flex-col items-center justify-around gap-6 p-5 lg:flex-row lg:gap-0">
         <AiOutlineSetting className="text-2xl" />
         <AiOutlineLogout className="text-2xl" />
       </div>
