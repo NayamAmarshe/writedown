@@ -8,9 +8,10 @@ interface TiptapProps {
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Tiptap = ({ channelData, setInput }: TiptapProps) => {
+const Tiptap = ({ channelData, setInput, input }: TiptapProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
+    content: input,
     editorProps: {
       attributes: {
         class:
@@ -18,9 +19,9 @@ const Tiptap = ({ channelData, setInput }: TiptapProps) => {
       },
     },
     onUpdate: ({ editor }) => {
-      console.log(editor.getHTML(), channelData);
       setInput(editor.getHTML());
     },
+    autofocus: true,
   });
 
   return (
