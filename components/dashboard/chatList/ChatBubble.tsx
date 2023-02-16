@@ -57,7 +57,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
       <Modal
         title="Delete Message"
         saveButtonLabel="Delete"
-        id="delete-message"
+        id={`delete-message-${messageData.id}`}
         saveHandler={() => {
           if (!channelData) return;
 
@@ -84,7 +84,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         {/* DELETE BUTTON */}
         <button
           className="hidden w-fit rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
-          data-hs-overlay="#delete-message"
+          data-hs-overlay={`#delete-message-${messageData.id}`}
         >
           Delete
         </button>
