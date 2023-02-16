@@ -21,7 +21,7 @@ const Tiptap = ({ channelData, setInput, input }: TiptapProps) => {
     onUpdate: ({ editor }) => {
       setInput(editor.getHTML());
     },
-    autofocus: true,
+    autofocus: false,
   });
 
   return (
