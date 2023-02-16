@@ -1,5 +1,8 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import { deleteMessage } from "@/utils/firebaseOperations";
 import Skeleton from "react-loading-skeleton";
+import { FiEdit2 } from "react-icons/fi";
+import Modal from "@/components/Modal";
 import React from "react";
 
 interface ChatBubbleProps {
@@ -34,30 +37,60 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
     }
     return new Date().toLocaleDateString(); // for more than a week, show the actual date
   };
+
+  if (messageData.type === "info")
+    return (
+      <div className="my-5 h-fit w-fit self-center rounded-full bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500">
+        <p>{messageData.text}</p>
+      </div>
+    );
+
   return (
     <div
       key={messageData.id}
-      className={`${
-        messageData.type === "info" &&
-        "my-5 h-fit w-fit self-center rounded-full bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500"
-      } ${
-        messageData.type === "message" &&
-        (messageData.text.length > 50
-          ? "w-full items-center rounded-xl bg-gray-100"
-          : "w-fit items-center rounded-xl bg-gray-100")
-      }`}
+      className={`
+          group relative w-full items-center rounded-xl bg-gray-100
+        `}
     >
-      {messageData.type === "message" && (
-        <p className="my-2 mx-2 w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
+      <Modal
+        title="Delete Message"
+        saveButtonLabel="Delete"
+        id="delete-message"
+        saveHandler={() => {
+          if (!channelData) return;
+
+          deleteMessage(channelData?.id, channelData?.userId, messageData.id);
+        }}
+      >
+        <p className="max-w-md font-medium">
+          Are you sure you want to delete this message?This action is
+          irreversible!
+        </p>
+      </Modal>
+
+      <div className="my-2 mx-2 flex flex-row gap-2">
+        {/* MESSAGE TIME */}
+        <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
           {getMessageTime() || <Skeleton />}
         </p>
-      )}
+
+        {/* EDIT BUTTON */}
+        <button className="hidden w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block">
+          Edit
+        </button>
+
+        {/* DELETE BUTTON */}
+        <button
+          className="hidden w-fit rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
+          data-hs-overlay="#delete-message"
+        >
+          Delete
+        </button>
+      </div>
+
+      {/* MESSAGE TEXT */}
       <p
-        className={
-          messageData.type === "message"
-            ? "prose prose-sm m-3 max-w-none md:prose-base lg:prose-lg"
-            : ""
-        }
+        className="prose prose-sm m-3 max-w-none md:prose-base lg:prose-lg"
         dangerouslySetInnerHTML={{ __html: messageData.text }}
       ></p>
     </div>
