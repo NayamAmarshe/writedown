@@ -13,6 +13,7 @@ export interface IChannelData {
 export interface IMessageData {
   id: string;
   createdAt?: Timestamp;
+  updated: boolean;
   text: string;
   type: "info" | "message";
   channelId: string;

@@ -1,14 +1,22 @@
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useEffect } from "react";
 
 interface TiptapProps {
   channelData: IChannelData;
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
+  clearSwitch?: boolean;
+  setClearSwitch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Tiptap = ({ setInput, input }: TiptapProps) => {
+const Tiptap = ({
+  setInput,
+  input,
+  clearSwitch,
+  setClearSwitch,
+}: TiptapProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: input,
@@ -24,11 +32,14 @@ const Tiptap = ({ setInput, input }: TiptapProps) => {
     autofocus: false,
   });
 
+  useEffect(() => {
+    if (!setClearSwitch || !clearSwitch) return;
+    editor?.commands.setContent("");
+    setClearSwitch(false);
+  }, [clearSwitch]);
+
   return (
-    <EditorContent
-      editor={editor}
-      className="max-h-96 w-full overflow-y-auto"
-    />
+    <EditorContent editor={editor} className="h-full w-full overflow-y-auto" />
   );
 };
 
