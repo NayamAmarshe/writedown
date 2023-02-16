@@ -29,6 +29,7 @@ const messagesConverter = converter<IMessageData>();
 
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
+  const [clear, setClear] = useState(false);
   const [selectedChannelId] = useAtom(selectedChannelIdAtom);
 
   const [channel] = useDocumentData(
@@ -71,10 +72,13 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     createNewMessage(selectedChannelId, user?.uid, {
       id: uuidv4(),
       text: input,
+      updated: false,
       type: "message",
       createdAt: serverTimestamp() as Timestamp,
       channelId: selectedChannelId,
     });
+
+    setClear(true);
     setInput("");
   };
 
@@ -104,7 +108,13 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           onChange={(e) => setInput(e.target.value)}
         /> */}
         {channel && (
-          <Tiptap channelData={channel} input={input} setInput={setInput} />
+          <Tiptap
+            channelData={channel}
+            input={input}
+            setInput={setInput}
+            clearSwitch={clear}
+            setClearSwitch={setClear}
+          />
         )}
         <Button variant="solid-black" type="submit">
           Submit

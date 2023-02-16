@@ -12,6 +12,7 @@ interface ChatBubbleProps {
 }
 
 const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
+  const [edited, setEdited] = useState(messageData.updated);
   const [input, setInput] = useState(messageData.text);
   const getMessageTime = () => {
     const timestamp = messageData.createdAt;
@@ -74,6 +75,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
 
       <Modal
         title="Edit Message"
+        customStyle="fixed inset-4"
         saveButtonLabel="Edit"
         id={`edit-message-${messageData.id}`}
         saveHandler={() => {
@@ -82,8 +84,9 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
           editMessage(channelData?.userId, {
             id: messageData.id,
             text: input,
+            updated: true,
             type: "message",
-            createdAt: serverTimestamp() as Timestamp,
+            createdAt: messageData?.createdAt,
             channelId: channelData?.id,
           });
         }}
@@ -100,6 +103,13 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
           {getMessageTime() || <Skeleton />}
         </p>
+
+        {/* EDITED FLAG */}
+        {edited && (
+          <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
+            edited
+          </p>
+        )}
 
         {/* EDIT BUTTON */}
         <button

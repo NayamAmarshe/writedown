@@ -7,6 +7,7 @@ interface ModalProps {
   saveHandler: () => void;
   title: string;
   saveButtonLabel?: string;
+  customStyle?: string;
 }
 
 const Modal = ({
@@ -15,6 +16,7 @@ const Modal = ({
   saveButtonLabel,
   title,
   children,
+  customStyle,
 }: ModalProps) => {
   return (
     <div
@@ -22,7 +24,11 @@ const Modal = ({
       className="hs-overlay fixed top-0 left-0 z-[60] hidden h-full w-full overflow-y-auto overflow-x-hidden"
     >
       <div className="m-3 mt-0 flex min-h-[calc(100%-3.5rem)] items-center justify-center opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
-        <div className="flex flex-col rounded-xl border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]">
+        <div
+          className={`flex ${
+            customStyle ? customStyle : ""
+          } flex-col rounded-xl border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]`}
+        >
           <div className="flex items-center justify-between border-b py-3 px-4 dark:border-gray-700">
             <h3 className="font-bold text-gray-800 dark:text-white">{title}</h3>
             <Button
@@ -47,7 +53,7 @@ const Modal = ({
               </svg>
             </Button>
           </div>
-          <div className="overflow-y-auto p-4">{children}</div>
+          <div className="h-full overflow-y-auto p-4">{children}</div>
           <div className="flex items-center justify-end gap-x-2 border-t py-3 px-4 dark:border-gray-700">
             <Button
               variant="solid-red"

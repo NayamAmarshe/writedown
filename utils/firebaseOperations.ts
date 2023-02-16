@@ -80,6 +80,7 @@ export const createChannel = async (
       type: "info",
       createdAt: serverTimestamp() as Timestamp,
       channelId: channelData.id,
+      updated: false,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
