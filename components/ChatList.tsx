@@ -94,7 +94,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       {/* BOTTOM BAR */}
       <form
-        className="flex flex-row items-end justify-end gap-2"
+        className="flex flex-row items-end justify-end gap-2 p-2"
         onSubmit={messageSubmitHandler}
       >
         {/* <Input
