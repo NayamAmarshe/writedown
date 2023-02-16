@@ -8,7 +8,7 @@ interface TiptapProps {
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Tiptap = ({ channelData, setInput, input }: TiptapProps) => {
+const Tiptap = ({ setInput, input }: TiptapProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: input,

@@ -81,7 +81,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   return (
     <div className="flex h-full w-full flex-col justify-between md:p-5">
       <div className="m-5 flex flex-col gap-y-1 overflow-y-auto px-2">
-        {messages?.map((message, index) => {
+        {messages?.map((message) => {
           return (
             <ChatBubble
               key={message.id}
