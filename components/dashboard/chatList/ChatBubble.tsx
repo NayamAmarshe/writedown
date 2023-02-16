@@ -1,7 +1,6 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage } from "@/utils/firebaseOperations";
 import Skeleton from "react-loading-skeleton";
-import { FiEdit2 } from "react-icons/fi";
 import Modal from "@/components/Modal";
 import React from "react";
 
