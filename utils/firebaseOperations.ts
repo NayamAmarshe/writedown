@@ -140,6 +140,30 @@ export const getMessagesByChannelId = async (
   return [];
 };
 
+export const editMessage = async (userId: string, message: IMessageData) => {
+  if (!userId || !message) return;
+
+  const messageRef = doc(
+    db,
+    "users",
+    userId,
+    "channels",
+    message.channelId,
+    "messages",
+    message.id
+  );
+  console.log(
+    "🚀 => file: firebaseOperations.ts:159 => messageRef",
+    messageRef
+  );
+
+  try {
+    await setDoc(messageRef, message);
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
+};
+
 export const deleteMessage = async (
   channelId: string,
   userId: string,

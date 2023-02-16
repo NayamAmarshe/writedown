@@ -1,8 +1,10 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import { deleteMessage } from "@/utils/firebaseOperations";
+import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
+import Tiptap from "@/components/Tiptap";
+import React, { useState } from "react";
 import Modal from "@/components/Modal";
-import React from "react";
 
 interface ChatBubbleProps {
   messageData: IMessageData;
@@ -10,6 +12,7 @@ interface ChatBubbleProps {
 }
 
 const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
+  const [input, setInput] = useState(messageData.text);
   const getMessageTime = () => {
     const timestamp = messageData.createdAt;
     if (!timestamp) return null;
@@ -69,6 +72,29 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         </p>
       </Modal>
 
+      <Modal
+        title="Edit Message"
+        saveButtonLabel="Edit"
+        id={`edit-message-${messageData.id}`}
+        saveHandler={() => {
+          if (!channelData) return;
+
+          editMessage(channelData?.userId, {
+            id: messageData.id,
+            text: input,
+            type: "message",
+            createdAt: serverTimestamp() as Timestamp,
+            channelId: channelData?.id,
+          });
+        }}
+      >
+        <Tiptap
+          channelData={channelData as IChannelData}
+          input={input}
+          setInput={setInput}
+        />
+      </Modal>
+
       <div className="my-2 mx-2 flex flex-row gap-2">
         {/* MESSAGE TIME */}
         <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
@@ -76,7 +102,10 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         </p>
 
         {/* EDIT BUTTON */}
-        <button className="hidden w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block">
+        <button
+          className="hidden w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
+          data-hs-overlay={`#edit-message-${messageData.id}`}
+        >
           Edit
         </button>
 
