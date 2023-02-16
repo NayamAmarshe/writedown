@@ -81,7 +81,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   return (
     <div className="flex h-full w-full flex-col justify-between md:p-5">
       <div className="m-5 flex flex-col gap-y-1 overflow-y-auto px-2">
-        {messages?.map((message) => {
+        {messages?.map((message, index) => {
           return (
             <ChatBubble
               key={message.id}
@@ -94,7 +94,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       {/* BOTTOM BAR */}
       <form
-        className="flex flex-row items-end justify-end gap-2 p-2"
+        className="flex flex-col  justify-end gap-2 p-2 md:flex-row md:items-end"
         onSubmit={messageSubmitHandler}
       >
         {/* <Input

@@ -1,5 +1,6 @@
 // Firebase v9 function to store data in users collection
 import {
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -137,4 +138,32 @@ export const getMessagesByChannelId = async (
   }
 
   return [];
+};
+
+export const deleteMessage = async (
+  channelId: string,
+  userId: string,
+  messageId: string
+) => {
+  if (!channelId || !userId || !messageId) return;
+
+  const messageRef = doc(
+    db,
+    "users",
+    userId,
+    "channels",
+    channelId,
+    "messages",
+    messageId
+  );
+  console.log(
+    "🚀 => file: firebaseOperations.ts:159 => messageRef",
+    messageRef
+  );
+
+  try {
+    await deleteDoc(messageRef);
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
 };
