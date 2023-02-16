@@ -1,9 +1,9 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Tiptap from "@/components/Tiptap";
-import React, { useState } from "react";
 import Modal from "@/components/Modal";
 
 interface ChatBubbleProps {
@@ -42,6 +42,10 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
     }
     return new Date().toLocaleDateString(); // for more than a week, show the actual date
   };
+
+  useEffect(() => {
+    setEdited(messageData.updated);
+  }, [messageData.updated]);
 
   if (messageData.type === "info")
     return (
