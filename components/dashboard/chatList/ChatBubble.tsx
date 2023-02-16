@@ -21,11 +21,13 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
 
     const seconds = Math.floor(diff / 1000);
     if (seconds < 60) {
-      return seconds + " seconds ago";
+      return "Just now";
     }
     const minutes = Math.floor(diff / (60 * 1000));
-    if (minutes < 60) {
+    if (minutes > 1 && minutes < 60) {
       return minutes + " minutes ago";
+    } else if (minutes === 1) {
+      return "A minute ago";
     }
     const hours = Math.floor(diff / (60 * 60 * 1000));
     if (hours < 24) {
