@@ -80,7 +80,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
       <Modal
         title="Edit Message"
         fullscreen={true}
-        saveButtonLabel="Edit"
+        saveButtonLabel="Save"
         id={`edit-message-${messageData.id}`}
         saveHandler={() => {
           if (!channelData) return;
