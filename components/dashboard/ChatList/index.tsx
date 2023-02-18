@@ -17,6 +17,7 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import { converter } from "@/utils/firestoreDataConverter";
 import React, { FormEvent, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Editor from "@/components/ui/Editor";
 import { uuidv4 } from "@firebase/util";
@@ -85,15 +86,16 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   return (
     <div className="flex h-full w-full flex-col justify-between md:p-5">
       <div className="m-5 flex flex-col gap-y-1 overflow-y-auto px-2">
-        {messages?.map((message) => {
-          return (
-            <ChatBubble
-              key={message.id}
-              messageData={message}
-              channelData={channel}
-            />
-          );
-        })}
+        {selectedChannelId &&
+          messages?.map((message) => {
+            return (
+              <ChatBubble
+                key={message.id}
+                messageData={message}
+                channelData={channel}
+              />
+            );
+          })}
       </div>
 
       {/* BOTTOM BAR */}
@@ -101,24 +103,22 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         className="flex flex-col  justify-end gap-2 p-2 md:flex-row md:items-end"
         onSubmit={messageSubmitHandler}
       >
-        {/* <Input
-          id="message-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        /> */}
-        {channel && (
-          <Editor
-            channelData={channel}
-            input={input}
-            setInput={setInput}
-            clearSwitch={clear}
-            setClearSwitch={setClear}
-          />
+        {selectedChannelId && channel ? (
+          <>
+            <Editor
+              channelData={channel}
+              input={input}
+              setInput={setInput}
+              clearSwitch={clear}
+              setClearSwitch={setClear}
+            />
+            <Button variant="solid-black" type="submit">
+              Submit
+            </Button>
+          </>
+        ) : (
+          <Skeleton className="h-full w-full" />
         )}
-        <Button variant="solid-black" type="submit">
-          Submit
-        </Button>
       </form>
     </div>
   );

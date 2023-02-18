@@ -84,6 +84,11 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         id={`edit-message-${messageData.id}`}
         saveHandler={() => {
           if (!channelData) return;
+          if (input.length === 0 || input === "<p></p>") {
+            // TODO: SHOW TOAST/MODAL IF THEY WANNA DELETE THEIR MESSAGE INSTEAD
+            setInput(messageData.text);
+            return;
+          }
 
           editMessage(channelData?.userId, {
             id: messageData.id,
@@ -93,6 +98,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
             createdAt: messageData?.createdAt,
             channelId: channelData?.id,
           });
+          setInput(messageData.text);
         }}
       >
         <EditorFullscreen
@@ -104,9 +110,19 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
 
       <div className="my-2 mx-2 flex flex-row gap-2">
         {/* MESSAGE TIME */}
-        <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
-          {getMessageTime() || <Skeleton />}
-          <p className="inline text-gray-500"> - edited</p>
+        <p className="group/item w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
+          <span className="group-hover/item:hidden">
+            {getMessageTime() || <Skeleton />}
+          </span>
+          <span className="hidden group-hover/item:inline">
+            {messageData.createdAt?.toDate().toDateString() +
+              " at " +
+              messageData.createdAt
+                ?.toDate()
+                .toLocaleTimeString()
+                .slice(0, -3) || <Skeleton />}
+          </span>
+          <span className="inline text-gray-500"> - edited</span>
         </p>
 
         {/* EDIT BUTTON */}
