@@ -106,14 +106,8 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         {/* MESSAGE TIME */}
         <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
           {getMessageTime() || <Skeleton />}
+          <p className="inline text-gray-500"> - edited</p>
         </p>
-
-        {/* EDITED FLAG */}
-        {edited && (
-          <p className="w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
-            edited
-          </p>
-        )}
 
         {/* EDIT BUTTON */}
         <button
