@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import type { NextPage } from "next";
 import Link from "next/link";
 

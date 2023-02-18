@@ -1,7 +1,7 @@
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
-import ChatList from "@/components/ChatList";
-import Sidebar from "@/components/Sidebar";
+import ChatList from "@/components/dashboard/ChatList";
+import Sidebar from "@/components/dashboard/Sidebar";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { auth } from "./_app";
