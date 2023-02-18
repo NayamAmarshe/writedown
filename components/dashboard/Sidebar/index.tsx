@@ -9,16 +9,16 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
+import EmojiSelector from "@/components/ui/EmojiSelector";
 import { collection, query } from "firebase/firestore";
-import EmojiSelector from "../../ui/EmojiSelector";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
+import Modal from "@/components/ui/Modal";
+import Input from "@/components/ui/Input";
 import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
-import Modal from "../../ui/Modal";
-import Input from "../../ui/Input";
 import { useAtom } from "jotai";
 
 interface SidebarProps {
