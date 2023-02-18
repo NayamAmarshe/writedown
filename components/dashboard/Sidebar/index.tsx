@@ -12,8 +12,6 @@ import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
 import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import "react-loading-skeleton/dist/skeleton.css";
-import Skeleton from "react-loading-skeleton";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import { uuidv4 } from "@firebase/util";
@@ -39,11 +37,11 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     selectedChannelIdAtom
   );
 
-  const [channels] = useCollectionData(
+  const [channels, channelsLoading] = useCollectionData(
     user && query(collection(db, "users", user.uid, "channels"))
   );
 
-  const [messages] = useCollectionData(
+  const [messages, messagesLoading] = useCollectionData(
     user && query(collection(db, "messages"))
   );
 
@@ -53,10 +51,6 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     }
   }, [channels, messages]);
 
-  useEffect(() => {
-    console.log("Sidebar -> selectedChannelId: ", selectedChannelId);
-  }, [selectedChannelId]);
-
   const resetAddChannelForm = () => {
     setChannelName("");
     setSelectEmoji({
@@ -64,6 +58,10 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     });
     setEmojiBackgroundIndex(0);
   };
+
+  if (!selectedChannelId) {
+    return <></>;
+  }
 
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden bg-gray-100 py-4">
@@ -132,8 +130,8 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
 
         {/* CHANNEL LIST */}
         <div className="flex h-full flex-col gap-5 overflow-auto">
-          {channels ? (
-            channels.map((item, index) => {
+          {selectedChannelId &&
+            channels?.map((item) => {
               return (
                 <ChannelCard
                   key={item.id}
@@ -144,11 +142,8 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
                   }}
                 />
               );
-            })
-          ) : (
-            <Skeleton count={5} height="50px" />
-          )}
-          {channels && channels.length === 0 && (
+            })}
+          {selectedChannelId && channels && channels.length === 0 && (
             <p className="text-center text-gray-500">
               No Channels to show. Start by creating one 🤓
             </p>

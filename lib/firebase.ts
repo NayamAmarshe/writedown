@@ -1,4 +1,7 @@
-import { enableIndexedDbPersistence } from "firebase/firestore";
+import {
+  enableIndexedDbPersistence,
+  enableMultiTabIndexedDbPersistence,
+} from "firebase/firestore";
 import { getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import "firebase/firestore";
@@ -18,10 +21,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 if (!(db as any)._firestoreClient) {
-  enableIndexedDbPersistence(db, {
-    forceOwnership: true,
-  });
-  console.log("persistence enabled");
+  enableMultiTabIndexedDbPersistence(db);
 }
 
 export { db, firebaseApp };
