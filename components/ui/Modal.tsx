@@ -7,7 +7,7 @@ interface ModalProps {
   saveHandler: () => void;
   title: string;
   saveButtonLabel?: string;
-  customStyle?: string;
+  fullscreen?: boolean;
 }
 
 const Modal = ({
@@ -16,7 +16,7 @@ const Modal = ({
   saveButtonLabel,
   title,
   children,
-  customStyle,
+  fullscreen,
 }: ModalProps) => {
   return (
     <div
@@ -26,7 +26,7 @@ const Modal = ({
       <div className="m-3 mt-0 flex min-h-[calc(100%-3.5rem)] items-center justify-center opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
         <div
           className={`flex ${
-            customStyle ? customStyle : ""
+            fullscreen ? "fixed inset-4" : ""
           } flex-col rounded-xl border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-slate-700/[.7]`}
         >
           <div className="flex items-center justify-between border-b py-3 px-4 dark:border-gray-700">

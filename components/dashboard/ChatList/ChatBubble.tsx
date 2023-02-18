@@ -1,8 +1,8 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
+import EditorFullscreen from "@/components/ui/EditorFullscreen";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import Editor from "@/components/ui/Editor";
 import Modal from "@/components/ui/Modal";
 
 interface ChatBubbleProps {
@@ -76,9 +76,10 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         </p>
       </Modal>
 
+      {/* MESSAGE EDIT MODAL */}
       <Modal
         title="Edit Message"
-        customStyle="fixed inset-4"
+        fullscreen={true}
         saveButtonLabel="Edit"
         id={`edit-message-${messageData.id}`}
         saveHandler={() => {
@@ -94,7 +95,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
           });
         }}
       >
-        <Editor
+        <EditorFullscreen
           channelData={channelData as IChannelData}
           input={input}
           setInput={setInput}
