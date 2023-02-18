@@ -1,10 +1,10 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
 import { serverTimestamp, Timestamp } from "firebase/firestore";
+import Tiptap from "@/components/dashboard/ChatList/Tiptap";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import Tiptap from "@/components/Tiptap";
-import Modal from "@/components/Modal";
+import Modal from "@components/ui/Modal";
 
 interface ChatBubbleProps {
   messageData: IMessageData;

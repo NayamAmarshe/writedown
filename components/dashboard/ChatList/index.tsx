@@ -16,12 +16,12 @@ import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import { converter } from "@/utils/firestoreDataConverter";
-import ChatBubble from "./dashboard/chatList/ChatBubble";
 import React, { FormEvent, useState } from "react";
+import Button from "@components/ui/Button";
 import { uuidv4 } from "@firebase/util";
+import ChatBubble from "./ChatBubble";
 import { db } from "@/lib/firebase";
 import { useAtom } from "jotai";
-import Button from "./Button";
 import Tiptap from "./Tiptap";
 
 const channelConverter = converter<IChannelData>();

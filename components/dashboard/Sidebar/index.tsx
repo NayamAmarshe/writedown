@@ -9,17 +9,17 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
-import ChannelCard from "./dashboard/sidebar/ChannelCard";
 import { collection, query } from "firebase/firestore";
+import EmojiSelector from "../../ui/EmojiSelector";
 import React, { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
-import EmojiSelector from "./EmojiSelector";
 import { uuidv4 } from "@firebase/util";
+import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
+import Modal from "../../ui/Modal";
+import Input from "../../ui/Input";
 import { useAtom } from "jotai";
-import Modal from "./Modal";
-import Input from "./Input";
 
 interface SidebarProps {
   id: string;
