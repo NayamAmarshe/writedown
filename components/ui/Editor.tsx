@@ -11,7 +11,7 @@ interface TiptapProps {
   setClearSwitch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Tiptap = ({
+const Editor = ({
   setInput,
   input,
   clearSwitch,
@@ -23,7 +23,7 @@ const Tiptap = ({
     editorProps: {
       attributes: {
         class:
-          "h-full focus:outline-none w-full border-2 rounded-xl p-2 prose max-w-none border-gray-200 py-3 px-4 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 prose-sm md:prose-base lg:prose-lg",
+          "max-h-full overflow-y-auto focus:outline-none w-full border-2 rounded-xl p-2 prose max-w-none border-gray-200 py-3 px-4 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 prose-sm md:prose-base lg:prose-lg",
       },
     },
     onUpdate: ({ editor }) => {
@@ -38,9 +38,7 @@ const Tiptap = ({
     setClearSwitch(false);
   }, [clearSwitch]);
 
-  return (
-    <EditorContent editor={editor} className="h-full w-full overflow-y-auto" />
-  );
+  return <EditorContent editor={editor} className="w-full" />;
 };
 
-export default Tiptap;
+export default Editor;

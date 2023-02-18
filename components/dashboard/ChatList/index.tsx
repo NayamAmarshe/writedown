@@ -17,12 +17,12 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import { converter } from "@/utils/firestoreDataConverter";
 import React, { FormEvent, useState } from "react";
-import Button from "@components/ui/Button";
+import Button from "@/components/ui/Button";
+import Editor from "@/components/ui/Editor";
 import { uuidv4 } from "@firebase/util";
 import ChatBubble from "./ChatBubble";
 import { db } from "@/lib/firebase";
 import { useAtom } from "jotai";
-import Tiptap from "./Tiptap";
 
 const channelConverter = converter<IChannelData>();
 const messagesConverter = converter<IMessageData>();
@@ -108,7 +108,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           onChange={(e) => setInput(e.target.value)}
         /> */}
         {channel && (
-          <Tiptap
+          <Editor
             channelData={channel}
             input={input}
             setInput={setInput}

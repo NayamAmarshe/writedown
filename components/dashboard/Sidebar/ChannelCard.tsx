@@ -1,7 +1,6 @@
-import { getMessagesByChannelId } from "@/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
-import React, { HTMLAttributes, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
+import React, { HTMLAttributes } from "react";
 
 const ChannelCard = ({
   channel,
