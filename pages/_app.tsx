@@ -1,3 +1,4 @@
+import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
 import type { AppProps } from "next/app";
 import { getAuth } from "firebase/auth";
