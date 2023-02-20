@@ -1,5 +1,12 @@
+import {
+  collection,
+  collectionGroup,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import { collection, limit, orderBy, query } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { converter } from "@/utils/firestoreDataConverter";
 import React, { HTMLAttributes, useEffect } from "react";
@@ -16,21 +23,20 @@ const ChannelCard = ({
   channel: IChannelData;
   highlight: boolean;
 } & HTMLAttributes<HTMLDivElement>) => {
-  const [messages] = useCollectionData(
+  const [messages, messagesLoading, messagesError] = useCollectionData(
     query(
-      collection(db, "messages"),
-      orderBy("createdAt"),
-      limit(10)
-    ).withConverter(messagesConverter),
-    {
-      initialValue: [],
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
+      collectionGroup(db, "messages"),
+      where("channelId", "==", channel.id),
+      orderBy("createdAt", "desc"),
+      limit(1)
+    ).withConverter(messagesConverter)
   );
 
   useEffect(() => {
     console.log("messages", messages);
-  }, []);
+    console.log("LOADING: ", messagesLoading);
+    console.log("ERROR: ", messagesError);
+  }, [messages, messagesLoading, messagesError]);
 
   return (
     <div
@@ -52,16 +58,18 @@ const ChannelCard = ({
       {/* CHANNEL INFO */}
       <div className="hidden w-full lg:flex lg:flex-col">
         {/* CHANNEL HEADING */}
-        <div className="flex w-full flex-row justify-between">
+        <div className="flex w-full flex-row items-center justify-between">
           {/* CHANNEL NAME */}
           <h4 className="font-medium text-gray-700">
             {channel.name || <Skeleton />}
           </h4>
-          {/* CHANNEL TIME */}
-          <h4 className="text-xs text-gray-400">{}</h4>
         </div>
         {/* CHANNEL CHAT */}
-        <p className="text-sm text-gray-400">{<Skeleton />}</p>
+        <p className="w-full truncate text-sm text-gray-400">
+          {(messages && messages[0]?.text.slice(0, 20)) || (
+            <Skeleton className="w-5/6" />
+          )}
+        </p>
       </div>
     </div>
   );
