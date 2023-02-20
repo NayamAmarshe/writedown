@@ -8,6 +8,8 @@ export interface IChannelData {
   emoji: string;
   emojiBackground: string;
   messages: IMessageData[];
+  type: "private" | "public";
+  slug: string;
 }
 
 export interface IMessageData {
@@ -17,4 +19,7 @@ export interface IMessageData {
   text: string;
   type: "info" | "message";
   channelId: string;
+  userId: string;
+  type: "info" | "message";
+  slug: string;
 }
