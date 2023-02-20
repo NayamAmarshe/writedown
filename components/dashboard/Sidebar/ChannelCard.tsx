@@ -1,6 +1,12 @@
-import { IChannelData } from "@/types/utils/firebaseOperations";
+import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import { collection, limit, orderBy, query } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { converter } from "@/utils/firestoreDataConverter";
+import React, { HTMLAttributes, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
-import React, { HTMLAttributes } from "react";
+import { db } from "@/lib/firebase";
+
+const messagesConverter = converter<IMessageData>();
 
 const ChannelCard = ({
   channel,
@@ -10,6 +16,22 @@ const ChannelCard = ({
   channel: IChannelData;
   highlight: boolean;
 } & HTMLAttributes<HTMLDivElement>) => {
+  const [messages] = useCollectionData(
+    query(
+      collection(db, "messages"),
+      orderBy("createdAt"),
+      limit(10)
+    ).withConverter(messagesConverter),
+    {
+      initialValue: [],
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
+  useEffect(() => {
+    console.log("messages", messages);
+  }, []);
+
   return (
     <div
       key={channel.id}
@@ -36,10 +58,10 @@ const ChannelCard = ({
             {channel.name || <Skeleton />}
           </h4>
           {/* CHANNEL TIME */}
-          <h4 className="text-xs text-gray-400">{<Skeleton />}</h4>
+          <h4 className="text-xs text-gray-400">{}</h4>
         </div>
         {/* CHANNEL CHAT */}
-        <p className="text-sm text-gray-400">{"HHEHE" || <Skeleton />}</p>
+        <p className="text-sm text-gray-400">{<Skeleton />}</p>
       </div>
     </div>
   );
