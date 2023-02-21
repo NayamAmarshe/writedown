@@ -17,6 +17,7 @@ import Input from "@/components/ui/Input";
 import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
+import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
 
 interface SidebarProps {
@@ -79,6 +80,8 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
             id: uuidv4(),
             messages: [],
             userId: user.uid,
+            slug: nanoid(),
+            type: "private",
           });
           resetAddChannelForm();
         }}

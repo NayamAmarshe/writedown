@@ -9,6 +9,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
@@ -81,6 +82,8 @@ export const createChannel = async (
       createdAt: serverTimestamp() as Timestamp,
       channelId: channelData.id,
       updated: false,
+      slug: channelData.slug,
+      userId: userId,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
@@ -141,17 +144,22 @@ export const getMessagesByChannelId = async (
   return [];
 };
 
-export const editMessage = async (userId: string, message: IMessageData) => {
-  if (!userId || !message) return;
+export const editMessage = async (
+  userId: string,
+  channelId: string,
+  messageId: string,
+  updatedText: string
+) => {
+  if (!userId || !updatedText) return;
 
   const messageRef = doc(
     db,
     "users",
     userId,
     "channels",
-    message.channelId,
+    channelId,
     "messages",
-    message.id
+    messageId
   );
   console.log(
     "🚀 => file: firebaseOperations.ts:159 => messageRef",
@@ -159,7 +167,9 @@ export const editMessage = async (userId: string, message: IMessageData) => {
   );
 
   try {
-    await setDoc(messageRef, message);
+    await updateDoc(messageRef, {
+      text: updatedText,
+    });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
   }

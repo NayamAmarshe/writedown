@@ -83,21 +83,19 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         saveButtonLabel="Save"
         id={`edit-message-${messageData.id}`}
         saveHandler={() => {
-          if (!channelData) return;
+          if (!channelData || !messageData) return;
           if (input.length === 0 || input === "<p></p>") {
             // TODO: SHOW TOAST/MODAL IF THEY WANNA DELETE THEIR MESSAGE INSTEAD
             setInput(messageData.text);
             return;
           }
 
-          editMessage(channelData?.userId, {
-            id: messageData.id,
-            text: input,
-            updated: true,
-            type: "message",
-            createdAt: messageData?.createdAt,
-            channelId: channelData?.id,
-          });
+          editMessage(
+            channelData.userId,
+            channelData.id,
+            messageData.id,
+            input
+          );
           setInput(messageData.text);
         }}
       >
