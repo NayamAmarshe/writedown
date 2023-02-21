@@ -19,6 +19,11 @@
       "@/*": ["*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/ui/EditorAlt.jsx"
+  ],
   "exclude": ["node_modules"]
 }
