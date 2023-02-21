@@ -13,6 +13,7 @@ import {
 } from "react-firebase-hooks/firestore";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import { MilkdownEditorWrapper } from "@/components/ui/MildownEditor";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import { converter } from "@/utils/firestoreDataConverter";
@@ -103,18 +104,20 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       {/* BOTTOM BAR */}
       <form
-        className="flex flex-col  justify-end gap-2 p-2 md:flex-row md:items-end"
+        className="md:items flex flex-col gap-2 p-2 md:flex-row"
         onSubmit={messageSubmitHandler}
       >
         {selectedChannelId && channel ? (
           <>
-            <Editor
+            <MilkdownEditorWrapper />
+
+            {/* <Editor
               channelData={channel}
               input={input}
               setInput={setInput}
               clearSwitch={clear}
               setClearSwitch={setClear}
-            />
+            /> */}
             <Button variant="solid-black" type="submit">
               Submit
             </Button>
@@ -123,6 +126,8 @@ const ChatList = ({ user }: IFirebaseAuth) => {
           <Skeleton className="h-full w-full" />
         )}
       </form>
+
+      {/* BOTTOM BAR */}
     </div>
   );
 };
