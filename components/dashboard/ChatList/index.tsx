@@ -23,6 +23,7 @@ import Editor from "@/components/ui/Editor";
 import { uuidv4 } from "@firebase/util";
 import ChatBubble from "./ChatBubble";
 import { db } from "@/lib/firebase";
+import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
 
 const channelConverter = converter<IChannelData>();
@@ -77,6 +78,8 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       type: "message",
       createdAt: serverTimestamp() as Timestamp,
       channelId: selectedChannelId,
+      slug: nanoid(),
+      userId: user.uid,
     });
 
     setClear(true);
