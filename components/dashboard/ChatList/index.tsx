@@ -13,10 +13,11 @@ import {
 } from "react-firebase-hooks/firestore";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
-import { MilkdownEditorWrapper } from "@/components/ui/MildownEditor";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
+import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { converter } from "@/utils/firestoreDataConverter";
+import { MilkdownProvider } from "@milkdown/react";
 import React, { FormEvent, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -109,7 +110,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       >
         {selectedChannelId && channel ? (
           <>
-            <MilkdownEditorWrapper />
+            {/* <MilkdownEditorWrapper /> */}
 
             {/* <Editor
               channelData={channel}
@@ -118,6 +119,15 @@ const ChatList = ({ user }: IFirebaseAuth) => {
               clearSwitch={clear}
               setClearSwitch={setClear}
             /> */}
+            <MilkdownProvider>
+              <MilkdownEditor
+                channelData={channel}
+                input={input}
+                setInput={setInput}
+                clearSwitch={clear}
+                setClearSwitch={setClear}
+              />
+            </MilkdownProvider>
             <Button variant="solid-black" type="submit">
               Submit
             </Button>
