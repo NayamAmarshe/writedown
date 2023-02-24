@@ -120,17 +120,17 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
       </div>
 
       {/* CHANNELS SECTION */}
-      <div className="flex h-2 basis-full flex-col gap-3 p-3">
+      <div className="flex h-2 basis-full flex-col gap-3 p-2">
         {/* CHANNELS HEADING */}
         <h4 className="mt-4 hidden text-sm font-medium text-gray-600 lg:block">
           CHANNELS
         </h4>
         {/* NEW CHANNEL BUTTON */}
         <button
-          className="flex h-16 w-full flex-row items-center justify-center gap-2 rounded-full bg-gray-200 p-2 lg:h-auto"
+          className="flex flex-row items-center justify-center rounded-full bg-gray-200 p-5 md:w-full md:gap-2 lg:h-16 lg:p-2"
           data-hs-overlay="#add-new-channel"
         >
-          <AiFillPlusCircle className="text-xl" />
+          <AiFillPlusCircle className="text-3xl lg:text-xl" />
           <span className="hidden lg:block">New Channel</span>
         </button>
 
