@@ -10,13 +10,16 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
+import { auth } from "@/pages/_app";
 import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
 
@@ -155,9 +158,13 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
       </div>
 
       {/* BOTTOM BAR */}
-      <div className="gap- flex w-full flex-col items-center justify-around gap-6 p-5 lg:flex-row lg:gap-0">
-        <AiOutlineSetting className="text-2xl" />
-        <AiOutlineLogout className="text-2xl" />
+      <div className="flex flex-row items-center justify-center gap-2">
+        <Button variant="outline-gray" onClick={() => auth.signOut()}>
+          <AiOutlineLogout className="text-xl" />
+          <span className="hidden lg:inline"> Logout</span>
+        </Button>
+        {/* <AiOutlineSetting className="text-2xl" />
+        <AiOutlineLogout className="text-2xl" /> */}
       </div>
     </div>
   );
