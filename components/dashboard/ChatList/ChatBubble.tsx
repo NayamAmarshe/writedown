@@ -1,8 +1,9 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
-import EditorFullscreen from "@/components/ui/EditorFullscreen";
+import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
+import ReactMarkdown from "react-markdown";
 import Modal from "@/components/ui/Modal";
 
 interface ChatBubbleProps {
@@ -13,6 +14,9 @@ interface ChatBubbleProps {
 const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
   const [edited, setEdited] = useState(messageData.updated);
   const [input, setInput] = useState(messageData.text);
+  const [clearInput, setClearInput] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
   const getMessageTime = () => {
     const timestamp = messageData.createdAt;
     if (!timestamp) return null;
@@ -45,6 +49,10 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
   useEffect(() => {
     setEdited(messageData.updated);
   }, [messageData.updated]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   if (messageData.type === "info")
     return (
@@ -99,11 +107,15 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
           setInput(messageData.text);
         }}
       >
-        <EditorFullscreen
-          channelData={channelData as IChannelData}
-          input={input}
-          setInput={setInput}
-        />
+        {isClient && channelData && (
+          <MilkdownEditor
+            input={input}
+            setInput={setInput}
+            clearSwitch={clearInput}
+            setClearSwitch={setClearInput}
+            className="prose prose-sm h-full min-w-full flex-grow overflow-y-auto rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
+          />
+        )}
       </Modal>
 
       <div className="my-2 mx-2 flex flex-row gap-2">
@@ -141,10 +153,9 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
       </div>
 
       {/* MESSAGE TEXT */}
-      <p
-        className="prose prose-sm m-3 max-w-none md:prose-base lg:prose-lg"
-        dangerouslySetInnerHTML={{ __html: messageData.text }}
-      ></p>
+      <ReactMarkdown className="prose prose-sm m-3 max-w-none whitespace-pre-wrap md:prose-base lg:prose-lg">
+        {messageData.text}
+      </ReactMarkdown>
     </div>
   );
 };

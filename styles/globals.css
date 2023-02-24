@@ -9,5 +9,9 @@
 }
 
 .milkdown {
-  min-width: 100wv;
+  width: 100%;
+}
+
+[data-milkdown-root="true"] {
+  width: 100%;
 }

@@ -15,13 +15,12 @@ import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { createNewMessage } from "@/utils/firebaseOperations";
+import React, { FormEvent, useEffect, useState } from "react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { converter } from "@/utils/firestoreDataConverter";
 import { MilkdownProvider } from "@milkdown/react";
-import React, { FormEvent, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import Editor from "@/components/ui/Editor";
 import { uuidv4 } from "@firebase/util";
 import ChatBubble from "./ChatBubble";
 import { db } from "@/lib/firebase";
@@ -35,6 +34,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
   const [clear, setClear] = useState(false);
   const [selectedChannelId] = useAtom(selectedChannelIdAtom);
+  const [isClient, setIsClient] = useState(false);
 
   const [channel] = useDocumentData(
     selectedChannelId && user
@@ -46,6 +46,14 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
+
+  useEffect(() => {
+    console.log(input);
+  }, [input]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const [messages] = useCollectionData(
     user && selectedChannelId
@@ -86,6 +94,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
     setClear(true);
     setInput("");
+    console.log("MESSAGE SENT");
   };
 
   return (
@@ -105,20 +114,11 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       {/* BOTTOM BAR */}
       <form
-        className="md:items flex flex-col gap-2 p-2 md:flex-row"
+        className="flex flex-row items-end gap-2"
         onSubmit={messageSubmitHandler}
       >
-        {selectedChannelId && channel ? (
+        {isClient && selectedChannelId && channel ? (
           <>
-            {/* <MilkdownEditorWrapper /> */}
-
-            {/* <Editor
-              channelData={channel}
-              input={input}
-              setInput={setInput}
-              clearSwitch={clear}
-              setClearSwitch={setClear}
-            /> */}
             <MilkdownProvider>
               <MilkdownEditor
                 channelData={channel}
@@ -126,6 +126,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
                 setInput={setInput}
                 clearSwitch={clear}
                 setClearSwitch={setClear}
+                className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
               />
             </MilkdownProvider>
             <Button variant="solid-black" type="submit">
