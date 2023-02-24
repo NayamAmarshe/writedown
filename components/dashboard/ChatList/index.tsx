@@ -114,7 +114,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       {/* BOTTOM BAR */}
       <form
-        className="flex flex-row items-end gap-2"
+        className="flex flex-row items-end gap-2 p-2"
         onSubmit={messageSubmitHandler}
       >
         {isClient && selectedChannelId && channel ? (
