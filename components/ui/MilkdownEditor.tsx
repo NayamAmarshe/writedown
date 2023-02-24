@@ -1,24 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   defaultValueCtx,
   Editor,
-  editorCtx,
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
-import { Milkdown, useEditor, MilkdownProvider } from "@milkdown/react";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { IChannelData } from "@/types/utils/firebaseOperations";
-import React, { useEffect, useRef, useState } from "react";
 import { commonmark } from "@milkdown/preset-commonmark";
-import { getHTML, insert } from "@milkdown/utils";
+import { Milkdown, useEditor } from "@milkdown/react";
+import tooltip from "@milkdown/plugin-tooltip";
+import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
-
+import React, { useEffect } from "react";
+import "@milkdown/theme-nord/style.css";
 interface editorProps {
   channelData?: IChannelData;
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  clearSwitch?: boolean;
-  setClearSwitch?: React.Dispatch<React.SetStateAction<boolean>>;
+  clearSwitch: boolean;
+  setClearSwitch: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: React.HTMLAttributes<HTMLDivElement>["className"];
 }
 
 const MilkdownEditor = ({
@@ -26,31 +28,23 @@ const MilkdownEditor = ({
   input,
   clearSwitch,
   setClearSwitch,
+  className,
 }: editorProps) => {
-  const editorInstance = useRef<Editor>();
-
-  useEditor((root) =>
+  const editor = useEditor((root) =>
     Editor.make()
-
       .config((ctx) => {
+        ctx.set(rootCtx, root);
+        ctx.set(defaultValueCtx, input);
         ctx.update(editorViewOptionsCtx, (prev) => ({
           ...prev,
           attributes: {
-            class:
-              "max-h-96 overflow-y-auto focus:outline-none w-96 border-2 rounded-xl p-2 prose max-w-none border-gray-200 py-3 px-4 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 prose-sm md:prose-base lg:prose-lg ",
+            class: className ? className : "",
           },
         }));
-        ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, input);
-        ctx.get(listenerCtx).mounted((ctx) => {
-          editorInstance.current = ctx.get(editorCtx);
-          const listener = ctx.get(listenerCtx);
-
-          listener.markdownUpdated((ctx, markdown, prevMarkdown) => {
-            if (markdown !== prevMarkdown) {
-              setInput(ctx.get(editorCtx).action(getHTML()));
-            }
-          });
+        ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
+          if (markdown !== prevMarkdown) {
+            setInput(markdown);
+          }
         });
       })
       .config(nord)
@@ -59,10 +53,15 @@ const MilkdownEditor = ({
   );
 
   useEffect(() => {
-    if (!setClearSwitch || !clearSwitch) return;
-    editorInstance.current?.action(insert(""));
+    if (clearSwitch === false) {
+      return;
+    }
+
+    editor.get()?.action(replaceAll(""));
+
     setClearSwitch(false);
   }, [clearSwitch]);
+
   return <Milkdown />;
 };
 
