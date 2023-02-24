@@ -1,6 +1,7 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { deleteMessage, editMessage } from "@/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
+import { MilkdownProvider } from "@milkdown/react";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import ReactMarkdown from "react-markdown";
@@ -68,6 +69,51 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
           group relative w-full items-center rounded-xl bg-gray-100
         `}
     >
+      {/* MESSAGE BUBBLE */}
+      <>
+        <div className="my-2 mx-2 flex flex-row gap-2">
+          {/* MESSAGE TIME */}
+          <p className="group/item w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
+            {/* DEFAULT AGO TIME */}
+            <span className="group-hover/item:hidden">
+              {getMessageTime() || <Skeleton />}
+            </span>
+            {/* HOVER TIME */}
+            <span className="hidden group-hover/item:inline">
+              {messageData.createdAt?.toDate().toDateString() +
+                " at " +
+                messageData.createdAt
+                  ?.toDate()
+                  .toLocaleTimeString()
+                  .slice(0, -3) || <Skeleton />}
+            </span>
+            {/* EDITED INDICATOR */}
+            <span className="inline text-gray-500"> - edited</span>
+          </p>
+
+          {/* EDIT BUTTON */}
+          <button
+            className="hidden w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
+            data-hs-overlay={`#edit-message-${messageData.id}`}
+          >
+            Edit
+          </button>
+
+          {/* DELETE BUTTON */}
+          <button
+            className="hidden w-fit rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
+            data-hs-overlay={`#delete-message-${messageData.id}`}
+          >
+            Delete
+          </button>
+        </div>
+        {/* MESSAGE TEXT */}
+        <ReactMarkdown className="prose prose-sm m-3 max-w-none break-all md:prose-base lg:prose-lg">
+          {messageData.text}
+        </ReactMarkdown>
+      </>
+
+      {/* DELETE MESSAGE MODAL */}
       <Modal
         title="Delete Message"
         saveButtonLabel="Delete"
@@ -108,54 +154,17 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
         }}
       >
         {isClient && channelData && (
-          <MilkdownEditor
-            input={input}
-            setInput={setInput}
-            clearSwitch={clearInput}
-            setClearSwitch={setClearInput}
-            className="prose prose-sm h-full min-w-full flex-grow overflow-y-auto rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
-          />
+          <MilkdownProvider>
+            <MilkdownEditor
+              input={input}
+              setInput={setInput}
+              clearSwitch={clearInput}
+              setClearSwitch={setClearInput}
+              className="prose prose-sm h-full min-w-full flex-grow overflow-y-auto whitespace-pre-wrap rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
+            />
+          </MilkdownProvider>
         )}
       </Modal>
-
-      <div className="my-2 mx-2 flex flex-row gap-2">
-        {/* MESSAGE TIME */}
-        <p className="group/item w-fit rounded-md bg-gray-200 py-1 px-2 text-xs font-medium text-gray-900">
-          <span className="group-hover/item:hidden">
-            {getMessageTime() || <Skeleton />}
-          </span>
-          <span className="hidden group-hover/item:inline">
-            {messageData.createdAt?.toDate().toDateString() +
-              " at " +
-              messageData.createdAt
-                ?.toDate()
-                .toLocaleTimeString()
-                .slice(0, -3) || <Skeleton />}
-          </span>
-          <span className="inline text-gray-500"> - edited</span>
-        </p>
-
-        {/* EDIT BUTTON */}
-        <button
-          className="hidden w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
-          data-hs-overlay={`#edit-message-${messageData.id}`}
-        >
-          Edit
-        </button>
-
-        {/* DELETE BUTTON */}
-        <button
-          className="hidden w-fit rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
-          data-hs-overlay={`#delete-message-${messageData.id}`}
-        >
-          Delete
-        </button>
-      </div>
-
-      {/* MESSAGE TEXT */}
-      <ReactMarkdown className="prose prose-sm m-3 max-w-none whitespace-pre-wrap md:prose-base lg:prose-lg">
-        {messageData.text}
-      </ReactMarkdown>
     </div>
   );
 };

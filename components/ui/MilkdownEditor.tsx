@@ -9,7 +9,6 @@ import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { Milkdown, useEditor } from "@milkdown/react";
-import tooltip from "@milkdown/plugin-tooltip";
 import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
 import React, { useEffect } from "react";

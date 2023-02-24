@@ -98,7 +98,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col justify-between md:p-5">
+    <div className="flex h-full w-full flex-col justify-between md:p-5 ">
       <div className="m-5 flex flex-col gap-y-1 overflow-y-auto px-2">
         {selectedChannelId &&
           messages?.map((message) => {
@@ -126,7 +126,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
                 setInput={setInput}
                 clearSwitch={clear}
                 setClearSwitch={setClear}
-                className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
+                className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto whitespace-pre-wrap rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
               />
             </MilkdownProvider>
             <Button variant="solid-black" type="submit">
