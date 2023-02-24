@@ -1,9 +1,9 @@
-import { FieldValue, Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 export interface IChannelData {
   id: string;
   userId: string;
-  createdAt?: FieldValue;
+  createdAt?: Timestamp;
   name: string;
   emoji: string;
   emojiBackground: string;

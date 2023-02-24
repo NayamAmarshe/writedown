@@ -18,6 +18,7 @@ import { createNewMessage } from "@/utils/firebaseOperations";
 import React, { FormEvent, useEffect, useState } from "react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { converter } from "@/utils/firestoreDataConverter";
+import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -97,9 +98,12 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     console.log("MESSAGE SENT");
   };
 
+  if (!channel) return <></>;
+
   return (
-    <div className="flex h-full w-full flex-col justify-between md:p-5 ">
-      <div className="m-5 flex flex-col gap-y-1 overflow-y-auto px-2">
+    <div className="flex h-full w-full flex-col justify-between">
+      <ChannelDetailsBar channel={channel} />
+      <div className="flex flex-col gap-y-1 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
           messages?.map((message) => {
             return (
