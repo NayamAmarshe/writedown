@@ -47,6 +47,14 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         collection(db, "users", user.uid, "channels"),
         orderBy("updatedAt", "desc")
       )
+      ? query(
+          collection(db, "users", user.uid, "channels"),
+          orderBy("updatedAt", "desc")
+        )
+      : query(
+          collection(db, "users", user!.uid, "channels"),
+          orderBy("createdAt", "desc")
+        )
   );
 
   const [messages, messagesLoading] = useCollectionData(
