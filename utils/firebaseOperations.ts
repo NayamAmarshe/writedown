@@ -116,9 +116,9 @@ export const createNewMessage = async (
   try {
     // Create a document inside channelsRef array
     await setDoc(messagesRef, messageData, { merge: true });
-    await updateDoc(channelRef, {
+    /*await updateDoc(channelRef, {
       updatedAt: messageData.createdAt,
-    });
+    });*/
     // await getMessagesByChannelId(channelId, userId);
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
