@@ -12,7 +12,10 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { IMessageData } from "@/types/utils/firebaseOperations";
+import {
+  IChannelEditData,
+  IMessageData,
+} from "@/types/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { collection } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
@@ -67,6 +70,7 @@ export const createChannel = async (
       {
         id: channelData.id,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         name: channelData.name,
         emoji: channelData.emoji,
         emojiBackground: channelData.emojiBackground,
@@ -107,10 +111,56 @@ export const createNewMessage = async (
     messageData.id
   );
 
+  const channelRef = doc(db, "users", userId, "channels", channelId);
+
   try {
     // Create a document inside channelsRef array
     await setDoc(messagesRef, messageData, { merge: true });
+    await updateDoc(channelRef, {
+      updatedAt: messageData.createdAt,
+    });
     // await getMessagesByChannelId(channelId, userId);
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
+};
+
+export const editChannel = async (
+  userId: string,
+  channelId: string,
+  updatedData: IChannelEditData
+) => {
+  if (!userId || !updatedData) return;
+
+  const channelRef = doc(db, "users", userId, "channels", channelId);
+  console.log(
+    "🚀 => file: firebaseOperations.ts:159 => messageRef",
+    channelRef
+  );
+
+  try {
+    await updateDoc(channelRef, {
+      name: updatedData.name,
+      emoji: updatedData.emoji,
+      emojiBackground: updatedData.emojiBackground,
+      updatedAt: serverTimestamp() as Timestamp,
+    });
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
+};
+
+export const deleteChannel = async (channelId: string, userId: string) => {
+  if (!channelId || !userId) return;
+
+  const channelRef = doc(db, "users", userId, "channels", channelId);
+  console.log(
+    "🚀 => file: firebaseOperations.ts:159 => messageRef",
+    channelRef
+  );
+
+  try {
+    await deleteDoc(channelRef);
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);
   }

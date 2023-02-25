@@ -4,12 +4,20 @@ export interface IChannelData {
   id: string;
   userId: string;
   createdAt?: Timestamp;
+  updatedAt?: Timestamp;
   name: string;
   emoji: string;
   emojiBackground: string;
   messages: IMessageData[];
   type: "private" | "public";
   slug: string;
+}
+
+export interface IChannelEditData {
+  name: string;
+  emoji: string;
+  emojiBackground: string;
+  type?: "private" | "public";
 }
 
 export interface IMessageData {
