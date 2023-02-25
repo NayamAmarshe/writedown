@@ -5,6 +5,7 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
+import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import { commonmark } from "@milkdown/preset-commonmark";
@@ -15,6 +16,7 @@ import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
 import React, { useEffect } from "react";
 import "@milkdown/theme-nord/style.css";
+import { useAtom } from "jotai";
 interface editorProps {
   channelData?: IChannelData;
   input: string;
@@ -31,6 +33,10 @@ const MilkdownEditor = ({
   setClearSwitch,
   className,
 }: editorProps) => {
+  const [selectedChannelId, setSelectedChannelId] = useAtom(
+    selectedChannelIdAtom
+  );
+
   const editor = useEditor((root) =>
     Editor.make()
       .config((ctx) => {
@@ -65,6 +71,11 @@ const MilkdownEditor = ({
     setClearSwitch(false);
   }, [clearSwitch]);
 
+  /* NOT SURE IF WE WANT THE TEXT FIELD TO RESET IF THE ACTIVE CHANNEL IS CHANGED
+useEffect(() => {
+    editor.get()?.action(replaceAll(""));
+  }, [selectedChannelId]);
+*/
   return <Milkdown />;
 };
 
