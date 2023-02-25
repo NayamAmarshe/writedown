@@ -52,7 +52,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
           orderBy("updatedAt", "desc")
         )
       : query(
-          collection(db, "users", user.uid, "channels"),
+          collection(db, "users", user!.uid, "channels"),
           orderBy("createdAt", "desc")
         )
   );
