@@ -169,6 +169,7 @@ export const editMessage = async (
   try {
     await updateDoc(messageRef, {
       text: updatedText,
+      updated: true,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);

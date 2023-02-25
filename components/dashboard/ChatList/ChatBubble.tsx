@@ -88,7 +88,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
                   .slice(0, -3) || <Skeleton />}
             </span>
             {/* EDITED INDICATOR */}
-            <span className="inline text-gray-500"> - edited</span>
+            {edited && <span className="inline text-gray-500"> - edited</span>}
           </p>
 
           {/* EDIT BUTTON */}
