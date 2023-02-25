@@ -8,10 +8,10 @@ import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IChannelData } from "@/types/utils/firebaseOperations";
+import { collection, orderBy, query } from "firebase/firestore";
 import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
@@ -42,11 +42,15 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   );
 
   const [channels, channelsLoading] = useCollectionData(
-    user && query(collection(db, "users", user.uid, "channels"))
+    user &&
+      query(
+        collection(db, "users", user.uid, "channels"),
+        orderBy("updatedAt", "desc")
+      )
   );
 
   const [messages, messagesLoading] = useCollectionData(
-    user && query(collection(db, "messages"))
+    user && query(collection(db, "messages"), orderBy("createdAt"))
   );
 
   useEffect(() => {
