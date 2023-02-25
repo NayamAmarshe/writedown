@@ -67,7 +67,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
             selectedChannelId,
             "messages"
           ),
-          orderBy("createdAt", "desc"),
+          orderBy("createdAt", "asc"),
           limit(10)
         ).withConverter(messagesConverter)
       : null,
