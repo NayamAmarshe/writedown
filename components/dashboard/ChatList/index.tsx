@@ -67,7 +67,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
             selectedChannelId,
             "messages"
           ),
-          orderBy("createdAt"),
+          orderBy("createdAt", "desc"),
           limit(10)
         ).withConverter(messagesConverter)
       : null,
@@ -102,7 +102,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <ChannelDetailsBar channel={channel} />
+      {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
       <div className="flex flex-col gap-y-1 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
           messages?.map((message) => {
