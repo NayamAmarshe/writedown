@@ -70,14 +70,14 @@ const ChannelDetailsBar = ({
           </div>
           {/* DELETE BUTTON */}
           <button
-            className="bg-red-500 text-white"
+            className="ml-6 w-fit rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
             onClick={() => deleteChannel(channel.id, userId)}
           >
             Delete
           </button>
           {/* EDIT BUTTON */}
           <button
-            className="bg-blue-500 text-white"
+            className="w-fit rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
             data-hs-overlay="#edit-channel"
           >
             Edit
