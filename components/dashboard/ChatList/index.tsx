@@ -1,14 +1,24 @@
 import {
   collection,
   doc,
+  getDocs,
   limit,
   orderBy,
   query,
+  QueryDocumentSnapshot,
   serverTimestamp,
+  startAfter,
   Timestamp,
 } from "firebase/firestore";
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import usePaginateQuery from "@/components/hooks/UsePaginateQuery";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
@@ -32,14 +42,30 @@ const messagesConverter = converter<IMessageData>();
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
   const [clear, setClear] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [selectedChannelId] = useAtom(selectedChannelIdAtom);
-  const [isClient, setIsClient] = useState(false);
-  const [lastMessage, setLastMessage] = useState<any>(null);
 
-  const queryFn = useCallback(() => {
-    if (!selectedChannelId || !user) return query(collection(db, ""));
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-    const q = query(
+  // FETCH CHANNEL DETAILS
+  const [channel] = useDocumentData(
+    selectedChannelId && user
+      ? doc(db, "users", user.uid, "channels", selectedChannelId).withConverter(
+          channelConverter
+        )
+      : null,
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
+  // FETCH MESSAGES
+  const fetchMessagesQuery = useCallback(() => {
+    if (!selectedChannelId || !user) return;
+
+    return query(
       collection(
         db,
         "users",
@@ -51,26 +77,120 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       limit(5),
       orderBy("createdAt")
     );
-
-    return q;
   }, [selectedChannelId, user]);
 
-  const { more, isLoading, data } = usePaginateQuery(queryFn);
-
-  const [channel] = useDocumentData(
-    selectedChannelId && user
-      ? doc(db, "users", user.uid, "channels", selectedChannelId)
-          .withConverter(channelConverter)
-          .withConverter(channelConverter)
-      : null,
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
+  // MESSAGES VARIABLES
+  const [messagesData, setMessagesData] = useState<IMessageData[]>([]);
+  const [messagesDataLoading, setMessagesDataLoading] = useState(false);
+  const lastMessageRef = useRef<QueryDocumentSnapshot<IMessageData> | null>(
+    null
   );
 
+  const resetMessages = () => {
+    setMessagesData([]);
+    setMessagesDataLoading(false);
+  };
+
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (!isMounted) return;
+
+    async function fetchMessages() {
+      try {
+        setMessagesDataLoading(true);
+
+        const fetchMessagesQueryFunction = fetchMessagesQuery();
+        if (!fetchMessagesQueryFunction) return;
+
+        const messagesQuery = query(fetchMessagesQueryFunction).withConverter(
+          messagesConverter
+        );
+
+        const messagesSnapshot = await getDocs(messagesQuery);
+
+        setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
+
+        lastMessageRef.current =
+          messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+
+        setMessagesDataLoading(false);
+      } catch (error) {
+        resetMessages();
+        console.log(error);
+      }
+    }
+
+    fetchMessages();
+  }, [fetchMessagesQuery, isMounted]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    async function fetchMessages() {
+      try {
+        setMessagesDataLoading(true);
+
+        const fetchMessagesQueryFunction = fetchMessagesQuery();
+        if (!fetchMessagesQueryFunction) return;
+
+        const messagesQuery = query(fetchMessagesQueryFunction).withConverter(
+          messagesConverter
+        );
+
+        const messagesSnapshot = await getDocs(messagesQuery);
+
+        setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
+
+        lastMessageRef.current =
+          messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+
+        setMessagesDataLoading(false);
+      } catch (error) {
+        resetMessages();
+        console.log(error);
+      }
+    }
+
+    fetchMessages();
+  }, [isMounted]);
+
+  const fetchMoreMessages = useCallback(async () => {
+    if (!isMounted) return;
+
+    try {
+      setMessagesDataLoading(true);
+
+      const fetchMessagesQueryFunction = fetchMessagesQuery();
+      if (!fetchMessagesQueryFunction) return;
+
+      const moreMessagesQuery = query(
+        fetchMessagesQueryFunction,
+        startAfter(lastMessageRef.current)
+      ).withConverter(messagesConverter);
+
+      const moreMessagesSnapshot = await getDocs(moreMessagesQuery);
+
+      setMessagesData([
+        ...messagesData,
+        ...moreMessagesSnapshot.docs.map((doc) => doc.data()),
+      ]);
+
+      lastMessageRef.current =
+        moreMessagesSnapshot.docs[moreMessagesSnapshot.docs.length - 1];
+
+      setMessagesDataLoading(false);
+    } catch (error) {
+      console.log("🚀 => file: index.tsx:143 => error:", error);
+      resetMessages();
+    }
+  }, [isMounted, messagesData, fetchMessagesQuery]);
+
+  const { loadMoreMessages, messagesLoading, messages } = useMemo(() => {
+    return {
+      loadMoreMessages: fetchMoreMessages,
+      messagesLoading: messagesDataLoading,
+      messages: messagesData ? messagesData : [],
+    };
+  }, [fetchMoreMessages, messagesData, messagesDataLoading]);
 
   // const [messages] = useCollectionData(
   //   user && selectedChannelId
@@ -114,23 +234,23 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     setInput("");
   };
 
+  // RENDER
   if (!channel) return <></>;
-
   return (
     <div className="flex h-full w-full flex-col justify-between">
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
       <div className="flex flex-col gap-y-1 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
-          data?.map((message) => {
+          messages.map((message) => {
             return (
               <ChatBubble
                 key={message.id}
-                messageData={message.data() as IMessageData}
+                messageData={message}
                 channelData={channel}
               />
             );
           })}
-        <button onClick={more}>Load More</button>
+        <button onClick={loadMoreMessages}>Load More</button>
       </div>
 
       {/* BOTTOM BAR */}
@@ -138,7 +258,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         className="flex flex-row items-end gap-2 p-2"
         onSubmit={messageSubmitHandler}
       >
-        {isClient && selectedChannelId && channel ? (
+        {isMounted && selectedChannelId && channel ? (
           <>
             <MilkdownProvider>
               <MilkdownEditor

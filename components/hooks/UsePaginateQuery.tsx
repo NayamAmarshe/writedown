@@ -8,7 +8,7 @@ import {
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Query } from "firebase/firestore";
 
-const usePaginateQuery = (queryFn: () => Query) => {
+const usePaginateQuery = (queryFn: () => Query, pageLoaded: boolean) => {
   const [data, setData] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const isMountedRef = useRef(false);
   const lastItemRef = useRef<any>(null);
