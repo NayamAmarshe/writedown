@@ -51,13 +51,14 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   );
 
   const [messages, messagesLoading] = useCollectionData(
-    user && query(collection(db, "messages"), orderBy("createdAt"))
+    user && query(collection(db, "messages"), orderBy("createdAt", "desc"))
   );
 
   useEffect(() => {
     if (channels && channels.length > 0) {
       setSelectedChannelId(channels[0].id);
     }
+    console.log(messages);
   }, [channels, messages]);
 
   const resetAddChannelForm = () => {
