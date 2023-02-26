@@ -16,6 +16,7 @@ import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
+import { toast } from "react-hot-toast";
 import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
@@ -47,14 +48,6 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         collection(db, "users", user.uid, "channels"),
         orderBy("updatedAt", "desc")
       )
-      ? query(
-          collection(db, "users", user.uid, "channels"),
-          orderBy("updatedAt", "desc")
-        )
-      : query(
-          collection(db, "users", user!.uid, "channels"),
-          orderBy("createdAt", "desc")
-        )
   );
 
   const [messages, messagesLoading] = useCollectionData(
@@ -75,9 +68,26 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
     setEmojiBackgroundIndex(0);
   };
 
-  if (!selectedChannelId) {
-    return <></>;
-  }
+  const saveChannelHandler = async () => {
+    if (channelName.length === 0) {
+      toast.error("Please enter a channel name");
+      return;
+    }
+
+    if (!user) return;
+
+    createChannel(user.uid, {
+      name: channelName,
+      emoji: selectEmoji.native,
+      emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
+      id: uuidv4(),
+      messages: [],
+      userId: user.uid,
+      slug: nanoid(),
+      type: "private",
+    });
+    resetAddChannelForm();
+  };
 
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden bg-gray-100 py-4">
@@ -85,21 +95,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
         title="Add New Channel"
         saveButtonLabel="Add"
         id="add-new-channel"
-        saveHandler={() => {
-          if (!user) return;
-
-          createChannel(user.uid, {
-            name: channelName,
-            emoji: selectEmoji.native,
-            emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
-            id: uuidv4(),
-            messages: [],
-            userId: user.uid,
-            slug: nanoid(),
-            type: "private",
-          });
-          resetAddChannelForm();
-        }}
+        saveHandler={saveChannelHandler}
       >
         <div className="flex flex-col gap-5">
           <EmojiSelector

@@ -8,6 +8,7 @@ interface ModalProps {
   title: string;
   saveButtonLabel?: string;
   fullscreen?: boolean;
+  disabled?: boolean;
 }
 
 const Modal = ({
@@ -17,6 +18,7 @@ const Modal = ({
   title,
   children,
   fullscreen,
+  disabled,
 }: ModalProps) => {
   return (
     <div
@@ -66,6 +68,7 @@ const Modal = ({
               variant="primary"
               onClick={saveHandler}
               data-hs-overlay={`#${id}`}
+              disabled={disabled}
             >
               {saveButtonLabel}
             </Button>
