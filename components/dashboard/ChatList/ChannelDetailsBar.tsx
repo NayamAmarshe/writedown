@@ -5,6 +5,7 @@ import EmojiSelector from "@/components/ui/EmojiSelector";
 import Skeleton from "react-loading-skeleton";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
+import { toast } from "react-hot-toast";
 import React, { useState } from "react";
 
 const ChannelDetailsBar = ({
@@ -29,6 +30,23 @@ const ChannelDetailsBar = ({
       native: "🙂",
     });
     setEmojiBackgroundIndex(0);
+  };
+
+  const saveChannelHandler = async () => {
+    if (channelName.length === 0) {
+      toast.error("Please enter a channel name");
+      return;
+    }
+
+    if (!userId) return;
+
+    editChannel(userId, channel.id, {
+      name: channelName,
+      emoji: selectEmoji.native,
+      emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
+    });
+
+    resetAddChannelForm();
   };
 
   return (
@@ -71,14 +89,8 @@ const ChannelDetailsBar = ({
         title="Edit Channel"
         saveButtonLabel="Save Changes"
         id="edit-channel"
-        saveHandler={() => {
-          editChannel(userId, channel.id, {
-            name: channelName,
-            emoji: selectEmoji.native,
-            emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
-          });
-          resetAddChannelForm();
-        }}
+        saveHandler={saveChannelHandler}
+        disabled={channelName.length === 0}
       >
         <div className="flex flex-col gap-5">
           <EmojiSelector

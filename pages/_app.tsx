@@ -1,5 +1,6 @@
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
+import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { getAuth } from "firebase/auth";
 import { useEffect } from "react";
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider>
       <Component {...pageProps} />
+      <Toaster />
     </Provider>
   );
 }

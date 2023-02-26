@@ -13,6 +13,8 @@ const Dashboard = () => {
   // AUTH STATE HOOK
   const [authUser] = useAuthState(auth, {
     onUserChanged: async (user) => {
+      console.log("🚀 => file: dashboard.tsx:16 => user:", user);
+
       if (!user) {
         router.push("/login");
         return;
@@ -25,7 +27,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen w-screen flex-row">
-      <div className=" lg:w-96">
+      <div className="lg:w-96">
         {authUser && (
           <Sidebar
             id="sidebar"
