@@ -12,6 +12,7 @@ import { converter } from "@/utils/firestoreDataConverter";
 import React, { HTMLAttributes, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import { db } from "@/lib/firebase";
+import rMd from "remove-markdown";
 
 const messagesConverter = converter<IMessageData>();
 
@@ -66,7 +67,7 @@ const ChannelCard = ({
         </div>
         {/* CHANNEL CHAT */}
         <p className="w-full truncate text-sm text-gray-400">
-          {(messages && messages[0]?.text.slice(0, 20)) || (
+          {(messages && rMd(messages[0].text.slice(0, 20))) || (
             <Skeleton className="w-5/6" />
           )}
         </p>
