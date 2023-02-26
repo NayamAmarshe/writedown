@@ -75,7 +75,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
         "messages"
       ),
       limit(5),
-      orderBy("createdAt")
+      orderBy("createdAt", "desc")
     );
   }, [selectedChannelId, user]);
 
@@ -192,28 +192,6 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     };
   }, [fetchMoreMessages, messagesData, messagesDataLoading]);
 
-  // const [messages] = useCollectionData(
-  //   user && selectedChannelId
-  //     ? query(
-  //         collection(
-  //           db,
-  //           "users",
-  //           user.uid,
-  //           "channels",
-  //           selectedChannelId,
-  //           "messages"
-  //         ),
-  //         orderBy("createdAt", "asc"),
-  //         limit(5),
-  //         startAfter(lastMessage)
-  //       ).withConverter(messagesConverter)
-  //     : null,
-  //   {
-  //     initialValue: [],
-  //     snapshotListenOptions: { includeMetadataChanges: true },
-  //   }
-  // );
-
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -239,7 +217,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
-      <div className="flex flex-col gap-y-1 overflow-y-auto px-2 pt-20">
+      <div className="flex flex-col-reverse gap-y-1 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
           messages.map((message) => {
             return (
