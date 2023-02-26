@@ -85,6 +85,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   const lastMessageRef = useRef<QueryDocumentSnapshot<IMessageData> | null>(
     null
   );
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
   const resetMessages = () => {
     setMessagesData([]);
@@ -107,10 +108,16 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
         const messagesSnapshot = await getDocs(messagesQuery);
 
-        setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
+        if (messagesSnapshot.docs.length > 0) {
+          setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
 
-        lastMessageRef.current =
-          messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+          lastMessageRef.current =
+            messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+
+          setHasMoreMessages(true);
+        } else {
+          setHasMoreMessages(false);
+        }
 
         setMessagesDataLoading(false);
       } catch (error) {
@@ -138,10 +145,16 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
         const messagesSnapshot = await getDocs(messagesQuery);
 
-        setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
+        if (messagesSnapshot.docs.length > 0) {
+          setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
 
-        lastMessageRef.current =
-          messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+          lastMessageRef.current =
+            messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
+
+          setHasMoreMessages(true);
+        } else {
+          setHasMoreMessages(false);
+        }
 
         setMessagesDataLoading(false);
       } catch (error) {
@@ -217,7 +230,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
-      <div className="flex flex-col-reverse gap-y-1 overflow-y-auto px-2 pt-20">
+      <div className="flex flex-col-reverse gap-y-2 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
           messages.map((message) => {
             return (
@@ -228,7 +241,11 @@ const ChatList = ({ user }: IFirebaseAuth) => {
               />
             );
           })}
-        <button onClick={loadMoreMessages}>Load More</button>
+        {hasMoreMessages && (
+          <Button variant="outline-gray" onClick={loadMoreMessages}>
+            Load More
+          </Button>
+        )}
       </div>
 
       {/* BOTTOM BAR */}
