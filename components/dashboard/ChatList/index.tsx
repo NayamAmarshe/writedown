@@ -82,6 +82,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   // MESSAGES VARIABLES
   const [messagesData, setMessagesData] = useState<IMessageData[]>([]);
   const [messagesDataLoading, setMessagesDataLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const lastMessageRef = useRef<QueryDocumentSnapshot<IMessageData> | null>(
     null
   );
@@ -194,26 +195,29 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmit) {
+      if (!user || !selectedChannelId) return;
 
-    if (!user || !selectedChannelId) return;
+      createNewMessage(selectedChannelId, user?.uid, {
+        id: uuidv4(),
+        text: input,
+        updated: false,
+        type: "message",
+        createdAt: serverTimestamp() as Timestamp,
+        channelId: selectedChannelId,
+        slug: nanoid(),
+        userId: user.uid,
+      });
 
-    createNewMessage(selectedChannelId, user?.uid, {
-      id: uuidv4(),
-      text: input,
-      updated: false,
-      type: "message",
-      createdAt: serverTimestamp() as Timestamp,
-      channelId: selectedChannelId,
-      slug: nanoid(),
-      userId: user.uid,
-    });
-
-    setClear(true);
-    setInput("");
+      setClear(true);
+      setInput("");
+      setIsSubmit(false);
+    }
   };
 
   // RENDER
   if (!channel) return <></>;
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
@@ -228,7 +232,9 @@ const ChatList = ({ user }: IFirebaseAuth) => {
               />
             );
           })}
-        <button onClick={loadMoreMessages}>Load More</button>
+        <button onClick={loadMoreMessages} className="select-none">
+          Load More
+        </button>
       </div>
 
       {/* BOTTOM BAR */}
@@ -245,12 +251,13 @@ const ChatList = ({ user }: IFirebaseAuth) => {
                 setInput={setInput}
                 clearSwitch={clear}
                 setClearSwitch={setClear}
-                className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto whitespace-pre-wrap rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
+                className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto whitespace-pre-wrap rounded-b-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
               />
             </MilkdownProvider>
             <Button
               variant={input.trim() === "" ? "outline-black" : "solid-black"}
               type="submit"
+              onClick={() => setIsSubmit(true)}
               disabled={input.trim() === ""}
             >
               Submit

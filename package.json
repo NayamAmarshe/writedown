@@ -23,6 +23,7 @@
     "@milkdown/react": "^7.0.0-next.6",
     "@milkdown/theme-nord": "^7.0.0-next.6",
     "@milkdown/transformer": "^7.0.0-next.6",
+    "@milkdown/utils": "^7.0.0-next.6",
     "emoji-mart": "^5.5.2",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.17.1",

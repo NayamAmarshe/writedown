@@ -91,7 +91,7 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   };
 
   return (
-    <div className="flex h-full flex-col justify-between overflow-hidden bg-gray-100 py-4">
+    <div className="flex h-full select-none flex-col justify-between overflow-hidden bg-gray-100 py-4">
       <Modal
         title="Add New Channel"
         saveButtonLabel="Add"
