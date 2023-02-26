@@ -7,15 +7,13 @@ import {
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
-import {
-  useCollectionData,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import usePaginateQuery from "@/components/hooks/UsePaginateQuery";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { createNewMessage } from "@/utils/firebaseOperations";
-import React, { FormEvent, useEffect, useState } from "react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { converter } from "@/utils/firestoreDataConverter";
 import ChannelDetailsBar from "./ChannelDetailsBar";
@@ -36,6 +34,28 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   const [clear, setClear] = useState(false);
   const [selectedChannelId] = useAtom(selectedChannelIdAtom);
   const [isClient, setIsClient] = useState(false);
+  const [lastMessage, setLastMessage] = useState<any>(null);
+
+  const queryFn = useCallback(() => {
+    if (!selectedChannelId || !user) return query(collection(db, ""));
+
+    const q = query(
+      collection(
+        db,
+        "users",
+        user.uid,
+        "channels",
+        selectedChannelId,
+        "messages"
+      ),
+      limit(5),
+      orderBy("createdAt")
+    );
+
+    return q;
+  }, [selectedChannelId, user]);
+
+  const { more, isLoading, data } = usePaginateQuery(queryFn);
 
   const [channel] = useDocumentData(
     selectedChannelId && user
@@ -49,33 +69,30 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   );
 
   useEffect(() => {
-    console.log(input);
-  }, [input]);
-
-  useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const [messages] = useCollectionData(
-    user && selectedChannelId
-      ? query(
-          collection(
-            db,
-            "users",
-            user.uid,
-            "channels",
-            selectedChannelId,
-            "messages"
-          ),
-          orderBy("createdAt", "asc"),
-          limit(10)
-        ).withConverter(messagesConverter)
-      : null,
-    {
-      initialValue: [],
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
+  // const [messages] = useCollectionData(
+  //   user && selectedChannelId
+  //     ? query(
+  //         collection(
+  //           db,
+  //           "users",
+  //           user.uid,
+  //           "channels",
+  //           selectedChannelId,
+  //           "messages"
+  //         ),
+  //         orderBy("createdAt", "asc"),
+  //         limit(5),
+  //         startAfter(lastMessage)
+  //       ).withConverter(messagesConverter)
+  //     : null,
+  //   {
+  //     initialValue: [],
+  //     snapshotListenOptions: { includeMetadataChanges: true },
+  //   }
+  // );
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,7 +112,6 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
     setClear(true);
     setInput("");
-    console.log("MESSAGE SENT");
   };
 
   if (!channel) return <></>;
@@ -105,15 +121,16 @@ const ChatList = ({ user }: IFirebaseAuth) => {
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
       <div className="flex flex-col gap-y-1 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
-          messages?.map((message) => {
+          data?.map((message) => {
             return (
               <ChatBubble
                 key={message.id}
-                messageData={message}
+                messageData={message.data() as IMessageData}
                 channelData={channel}
               />
             );
           })}
+        <button onClick={more}>Load More</button>
       </div>
 
       {/* BOTTOM BAR */}
