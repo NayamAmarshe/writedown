@@ -57,7 +57,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
 
   if (messageData.type === "info")
     return (
-      <div className="mb-5 h-fit w-fit self-center rounded-full bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500">
+      <div className="mb-5 h-fit w-fit select-text self-center rounded-full bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500">
         <p>{messageData.text}</p>
       </div>
     );
@@ -108,7 +108,7 @@ const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
           </button>
         </div>
         {/* MESSAGE TEXT */}
-        <ReactMarkdown className="prose prose-sm m-3 max-w-none break-all md:prose-base lg:prose-lg">
+        <ReactMarkdown className="prose prose-sm m-3 max-w-none select-text break-all md:prose-base lg:prose-lg">
           {messageData.text}
         </ReactMarkdown>
       </>

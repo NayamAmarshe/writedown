@@ -57,7 +57,7 @@ const ChannelCard = ({
         {channel.emoji || <Skeleton />}
       </div>
       {/* CHANNEL INFO */}
-      <div className="hidden w-full lg:flex lg:flex-col">
+      <div className={`hidden w-full lg:flex lg:flex-col`}>
         {/* CHANNEL HEADING */}
         <div className="flex w-full flex-row items-center justify-between">
           {/* CHANNEL NAME */}
