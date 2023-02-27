@@ -51,7 +51,7 @@ const ChannelDetailsBar = ({
 
   return (
     <>
-      <div className="fixed z-10 flex h-16 w-full cursor-pointer items-center bg-gray-300 bg-opacity-60 px-2 backdrop-blur-lg">
+      <div className="fixed z-10 flex h-16 w-full cursor-pointer select-none items-center bg-gray-300 bg-opacity-60 px-2 backdrop-blur-lg">
         <div className="flex items-center gap-2">
           {/* CHANNEL PIC */}
           <div
