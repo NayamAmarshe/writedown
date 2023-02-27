@@ -265,7 +265,11 @@ const ChatList = ({ user }: IFirebaseAuth) => {
                 className="prose prose-sm max-h-96 min-w-full flex-grow overflow-y-auto whitespace-pre-wrap rounded-xl border-2 border-gray-200 p-2 py-3 px-4 text-sm md:prose-base lg:prose-lg focus:border-blue-500 focus:outline-none focus:ring-blue-500 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400"
               />
             </MilkdownProvider>
-            <Button variant="solid-black" type="submit">
+            <Button
+              variant={input.trim() === "" ? "outline-black" : "solid-black"}
+              type="submit"
+              disabled={input.trim() === ""}
+            >
               Submit
             </Button>
           </>
