@@ -85,7 +85,7 @@ const Sidebar = ({
   };
 
   return (
-    <div className="flex h-full flex-col justify-between overflow-hidden bg-gray-100 py-4">
+    <div className="flex h-full select-none flex-col justify-between overflow-hidden bg-gray-100 py-4">
       <Modal
         title="Add New Channel"
         saveButtonLabel="Add"
@@ -116,16 +116,18 @@ const Sidebar = ({
       {/* TOP BAR */}
       <div className="flex w-full flex-row items-center justify-center px-2 lg:justify-between">
         {/* LOGO */}
-        <h4 className="flex flex-row items-center gap-2  pb-4 text-xl font-semibold lg:border-none lg:pb-0">
+        <h4 className="flex cursor-pointer flex-row items-center gap-2 pb-4 text-xl font-semibold lg:border-none lg:pb-0">
           <img src="/logo.svg" alt="Logo" className="w-12 lg:w-8" />
-          <span className="hidden lg:block">WriteDown</span>
+          <span className={`hidden lg:block`}>WriteDown</span>
         </h4>
       </div>
 
       {/* CHANNELS SECTION */}
       <div className="flex h-2 basis-full flex-col gap-3 p-2">
         {/* CHANNELS HEADING */}
-        <h4 className="mt-4 hidden text-sm font-medium text-gray-600 lg:block">
+        <h4
+          className={`mt-4 hidden text-sm font-medium text-gray-600 lg:block`}
+        >
           CHANNELS
         </h4>
         {/* NEW CHANNEL BUTTON */}
@@ -134,7 +136,7 @@ const Sidebar = ({
           data-hs-overlay="#add-new-channel"
         >
           <AiFillPlusCircle className="text-3xl lg:text-xl" />
-          <span className="hidden lg:block">New Channel</span>
+          <span className={`hidden lg:block`}>New Channel</span>
         </button>
 
         {/* CHANNEL LIST */}
@@ -164,7 +166,7 @@ const Sidebar = ({
       <div className="flex flex-row items-center justify-center gap-2">
         <Button variant="outline-gray" onClick={() => auth.signOut()}>
           <AiOutlineLogout className="text-xl" />
-          <span className="hidden lg:inline"> Logout</span>
+          <span className={`hidden lg:inline`}> Logout</span>
         </Button>
         {/* <AiOutlineSetting className="text-2xl" />
         <AiOutlineLogout className="text-2xl" /> */}

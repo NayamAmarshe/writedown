@@ -250,7 +250,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   // RENDER
   if (!channel) return <></>;
   return (
-    <div className="flex h-full w-full flex-col justify-between">
+    <div className="flex h-full w-full select-none flex-col justify-between">
       {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
       <div className="flex flex-col-reverse gap-y-2 overflow-y-auto px-2 pt-20">
         {selectedChannelId &&
