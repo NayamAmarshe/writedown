@@ -4,10 +4,10 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
+import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { IChannelData } from "@/types/utils/firebaseOperations";
 import { collection, orderBy, query } from "firebase/firestore";
 import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
@@ -28,9 +28,15 @@ interface SidebarProps {
   id: string;
   showSidebar: boolean;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  channels?: IChannelData[];
+  messages?: IMessageData[];
 }
 
-const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
+const Sidebar = ({
+  user,
+  channels,
+  messages,
+}: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [selectEmoji, setSelectEmoji] = useState({
@@ -40,18 +46,6 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
 
   const [selectedChannelId, setSelectedChannelId] = useAtom(
     selectedChannelIdAtom
-  );
-
-  const [channels, channelsLoading] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "channels"),
-        orderBy("updatedAt", "desc")
-      )
-  );
-
-  const [messages, messagesLoading] = useCollectionData(
-    user && query(collection(db, "messages"), orderBy("createdAt", "desc"))
   );
 
   useEffect(() => {

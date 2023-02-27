@@ -12,12 +12,18 @@ import {
 } from "firebase/firestore";
 import React, {
   FormEvent,
+  memo,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import {
+  channelConverter,
+  converter,
+  messagesConverter,
+} from "@/utils/firestoreDataConverter";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import usePaginateQuery from "@/components/hooks/UsePaginateQuery";
@@ -25,7 +31,6 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
-import { converter } from "@/utils/firestoreDataConverter";
 import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
 import Skeleton from "react-loading-skeleton";
@@ -35,9 +40,6 @@ import ChatBubble from "./ChatBubble";
 import { db } from "@/lib/firebase";
 import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
-
-const channelConverter = converter<IChannelData>();
-const messagesConverter = converter<IMessageData>();
 
 const ChatList = ({ user }: IFirebaseAuth) => {
   const [input, setInput] = useState("");
@@ -108,7 +110,12 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
         const messagesSnapshot = await getDocs(messagesQuery);
 
+        console.log(
+          "🚀 => file: index.tsx:113 => messagesSnapshot.docs.length:",
+          messagesSnapshot.docs.length
+        );
         if (messagesSnapshot.docs.length > 0) {
+          console.log("fetchMessagesQuery useEffect, more messages available");
           setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
 
           lastMessageRef.current =
@@ -116,6 +123,9 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
           setHasMoreMessages(true);
         } else {
+          console.log(
+            "fetchMessagesQuery useEffect, more messages NOT available"
+          );
           setHasMoreMessages(false);
         }
 
@@ -145,7 +155,12 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
         const messagesSnapshot = await getDocs(messagesQuery);
 
+        console.log(
+          "🚀 => file: index.tsx:156 => messagesSnapshot.docs.length:",
+          messagesSnapshot.docs.length
+        );
         if (messagesSnapshot.docs.length > 0) {
+          console.log("MOUNT useEffect, more messages available");
           setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
 
           lastMessageRef.current =
@@ -153,6 +168,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
           setHasMoreMessages(true);
         } else {
+          console.log("MOUNT useEffect, more messages NOT available");
           setHasMoreMessages(false);
         }
 
@@ -182,13 +198,19 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
       const moreMessagesSnapshot = await getDocs(moreMessagesQuery);
 
-      setMessagesData([
-        ...messagesData,
-        ...moreMessagesSnapshot.docs.map((doc) => doc.data()),
-      ]);
+      if (moreMessagesSnapshot.docs.length > 0) {
+        setHasMoreMessages(true);
 
-      lastMessageRef.current =
-        moreMessagesSnapshot.docs[moreMessagesSnapshot.docs.length - 1];
+        setMessagesData([
+          ...messagesData,
+          ...moreMessagesSnapshot.docs.map((doc) => doc.data()),
+        ]);
+
+        lastMessageRef.current =
+          moreMessagesSnapshot.docs[moreMessagesSnapshot.docs.length - 1];
+      } else {
+        setHasMoreMessages(false);
+      }
 
       setMessagesDataLoading(false);
     } catch (error) {
@@ -241,7 +263,7 @@ const ChatList = ({ user }: IFirebaseAuth) => {
               />
             );
           })}
-        {hasMoreMessages && (
+        {hasMoreMessages && messages.length >= 5 && (
           <Button variant="outline-gray" onClick={loadMoreMessages}>
             Load More
           </Button>
@@ -283,4 +305,4 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   );
 };
 
-export default ChatList;
+export default memo(ChatList);
