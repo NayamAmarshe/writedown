@@ -21,6 +21,7 @@ import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
+import router from "next/router";
 import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
 
@@ -41,6 +42,17 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   const [selectedChannelId, setSelectedChannelId] = useAtom(
     selectedChannelIdAtom
   );
+
+  // AUTH STATE HOOK
+  const [authUser] = useAuthState(auth, {
+    onUserChanged: async (user) => {
+      console.log("🚀 => file: SideBar.tsx:16 => user:", user);
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+    },
+  });
 
   const [channels, channelsLoading] = useCollectionData(
     user &&
