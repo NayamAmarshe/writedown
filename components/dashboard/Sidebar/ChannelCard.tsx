@@ -67,7 +67,7 @@ const ChannelCard = ({
         </div>
         {/* CHANNEL CHAT */}
         <p className="w-full truncate text-sm text-gray-400">
-          {(messages && rMd(messages[0].text.slice(0, 20))) || (
+          {(messages && rMd(messages[0]?.text.slice(0, 20))) || (
             <Skeleton className="w-5/6" />
           )}
         </p>
