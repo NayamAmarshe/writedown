@@ -3,6 +3,7 @@ import {
   doc,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   QueryDocumentSnapshot,
@@ -106,6 +107,13 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
         const messagesQuery = query(fetchMessagesQueryFunction).withConverter(
           messagesConverter
+        );
+
+        const messagesListener = onSnapshot(
+          messagesQuery,
+          (messagesSnapshot) => {
+            console.log(messagesSnapshot);
+          }
         );
 
         const messagesSnapshot = await getDocs(messagesQuery);
