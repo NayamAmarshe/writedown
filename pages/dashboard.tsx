@@ -9,14 +9,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
 import ChatList from "@/components/dashboard/ChatList";
 import Sidebar from "@/components/dashboard/Sidebar";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "./_app";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
+
+  const [showChatScreen, setShowChatScreen] = useState(false);
 
   // AUTH STATE HOOK
   const [user] = useAuthState(auth, {
@@ -45,9 +47,17 @@ const Dashboard = () => {
       ).withConverter(messagesConverter)
   );
 
+  useEffect(() => {
+    if (user) {
+      setShowChatScreen(true);
+    }
+  }, [user]);
+
   return (
     <div className="flex h-screen w-screen flex-row">
-      <ChatScreen channels={channels} messages={messages} user={user} />
+      {showChatScreen && (
+        <ChatScreen channels={channels} messages={messages} user={user} />
+      )}
     </div>
   );
 };
