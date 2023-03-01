@@ -15,7 +15,7 @@ const ChatScreen = ({ user, channels, messages }: ChatScreenProps) => {
 
   return (
     <>
-      <div className="lg:w-96">
+      <div className={`${user ? "" : "hidden"} lg:w-96`}>
         <Sidebar
           id="sidebar"
           showSidebar={showSidebar}
