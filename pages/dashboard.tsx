@@ -47,9 +47,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen w-screen flex-row">
-      {user && (
-        <ChatScreen channels={channels} messages={messages} user={user} />
-      )}
+      <ChatScreen channels={channels} messages={messages} user={user} />
     </div>
   );
 };
