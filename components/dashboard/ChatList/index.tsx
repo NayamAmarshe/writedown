@@ -31,6 +31,7 @@ import usePaginateQuery from "@/components/hooks/UsePaginateQuery";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { createNewMessage } from "@/utils/firebaseOperations";
+import InfiniteScroll from "react-infinite-scroll-component";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
@@ -256,12 +257,26 @@ const ChatList = ({ user }: IFirebaseAuth) => {
   };
 
   // RENDER
-  if (!channel) return <></>;
+  // if (!channel) return <Skeleton className="h-full w-full" />;
+
   return (
     <div className="flex h-full w-full select-none flex-col justify-between">
-      {user && <ChannelDetailsBar userId={user.uid} channel={channel} />}
-      <div className="flex flex-col-reverse gap-y-2 overflow-y-auto px-2 pt-20">
-        {selectedChannelId &&
+      <ChannelDetailsBar userId={user?.uid} channel={channel} />
+
+      <InfiniteScroll
+        dataLength={messages.length} //This is important field to render the next data
+        next={fetchMoreMessages}
+        hasMore={hasMoreMessages}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+        className="flex max-h-full flex-col-reverse overflow-y-auto"
+        inverse={true}
+      >
+        {selectedChannelId && messages.length > 0 ? (
           messages.map((message) => {
             return (
               <ChatBubble
@@ -270,13 +285,16 @@ const ChatList = ({ user }: IFirebaseAuth) => {
                 channelData={channel}
               />
             );
-          })}
-        {hasMoreMessages && messages.length >= 5 && (
+          })
+        ) : (
+          <Skeleton className="h-20 w-full" count={5} />
+        )}
+      </InfiniteScroll>
+      {/* {hasMoreMessages && messages.length >= 5 && (
           <Button variant="outline-gray" onClick={loadMoreMessages}>
             Load More
           </Button>
-        )}
-      </div>
+        )} */}
 
       {/* BOTTOM BAR */}
       <form

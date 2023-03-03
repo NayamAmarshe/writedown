@@ -1,3 +1,4 @@
+import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
 import { Toaster } from "react-hot-toast";
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Provider>
-      <Component {...pageProps} />
+      <SkeletonTheme baseColor="#d1d5db">
+        <Component {...pageProps} />
+      </SkeletonTheme>
       <Toaster />
     </Provider>
   );

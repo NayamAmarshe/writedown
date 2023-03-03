@@ -10,6 +10,7 @@ import { createUser } from "@/utils/firebaseOperations";
 import ChatList from "@/components/dashboard/ChatList";
 import Sidebar from "@/components/dashboard/Sidebar";
 import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { useRouter } from "next/router";
 import { db } from "@/lib/firebase";
 import { auth } from "./_app";
@@ -55,8 +56,10 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen w-screen flex-row">
-      {showChatScreen && (
+      {showChatScreen ? (
         <ChatScreen channels={channels} messages={messages} user={user} />
+      ) : (
+        <Skeleton className="h-screen w-screen" />
       )}
     </div>
   );
