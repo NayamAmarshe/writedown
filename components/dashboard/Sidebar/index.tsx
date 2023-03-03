@@ -12,7 +12,8 @@ import { collection, orderBy, query } from "firebase/firestore";
 import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
 import { useAuthState } from "react-firebase-hooks/auth";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
@@ -141,7 +142,7 @@ const Sidebar = ({
 
         {/* CHANNEL LIST */}
         <div className="flex h-full flex-col gap-5 overflow-auto">
-          {selectedChannelId &&
+          {selectedChannelId ? (
             channels?.map((item) => {
               return (
                 <ChannelCard
@@ -153,7 +154,10 @@ const Sidebar = ({
                   }}
                 />
               );
-            })}
+            })
+          ) : (
+            <Skeleton className="w-full" count={10} />
+          )}
           {selectedChannelId && channels && channels.length === 0 && (
             <p className="text-center text-gray-500">
               No Channels to show. Start by creating one 🤓
@@ -175,4 +179,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);
