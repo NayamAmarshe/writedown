@@ -66,13 +66,13 @@ const ChatList = ({ user }: IFirebaseAuth) => {
 
   // FETCH MESSAGES
   const fetchMessagesQuery = useCallback(() => {
-    if (!selectedChannelId || !user) return;
+    if (!selectedChannelId || !user || !channel) return;
 
     return query(
       collection(
         db,
         "users",
-        user.uid,
+        channel.userId,
         "channels",
         selectedChannelId,
         "messages"

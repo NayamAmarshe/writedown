@@ -59,6 +59,14 @@ export const createChannel = async (
 ) => {
   if (!userId) return;
 
+  if (channelData.type === "public") {
+    const publicRef = doc(db, "public", channelData.slug);
+    await setDoc(publicRef, {
+      channelId: channelData.id,
+      userId: channelData.userId,
+    });
+  }
+
   const channelsRef = doc(db, "users", userId, "channels", channelData.id);
   const channelsSnap = await getDoc(channelsRef);
   console.log("🚀 => file: operations.ts:54 => channelsSnap", channelsSnap);
@@ -75,6 +83,7 @@ export const createChannel = async (
         emoji: channelData.emoji,
         emojiBackground: channelData.emojiBackground,
         userId: userId,
+        type: channelData.type,
       },
       { merge: true }
     );
@@ -88,6 +97,70 @@ export const createChannel = async (
       updated: false,
       slug: channelData.slug,
       userId: userId,
+    });
+  } catch (error) {
+    console.log("🚀 => file: operations.ts:37 => error", error);
+  }
+};
+
+export const joinChannel = async (userId: string, channelId: string) => {
+  if (!userId) return;
+
+  const publicRef = doc(db, "public", channelId);
+  const publicSnap = await getDoc(publicRef);
+
+  const publicData = publicSnap.data();
+
+  if (!publicData) return;
+
+  const channelsRef = doc(
+    db,
+    "users",
+    publicData.userId,
+    "channels",
+    publicData.channelId
+  );
+  const channelsSnap = await getDoc(channelsRef);
+
+  const channelData = channelsSnap.data();
+
+  if (!channelData) return;
+
+  const selfChannelRef = doc(
+    db,
+    "users",
+    userId,
+    "channels",
+    publicData.channelId
+  );
+  const selfChannelSnap = getDoc(selfChannelRef);
+
+  try {
+    // Create a document inside channelsRef array
+    await setDoc(
+      selfChannelRef,
+      {
+        id: channelData.id,
+        createdAt: channelData.createdAt,
+        updatedAt: channelData.updatedAt,
+        name: channelData.name,
+        emoji: channelData.emoji,
+        emojiBackground: channelData.emojiBackground,
+        userId: channelData.userId,
+        type: channelData.type,
+      },
+      { merge: true }
+    );
+
+    await createNewMessage(channelData.id, userId, {
+      id: uuidv4(),
+      text: userId + " has joined!",
+      type: "info",
+      createdAt: serverTimestamp() as Timestamp,
+      channelId: channelData.id,
+      updated: false,
+      slug: channelData.slug,
+      userId: channelData.userId,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);

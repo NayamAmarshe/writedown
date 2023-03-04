@@ -5,11 +5,11 @@ import {
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import { createChannel, joinChannel } from "@/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { collection, orderBy, query } from "firebase/firestore";
-import { createChannel } from "@/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
@@ -38,6 +38,8 @@ const Sidebar = ({
   messages,
 }: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
+  const [channelId, setChannelId] = useState("");
+  const [channelPublic, setChannelPublic] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [selectEmoji, setSelectEmoji] = useState({
     native: "🙂",
@@ -61,6 +63,23 @@ const Sidebar = ({
       native: "🙂",
     });
     setEmojiBackgroundIndex(0);
+    setChannelPublic(false);
+  };
+
+  const resetJoinChannelForm = () => {
+    setChannelId("");
+  };
+
+  const joinChannelHandler = async () => {
+    if (channelId.length === 0) {
+      toast.error("Please enter a channel ID");
+      return;
+    }
+
+    if (!user) return;
+
+    joinChannel(user.uid, channelId);
+    resetAddChannelForm();
   };
 
   const saveChannelHandler = async () => {
@@ -79,9 +98,9 @@ const Sidebar = ({
       messages: [],
       userId: user.uid,
       slug: nanoid(),
-      type: "private",
+      type: channelPublic ? "public" : "private",
     });
-    resetAddChannelForm();
+    resetJoinChannelForm();
   };
 
   return (
@@ -111,6 +130,35 @@ const Sidebar = ({
               setChannelName(e.target.value);
             }}
           />
+          <Input
+            id="channel-type"
+            label="Set as public"
+            type="checkbox"
+            value="public"
+            onChange={(e) => {
+              if (e.target.checked) setChannelPublic(true);
+              else setChannelPublic(false);
+            }}
+          />
+        </div>
+      </Modal>
+      <Modal
+        title="Join Channel"
+        saveButtonLabel="Join"
+        id="join-channel"
+        saveHandler={joinChannelHandler}
+      >
+        <div className="flex flex-col gap-5">
+          <Input
+            id="channel-id"
+            label="Channel ID"
+            type="text"
+            value={channelId}
+            placeholder="Enter Channel ID"
+            onChange={(e) => {
+              setChannelId(e.target.value);
+            }}
+          />
         </div>
       </Modal>
       {/* TOP BAR */}
@@ -137,6 +185,14 @@ const Sidebar = ({
         >
           <AiFillPlusCircle className="text-3xl lg:text-xl" />
           <span className={`hidden lg:block`}>New Channel</span>
+        </button>
+
+        <button
+          className="flex flex-row items-center justify-center rounded-full bg-gray-200 p-5 md:w-full md:gap-2 lg:h-16 lg:p-2"
+          data-hs-overlay="#join-channel"
+        >
+          <AiFillPlusCircle className="text-3xl lg:text-xl" />
+          <span className={`hidden lg:block`}>Join Channel</span>
         </button>
 
         {/* CHANNEL LIST */}
