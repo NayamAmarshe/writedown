@@ -60,6 +60,8 @@ const ChatList = ({
   const [messages, setMessages] = useState<IMessageData[]>([]);
   const [lastMessage, setLastMessage] =
     useState<QueryDocumentSnapshot<IMessageData> | null>(null);
+  const [lastMessage2, setLastMessage2] =
+    useState<QueryDocumentSnapshot<IMessageData> | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
   // FETCH CHANNEL DETAILS
@@ -93,27 +95,29 @@ const ChatList = ({
         "messages"
       ),
       orderBy("createdAt", "desc"),
-      limit(2)
+      limit(3)
     ).withConverter(messagesConverter);
 
     const unsubscribeSnapshot = onSnapshot(messagesRef, (snapshot) => {
       const fetchedMessages = snapshot.docs.map((doc) => doc.data());
 
       if (!lastMessage) {
-        messageCache[selectedChannelId] = fetchedMessages;
+        //messageCache[selectedChannelId] = fetchedMessages;
         setMessageCache((prevCache) => {
           const updatedCache = { ...prevCache };
-          const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+          const updatedCacheMessages = updatedCache[selectedChannelId];
 
-          updatedCache[selectedChannelId] = [
-            ...updatedCacheMessages,
-            ...fetchedMessages,
-          ];
+          if (!updatedCacheMessages) return updatedCache;
+
+          updatedCache[selectedChannelId] = Array.from(
+            new Set(updatedCacheMessages.concat(fetchedMessages))
+          );
 
           return updatedCache;
         });
 
         setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
+        setLastMessage2(snapshot.docs[snapshot.docs.length - 1]);
       }
 
       setMessages(fetchedMessages);
@@ -139,15 +143,15 @@ const ChatList = ({
           });
 
           // REPLACE THE CACHE WITH THE UPDATED MESSAGES LIST
-          messageCache[selectedChannelId] = updatedMessages;
+          //messageCache[selectedChannelId] = updatedMessages;
           setMessageCache((prevCache) => {
             const updatedCache = { ...prevCache };
-            const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+            const updatedCacheMessages = updatedCache[selectedChannelId];
+            if (!updatedCacheMessages) return updatedCache;
 
-            updatedCache[selectedChannelId] = [
-              ...updatedCacheMessages,
-              ...updatedMessages,
-            ];
+            updatedCache[selectedChannelId] = Array.from(
+              new Set(updatedCacheMessages.concat(updatedMessages))
+            );
 
             return updatedCache;
           });
@@ -171,12 +175,12 @@ const ChatList = ({
     });
   }, [selectedChannelId, lastMessage]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     if (!selectedChannelId || !user || isFetching) return;
 
     setIsFetching(true);
 
-    const messagesRef = query(
+    const messagesRef = await query(
       collection(
         db,
         "users",
@@ -186,30 +190,30 @@ const ChatList = ({
         "messages"
       ),
       orderBy("createdAt", "desc"),
-      startAfter(lastMessage),
+      startAfter(lastMessage2),
       limit(10)
     ).withConverter(messagesConverter);
 
     onSnapshot(messagesRef, (snapshot) => {
       const newMessages = snapshot.docs.map((doc) => doc.data());
-      console.log("🚀 => file: index.tsx:171 => messages:", messages);
+      console.log("🚀 => file: index.tsx:171 => messages:", newMessages);
 
       setMessages((prevMessages) => [...prevMessages, ...newMessages]);
 
       setMessageCache((prevCache) => {
         const updatedCache = { ...prevCache };
-        const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+        const updatedCacheMessages = updatedCache[selectedChannelId];
 
-        updatedCache[selectedChannelId] = [
-          ...updatedCacheMessages,
-          ...newMessages,
-        ];
+        if (!updatedCacheMessages) return updatedCache;
+
+        updatedCache[selectedChannelId] =
+          newMessages.concat(updatedCacheMessages);
 
         return updatedCache;
       });
 
       if (snapshot.docs.length > 0)
-        setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
+        setLastMessage2(snapshot.docs[snapshot.docs.length - 1]);
     });
 
     setIsFetching(false);
