@@ -101,6 +101,18 @@ const ChatList = ({
 
       if (!lastMessage) {
         messageCache[selectedChannelId] = fetchedMessages;
+        setMessageCache((prevCache) => {
+          const updatedCache = { ...prevCache };
+          const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+
+          updatedCache[selectedChannelId] = [
+            ...updatedCacheMessages,
+            ...fetchedMessages,
+          ];
+
+          return updatedCache;
+        });
+
         setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
       }
 
@@ -128,6 +140,17 @@ const ChatList = ({
 
           // REPLACE THE CACHE WITH THE UPDATED MESSAGES LIST
           messageCache[selectedChannelId] = updatedMessages;
+          setMessageCache((prevCache) => {
+            const updatedCache = { ...prevCache };
+            const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+
+            updatedCache[selectedChannelId] = [
+              ...updatedCacheMessages,
+              ...updatedMessages,
+            ];
+
+            return updatedCache;
+          });
 
           // REPLACE THE MESSAGES STATE WITH THE UPDATED MESSAGES LIST
           setMessages(updatedMessages);
