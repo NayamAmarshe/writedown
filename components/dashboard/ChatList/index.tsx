@@ -35,6 +35,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
+import { messagesAtom } from "@/stores/messages";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import { uuidv4 } from "@firebase/util";
@@ -43,15 +44,23 @@ import { db } from "@/lib/firebase";
 import { nanoid } from "nanoid";
 import { useAtom } from "jotai";
 
-const ChatList = ({ user }: IFirebaseAuth) => {
+interface ChatListProps {
+  selectedChannelId: string | null;
+  setSelectedChannelId: (id: string | null) => void;
+}
+
+const ChatList = ({
+  user,
+  selectedChannelId,
+}: IFirebaseAuth & ChatListProps) => {
   const [input, setInput] = useState("");
   const [clear, setClear] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [selectedChannelId] = useAtom(selectedChannelIdAtom);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [messageCache, setMessageCache] = useAtom(messagesAtom);
+  const [messages, setMessages] = useState<IMessageData[]>([]);
+  const [lastMessage, setLastMessage] =
+    useState<QueryDocumentSnapshot<IMessageData> | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
   // FETCH CHANNEL DETAILS
   const [channel] = useDocumentData(
@@ -65,176 +74,107 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     }
   );
 
-  // FETCH MESSAGES
-  const fetchMessagesQuery = useCallback(() => {
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (!selectedChannelId || !user) return;
 
-    return query(
+    setIsFetching(true);
+
+    const messagesRef = query(
       collection(
         db,
         "users",
-        user.uid,
+        user?.uid,
         "channels",
         selectedChannelId,
         "messages"
       ),
-      limit(5),
-      orderBy("createdAt", "desc")
-    );
-  }, [selectedChannelId, user]);
+      orderBy("createdAt", "desc"),
+      limit(2)
+    ).withConverter(messagesConverter);
 
-  // MESSAGES VARIABLES
-  const [messagesData, setMessagesData] = useState<IMessageData[]>([]);
-  const [messagesDataLoading, setMessagesDataLoading] = useState(false);
-  const lastMessageRef = useRef<QueryDocumentSnapshot<IMessageData> | null>(
-    null
-  );
-  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+    const unsubscribeSnapshot = onSnapshot(messagesRef, (snapshot) => {
+      const fetchedMessages = snapshot.docs.map((doc) => doc.data());
 
-  const resetMessages = () => {
-    setMessagesData([]);
-    setMessagesDataLoading(false);
+      if (!lastMessage) {
+        messageCache[selectedChannelId] = fetchedMessages;
+      }
+
+      setMessages(fetchedMessages);
+    });
+
+    const unsubscribeChanges = onSnapshot(messagesRef, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          const message = change.doc.data();
+
+          const updatedMessages = messages.map((m) => {
+            if (m.id === message.id) {
+              return message;
+            }
+            return m;
+          });
+
+          messageCache[selectedChannelId] = updatedMessages;
+          setMessages(updatedMessages);
+        }
+      });
+
+      if (messageCache[selectedChannelId]) {
+        setMessages(messageCache[selectedChannelId]);
+      }
+
+      setIsFetching(false);
+
+      return () => {
+        unsubscribeSnapshot();
+        unsubscribeChanges();
+      };
+    });
+  }, [selectedChannelId, lastMessage]);
+
+  const handleLoadMore = () => {
+    if (!selectedChannelId || !user || isFetching) return;
+
+    setIsFetching(true);
+
+    const messagesRef = query(
+      collection(
+        db,
+        "users",
+        user?.uid,
+        "channels",
+        selectedChannelId,
+        "messages"
+      ),
+      orderBy("createdAt", "desc"),
+      startAfter(lastMessage),
+      limit(10)
+    ).withConverter(messagesConverter);
+
+    onSnapshot(messagesRef, (snapshot) => {
+      const messages = snapshot.docs.map((doc) => doc.data());
+      if (messageCache[selectedChannelId]) {
+        messageCache[selectedChannelId] = [
+          ...messageCache[selectedChannelId],
+          ...messages,
+        ];
+      }
+      setMessages((prevMessages) => [...prevMessages, ...messages]);
+      if (snapshot.docs.length > 0)
+        setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
+    });
+
+    setIsFetching(false);
   };
 
   useEffect(() => {
-    if (!isMounted) return;
-
-    async function fetchMessages() {
-      try {
-        setMessagesDataLoading(true);
-
-        const fetchMessagesQueryFunction = fetchMessagesQuery();
-        if (!fetchMessagesQueryFunction) return;
-
-        const messagesQuery = query(fetchMessagesQueryFunction).withConverter(
-          messagesConverter
-        );
-
-        const messagesListener = onSnapshot(
-          messagesQuery,
-          (messagesSnapshot) => {
-            console.log(messagesSnapshot);
-          }
-        );
-
-        const messagesSnapshot = await getDocs(messagesQuery);
-
-        console.log(
-          "🚀 => file: index.tsx:113 => messagesSnapshot.docs.length:",
-          messagesSnapshot.docs.length
-        );
-        if (messagesSnapshot.docs.length > 0) {
-          console.log("fetchMessagesQuery useEffect, more messages available");
-          setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
-
-          lastMessageRef.current =
-            messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
-
-          setHasMoreMessages(true);
-        } else {
-          console.log(
-            "fetchMessagesQuery useEffect, more messages NOT available"
-          );
-          setHasMoreMessages(false);
-        }
-
-        setMessagesDataLoading(false);
-      } catch (error) {
-        resetMessages();
-        console.log(error);
-      }
-    }
-
-    fetchMessages();
-  }, [fetchMessagesQuery, isMounted]);
-
-  useEffect(() => {
-    if (!isMounted) return;
-
-    async function fetchMessages() {
-      try {
-        setMessagesDataLoading(true);
-
-        const fetchMessagesQueryFunction = fetchMessagesQuery();
-        if (!fetchMessagesQueryFunction) return;
-
-        const messagesQuery = query(fetchMessagesQueryFunction).withConverter(
-          messagesConverter
-        );
-
-        const messagesSnapshot = await getDocs(messagesQuery);
-
-        console.log(
-          "🚀 => file: index.tsx:156 => messagesSnapshot.docs.length:",
-          messagesSnapshot.docs.length
-        );
-        if (messagesSnapshot.docs.length > 0) {
-          console.log("MOUNT useEffect, more messages available");
-          setMessagesData([...messagesSnapshot.docs.map((doc) => doc.data())]);
-
-          lastMessageRef.current =
-            messagesSnapshot.docs[messagesSnapshot.docs.length - 1];
-
-          setHasMoreMessages(true);
-        } else {
-          console.log("MOUNT useEffect, more messages NOT available");
-          setHasMoreMessages(false);
-        }
-
-        setMessagesDataLoading(false);
-      } catch (error) {
-        resetMessages();
-        console.log(error);
-      }
-    }
-
-    fetchMessages();
-  }, [isMounted]);
-
-  const fetchMoreMessages = useCallback(async () => {
-    if (!isMounted) return;
-
-    try {
-      setMessagesDataLoading(true);
-
-      const fetchMessagesQueryFunction = fetchMessagesQuery();
-      if (!fetchMessagesQueryFunction) return;
-
-      const moreMessagesQuery = query(
-        fetchMessagesQueryFunction,
-        startAfter(lastMessageRef.current)
-      ).withConverter(messagesConverter);
-
-      const moreMessagesSnapshot = await getDocs(moreMessagesQuery);
-
-      if (moreMessagesSnapshot.docs.length > 0) {
-        setHasMoreMessages(true);
-
-        setMessagesData([
-          ...messagesData,
-          ...moreMessagesSnapshot.docs.map((doc) => doc.data()),
-        ]);
-
-        lastMessageRef.current =
-          moreMessagesSnapshot.docs[moreMessagesSnapshot.docs.length - 1];
-      } else {
-        setHasMoreMessages(false);
-      }
-
-      setMessagesDataLoading(false);
-    } catch (error) {
-      console.log("🚀 => file: index.tsx:143 => error:", error);
-      resetMessages();
-    }
-  }, [isMounted, messagesData, fetchMessagesQuery]);
-
-  const { loadMoreMessages, messagesLoading, messages } = useMemo(() => {
-    return {
-      loadMoreMessages: fetchMoreMessages,
-      messagesLoading: messagesDataLoading,
-      messages: messagesData ? messagesData : [],
-    };
-  }, [fetchMoreMessages, messagesData, messagesDataLoading]);
+    console.log("MESSAGES", messages);
+    console.log("CACHE", messageCache);
+  }, [messages]);
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -263,45 +203,39 @@ const ChatList = ({ user }: IFirebaseAuth) => {
     <div className="flex h-full w-full select-none flex-col justify-between">
       <ChannelDetailsBar userId={user?.uid} channel={channel} />
 
-      <InfiniteScroll
-        dataLength={messages.length} //This is important field to render the next data
-        next={fetchMoreMessages}
-        hasMore={hasMoreMessages}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        }
-        className="flex max-h-full flex-col-reverse overflow-y-auto"
-        inverse={true}
-      >
-        {selectedChannelId && messages.length > 0 ? (
-          messages.map((message) => {
-            return (
-              <ChatBubble
-                key={message.id}
-                messageData={message}
-                channelData={channel}
-              />
-            );
-          })
-        ) : (
-          <Skeleton className="h-20 w-full" count={5} />
-        )}
-      </InfiniteScroll>
-      {/* {hasMoreMessages && messages.length >= 5 && (
-          <Button variant="outline-gray" onClick={loadMoreMessages}>
-            Load More
-          </Button>
-        )} */}
+      <div className="mb-auto overflow-y-auto p-2">
+        <InfiniteScroll
+          dataLength={messages.length}
+          next={handleLoadMore}
+          hasMore={true}
+          loader={<h4>Loading...</h4>}
+          className="flex flex-col gap-y-2"
+        >
+          {selectedChannelId && messages.length > 0 ? (
+            messages.map((message) => {
+              return (
+                <ChatBubble
+                  key={message.id}
+                  messageData={message}
+                  channelData={channel}
+                />
+              );
+            })
+          ) : (
+            <Skeleton className="h-20 w-full" count={5} />
+          )}
+        </InfiniteScroll>
+        <Button variant="outline-gray" onClick={handleLoadMore}>
+          Load More
+        </Button>
+      </div>
 
       {/* BOTTOM BAR */}
       <form
         className="flex flex-row items-end gap-2 p-2"
         onSubmit={messageSubmitHandler}
       >
-        {isMounted && selectedChannelId && channel ? (
+        {isMounted && (
           <>
             <MilkdownProvider>
               <MilkdownEditor
@@ -321,8 +255,6 @@ const ChatList = ({ user }: IFirebaseAuth) => {
               Submit
             </Button>
           </>
-        ) : (
-          <Skeleton className="h-full w-full" />
         )}
       </form>
 

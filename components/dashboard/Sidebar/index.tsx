@@ -31,12 +31,16 @@ interface SidebarProps {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
   channels?: IChannelData[];
   messages?: IMessageData[];
+  selectedChannelId: string | null;
+  setSelectedChannelId: (id: string | null) => void;
 }
 
 const Sidebar = ({
   user,
   channels,
   messages,
+  selectedChannelId,
+  setSelectedChannelId,
 }: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
   const [showPicker, setShowPicker] = useState(false);
@@ -44,10 +48,6 @@ const Sidebar = ({
     native: "🙂",
   });
   const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
-
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
-  );
 
   useEffect(() => {
     if (channels && channels.length > 0) {
