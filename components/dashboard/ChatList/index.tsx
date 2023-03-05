@@ -101,28 +101,40 @@ const ChatList = ({
 
       if (!lastMessage) {
         messageCache[selectedChannelId] = fetchedMessages;
+        setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
       }
 
       setMessages(fetchedMessages);
     });
 
+    // SUBSCRIBE TO CHANGES
     const unsubscribeChanges = onSnapshot(messagesRef, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
+        // WHEN NEW MESSAGE IS DETECTED
         if (change.type === "modified") {
+          // GET THE NEW MESSAGE
           const message = change.doc.data();
 
+          // LOOP THROUGH THE PRE-EXISTING MESSAGES
           const updatedMessages = messages.map((m) => {
+            // IF THE NEW MESSAGE'S ID MATCHES THE OLD MESSAGE ID
+            // PICK THE NEWER ONE
             if (m.id === message.id) {
               return message;
             }
+            // OTHERWISE, RETURN THE OLD MESSAGE
             return m;
           });
 
+          // REPLACE THE CACHE WITH THE UPDATED MESSAGES LIST
           messageCache[selectedChannelId] = updatedMessages;
+
+          // REPLACE THE MESSAGES STATE WITH THE UPDATED MESSAGES LIST
           setMessages(updatedMessages);
         }
       });
 
+      // SET THE LAST MESSAGE
       if (messageCache[selectedChannelId]) {
         setMessages(messageCache[selectedChannelId]);
       }
@@ -157,6 +169,8 @@ const ChatList = ({
 
     onSnapshot(messagesRef, (snapshot) => {
       const messages = snapshot.docs.map((doc) => doc.data());
+      console.log("🚀 => file: index.tsx:171 => messages:", messages);
+
       if (messageCache[selectedChannelId]) {
         messageCache[selectedChannelId] = [
           ...messageCache[selectedChannelId],
@@ -174,7 +188,8 @@ const ChatList = ({
   useEffect(() => {
     console.log("MESSAGES", messages);
     console.log("CACHE", messageCache);
-  }, [messages]);
+    console.log("LAST MESSAGE", lastMessage);
+  }, [messages, lastMessage]);
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -209,7 +224,7 @@ const ChatList = ({
           next={handleLoadMore}
           hasMore={true}
           loader={<h4>Loading...</h4>}
-          className="flex flex-col gap-y-2"
+          className="flex flex-col-reverse gap-y-2"
         >
           {selectedChannelId && messages.length > 0 ? (
             messages.map((message) => {
