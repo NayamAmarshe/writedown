@@ -168,16 +168,23 @@ const ChatList = ({
     ).withConverter(messagesConverter);
 
     onSnapshot(messagesRef, (snapshot) => {
-      const messages = snapshot.docs.map((doc) => doc.data());
+      const newMessages = snapshot.docs.map((doc) => doc.data());
       console.log("🚀 => file: index.tsx:171 => messages:", messages);
 
-      if (messageCache[selectedChannelId]) {
-        messageCache[selectedChannelId] = [
-          ...messageCache[selectedChannelId],
-          ...messages,
+      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+
+      setMessageCache((prevCache) => {
+        const updatedCache = { ...prevCache };
+        const updatedCacheMessages = updatedCache[selectedChannelId] || [];
+
+        updatedCache[selectedChannelId] = [
+          ...updatedCacheMessages,
+          ...newMessages,
         ];
-      }
-      setMessages((prevMessages) => [...prevMessages, ...messages]);
+
+        return updatedCache;
+      });
+
       if (snapshot.docs.length > 0)
         setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
     });
@@ -188,8 +195,8 @@ const ChatList = ({
   useEffect(() => {
     console.log("MESSAGES", messages);
     console.log("CACHE", messageCache);
-    console.log("LAST MESSAGE", lastMessage);
-  }, [messages, lastMessage]);
+    console.log("LAST MESSAGE", lastMessage?.data().id);
+  }, [messages, lastMessage, selectedChannelId]);
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
