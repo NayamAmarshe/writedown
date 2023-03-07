@@ -14,11 +14,11 @@ import {
   channelConverter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
+import React, { FormEvent, memo, useEffect, useState } from "react";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
 import { createNewMessage } from "@/utils/firebaseOperations";
-import React, { FormEvent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import ChannelDetailsBar from "./ChannelDetailsBar";
@@ -245,4 +245,4 @@ const ChatList = ({
   );
 };
 
-export default ChatList;
+export default memo(ChatList);
