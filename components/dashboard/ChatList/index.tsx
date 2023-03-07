@@ -1,7 +1,6 @@
 import {
   collection,
   doc,
-  getDocs,
   limit,
   onSnapshot,
   orderBy,
@@ -11,26 +10,15 @@ import {
   startAfter,
   Timestamp,
 } from "firebase/firestore";
-import React, {
-  FormEvent,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
 import {
   channelConverter,
-  converter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
-import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
-import usePaginateQuery from "@/components/hooks/UsePaginateQuery";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { IMessageData } from "@/types/utils/firebaseOperations";
 import { createNewMessage } from "@/utils/firebaseOperations";
+import React, { FormEvent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import ChannelDetailsBar from "./ChannelDetailsBar";
@@ -58,9 +46,8 @@ const ChatList = ({
   const [isMounted, setIsMounted] = useState(false);
   const [messageCache, setMessageCache] = useAtom(messagesAtom);
   const [messages, setMessages] = useState<IMessageData[]>([]);
+  const [hasMore, setHasMore] = useState(true);
   const [lastMessage, setLastMessage] =
-    useState<QueryDocumentSnapshot<IMessageData> | null>(null);
-  const [lastMessage2, setLastMessage2] =
     useState<QueryDocumentSnapshot<IMessageData> | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -83,9 +70,12 @@ const ChatList = ({
   useEffect(() => {
     if (!selectedChannelId || !user) return;
 
-    setIsFetching(true);
+    if (messageCache[selectedChannelId]) {
+      setMessages(messageCache[selectedChannelId]);
+    }
 
-    const messagesRef = query(
+    // Fetch messages for selected channel ID from Firestore
+    const messagesQuery = query(
       collection(
         db,
         "users",
@@ -98,89 +88,35 @@ const ChatList = ({
       limit(3)
     ).withConverter(messagesConverter);
 
-    const unsubscribeSnapshot = onSnapshot(messagesRef, (snapshot) => {
-      const fetchedMessages = snapshot.docs.map((doc) => doc.data());
+    const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
+      const newMessages = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }));
 
-      if (!lastMessage) {
-        //messageCache[selectedChannelId] = fetchedMessages;
-        setMessageCache((prevCache) => {
-          const updatedCache = { ...prevCache };
-          const updatedCacheMessages = updatedCache[selectedChannelId];
-
-          if (!updatedCacheMessages) return updatedCache;
-
-          updatedCache[selectedChannelId] = Array.from(
-            new Set(updatedCacheMessages.concat(fetchedMessages))
-          );
-
-          return updatedCache;
-        });
-
-        setLastMessage(snapshot.docs[snapshot.docs.length - 1]);
-        setLastMessage2(snapshot.docs[snapshot.docs.length - 1]);
+      if (!messageCache[selectedChannelId]) {
+        setMessageCache((prev) => ({
+          ...prev,
+          [selectedChannelId]: newMessages,
+        }));
       }
 
-      setMessages(fetchedMessages);
+      // Update messages
+      setMessages(newMessages);
+      if (querySnapshot.docs.length > 0)
+        setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
 
-    // SUBSCRIBE TO CHANGES
-    const unsubscribeChanges = onSnapshot(messagesRef, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        // WHEN NEW MESSAGE IS DETECTED
-        if (change.type === "modified") {
-          // GET THE NEW MESSAGE
-          const message = change.doc.data();
+    // Cleanup subscription on unmount or channel change
+    return () => messagesSubscription();
+  }, [selectedChannelId, setMessageCache]);
 
-          // LOOP THROUGH THE PRE-EXISTING MESSAGES
-          const updatedMessages = messages.map((m) => {
-            // IF THE NEW MESSAGE'S ID MATCHES THE OLD MESSAGE ID
-            // PICK THE NEWER ONE
-            if (m.id === message.id) {
-              return message;
-            }
-            // OTHERWISE, RETURN THE OLD MESSAGE
-            return m;
-          });
+  const handleLoadMore = () => {
+    if (!selectedChannelId || !user) return;
+    console.log("Loading more messages");
+    if (!lastMessage) return;
 
-          // REPLACE THE CACHE WITH THE UPDATED MESSAGES LIST
-          //messageCache[selectedChannelId] = updatedMessages;
-          setMessageCache((prevCache) => {
-            const updatedCache = { ...prevCache };
-            const updatedCacheMessages = updatedCache[selectedChannelId];
-            if (!updatedCacheMessages) return updatedCache;
-
-            updatedCache[selectedChannelId] = Array.from(
-              new Set(updatedCacheMessages.concat(updatedMessages))
-            );
-
-            return updatedCache;
-          });
-
-          // REPLACE THE MESSAGES STATE WITH THE UPDATED MESSAGES LIST
-          setMessages(updatedMessages);
-        }
-      });
-
-      // SET THE LAST MESSAGE
-      if (messageCache[selectedChannelId]) {
-        setMessages(messageCache[selectedChannelId]);
-      }
-
-      setIsFetching(false);
-
-      return () => {
-        unsubscribeSnapshot();
-        unsubscribeChanges();
-      };
-    });
-  }, [selectedChannelId, lastMessage]);
-
-  const handleLoadMore = async () => {
-    if (!selectedChannelId || !user || isFetching) return;
-
-    setIsFetching(true);
-
-    const messagesRef = await query(
+    // Fetch messages for selected channel ID from Firestore
+    const messagesQuery = query(
       collection(
         db,
         "users",
@@ -190,40 +126,31 @@ const ChatList = ({
         "messages"
       ),
       orderBy("createdAt", "desc"),
-      startAfter(lastMessage2),
-      limit(10)
+      startAfter(lastMessage),
+      limit(3)
     ).withConverter(messagesConverter);
 
-    onSnapshot(messagesRef, (snapshot) => {
-      const newMessages = snapshot.docs.map((doc) => doc.data());
-      console.log("🚀 => file: index.tsx:171 => messages:", newMessages);
+    const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
+      const newMessages = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }));
 
-      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+      if (!messageCache[selectedChannelId]) {
+        setMessageCache((prev) => ({
+          ...prev,
+          [selectedChannelId]: newMessages,
+        }));
+      }
 
-      setMessageCache((prevCache) => {
-        const updatedCache = { ...prevCache };
-        const updatedCacheMessages = updatedCache[selectedChannelId];
-
-        if (!updatedCacheMessages) return updatedCache;
-
-        updatedCache[selectedChannelId] =
-          newMessages.concat(updatedCacheMessages);
-
-        return updatedCache;
-      });
-
-      if (snapshot.docs.length > 0)
-        setLastMessage2(snapshot.docs[snapshot.docs.length - 1]);
+      // Update messages
+      setMessages((prev) => [...prev, ...newMessages]);
+      setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
-
-    setIsFetching(false);
   };
 
   useEffect(() => {
-    console.log("MESSAGES", messages);
-    console.log("CACHE", messageCache);
-    console.log("LAST MESSAGE", lastMessage?.data().id);
-  }, [messages, lastMessage, selectedChannelId]);
+    if (selectedChannelId) setMessages(messageCache[selectedChannelId] || []);
+  }, [messageCache, selectedChannelId]);
 
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -252,13 +179,19 @@ const ChatList = ({
     <div className="flex h-full w-full select-none flex-col justify-between">
       <ChannelDetailsBar userId={user?.uid} channel={channel} />
 
-      <div className="mb-auto overflow-y-auto p-2">
+      <div
+        className="mb-auto flex flex-col-reverse overflow-y-auto p-2"
+        id="scrollableDiv"
+      >
         <InfiniteScroll
           dataLength={messages.length}
           next={handleLoadMore}
+          inverse={true}
           hasMore={true}
           loader={<h4>Loading...</h4>}
-          className="flex flex-col-reverse gap-y-2"
+          scrollThreshold={0.2}
+          scrollableTarget="scrollableDiv"
+          className="flex flex-col-reverse gap-1"
         >
           {selectedChannelId && messages.length > 0 ? (
             messages.map((message) => {
@@ -274,9 +207,9 @@ const ChatList = ({
             <Skeleton className="h-20 w-full" count={5} />
           )}
         </InfiniteScroll>
-        <Button variant="outline-gray" onClick={handleLoadMore}>
+        {/* <Button variant="outline-gray" onClick={handleLoadMore}>
           Load More
-        </Button>
+        </Button> */}
       </div>
 
       {/* BOTTOM BAR */}
@@ -312,4 +245,4 @@ const ChatList = ({
   );
 };
 
-export default memo(ChatList);
+export default ChatList;
