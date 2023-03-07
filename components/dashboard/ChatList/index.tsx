@@ -19,8 +19,9 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
 import { createNewMessage } from "@/utils/firebaseOperations";
-import InfiniteScroll from "react-infinite-scroll-component";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
+import { useInView } from "react-intersection-observer";
+import InfiniteScroll from "react-infinite-scroller";
 import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
 import { messagesAtom } from "@/stores/messages";
@@ -50,6 +51,12 @@ const ChatList = ({
   const [lastMessage, setLastMessage] =
     useState<QueryDocumentSnapshot<IMessageData> | null>(null);
   const [isFetching, setIsFetching] = useState(false);
+
+  const { ref, inView, entry } = useInView({
+    trackVisibility: true,
+    delay: 100,
+    threshold: 0,
+  });
 
   // FETCH CHANNEL DETAILS
   const [channel] = useDocumentData(
@@ -152,6 +159,12 @@ const ChatList = ({
     if (selectedChannelId) setMessages(messageCache[selectedChannelId] || []);
   }, [messageCache, selectedChannelId]);
 
+  useEffect(() => {
+    if (inView) {
+      handleLoadMore();
+    }
+  }, [inView, handleLoadMore]);
+
   const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -180,33 +193,32 @@ const ChatList = ({
       <ChannelDetailsBar userId={user?.uid} channel={channel} />
 
       <div
-        className="mb-auto flex flex-col-reverse overflow-y-auto p-2"
+        className="m-4 mb-auto flex flex-col-reverse gap-4 overflow-y-auto p-2"
         id="scrollableDiv"
       >
-        <InfiniteScroll
-          dataLength={messages.length}
-          next={handleLoadMore}
-          inverse={true}
-          hasMore={true}
-          loader={<h4>Loading...</h4>}
-          scrollThreshold={0.2}
-          scrollableTarget="scrollableDiv"
-          className="flex flex-col-reverse gap-1"
-        >
-          {selectedChannelId && messages.length > 0 ? (
-            messages.map((message) => {
+        {selectedChannelId && messages.length > 0 ? (
+          messages.map((message) => {
+            if (messages.indexOf(message) === messages.length - 1)
               return (
-                <ChatBubble
-                  key={message.id}
-                  messageData={message}
-                  channelData={channel}
-                />
+                <div ref={ref}>
+                  <ChatBubble
+                    key={message.id}
+                    messageData={message}
+                    channelData={channel}
+                  />
+                </div>
               );
-            })
-          ) : (
-            <Skeleton className="h-20 w-full" count={5} />
-          )}
-        </InfiniteScroll>
+            return (
+              <ChatBubble
+                key={message.id}
+                messageData={message}
+                channelData={channel}
+              />
+            );
+          })
+        ) : (
+          <Skeleton className="h-20 w-full" count={5} />
+        )}
         {/* <Button variant="outline-gray" onClick={handleLoadMore}>
           Load More
         </Button> */}
