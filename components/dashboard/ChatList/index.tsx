@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getCountFromServer,
   limit,
   onSnapshot,
   orderBy,
@@ -10,18 +11,23 @@ import {
   startAfter,
   Timestamp,
 } from "firebase/firestore";
+import React, {
+  FormEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   channelConverter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
-import React, { FormEvent, memo, useEffect, useState } from "react";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useInView } from "react-intersection-observer";
-import InfiniteScroll from "react-infinite-scroller";
 import ChannelDetailsBar from "./ChannelDetailsBar";
 import { MilkdownProvider } from "@milkdown/react";
 import { messagesAtom } from "@/stores/messages";
@@ -47,15 +53,15 @@ const ChatList = ({
   const [isMounted, setIsMounted] = useState(false);
   const [messageCache, setMessageCache] = useAtom(messagesAtom);
   const [messages, setMessages] = useState<IMessageData[]>([]);
-  const [hasMore, setHasMore] = useState(true);
   const [lastMessage, setLastMessage] =
     useState<QueryDocumentSnapshot<IMessageData> | null>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
 
   const { ref, inView, entry } = useInView({
     trackVisibility: true,
     delay: 100,
-    threshold: 0,
+    threshold: 0.8,
   });
 
   // FETCH CHANNEL DETAILS
@@ -113,14 +119,35 @@ const ChatList = ({
         setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
 
-    // Cleanup subscription on unmount or channel change
-    return () => messagesSubscription();
-  }, [selectedChannelId, setMessageCache]);
+    // Fetch one more message to check if there are more messages
+    // const moreMessagesQuery = query(
+    //   collection(
+    //     db,
+    //     "users",
+    //     user?.uid,
+    //     "channels",
+    //     selectedChannelId,
+    //     "messages"
+    //   ),
+    //   orderBy("createdAt", "desc"),
+    //   startAfter(lastMessage),
+    //   limit(1)
+    // ).withConverter(messagesConverter);
 
-  const handleLoadMore = () => {
+    // const moreMessagesCount = await getCountFromServer(messagesQuery);
+
+    // Cleanup subscription on unmount or channel change
+    return () => {
+      messagesSubscription();
+      // moreMessagesSubscription();
+    };
+  }, [selectedChannelId]);
+
+  const handleLoadMore = useCallback(async () => {
     if (!selectedChannelId || !user) return;
+    if (!lastMessage || !hasMore) return;
+
     console.log("Loading more messages");
-    if (!lastMessage) return;
 
     // Fetch messages for selected channel ID from Firestore
     const messagesQuery = query(
@@ -153,7 +180,9 @@ const ChatList = ({
       setMessages((prev) => [...prev, ...newMessages]);
       setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
-  };
+
+    return () => messagesSubscription();
+  }, [lastMessage, selectedChannelId]);
 
   useEffect(() => {
     if (selectedChannelId) setMessages(messageCache[selectedChannelId] || []);
@@ -165,25 +194,28 @@ const ChatList = ({
     }
   }, [inView, handleLoadMore]);
 
-  const messageSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const messageSubmitHandler = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    if (!user || !selectedChannelId) return;
+      if (!user || !selectedChannelId) return;
 
-    createNewMessage(selectedChannelId, user?.uid, {
-      id: uuidv4(),
-      text: input,
-      updated: false,
-      type: "message",
-      createdAt: serverTimestamp() as Timestamp,
-      channelId: selectedChannelId,
-      slug: nanoid(),
-      userId: user.uid,
-    });
+      createNewMessage(selectedChannelId, user?.uid, {
+        id: uuidv4(),
+        text: input,
+        updated: false,
+        type: "message",
+        createdAt: serverTimestamp() as Timestamp,
+        channelId: selectedChannelId,
+        slug: nanoid(),
+        userId: user.uid,
+      });
 
-    setClear(true);
-    setInput("");
-  };
+      setClear(true);
+      setInput("");
+    },
+    [input, selectedChannelId, user]
+  );
 
   // RENDER
   // if (!channel) return <Skeleton className="h-full w-full" />;
@@ -192,28 +224,17 @@ const ChatList = ({
     <div className="flex h-full w-full select-none flex-col justify-between">
       <ChannelDetailsBar userId={user?.uid} channel={channel} />
 
-      <div
-        className="m-4 mb-auto flex flex-col-reverse gap-4 overflow-y-auto p-2"
-        id="scrollableDiv"
-      >
+      <div className="m-4 mb-auto flex flex-col-reverse gap-4 overflow-y-auto p-2">
         {selectedChannelId && messages.length > 0 ? (
-          messages.map((message) => {
-            if (messages.indexOf(message) === messages.length - 1)
-              return (
-                <div ref={ref}>
-                  <ChatBubble
-                    key={message.id}
-                    messageData={message}
-                    channelData={channel}
-                  />
-                </div>
-              );
+          messages.map((message, index) => {
             return (
-              <ChatBubble
+              <div
+                ref={index === messages.length - 1 ? ref : null}
                 key={message.id}
-                messageData={message}
-                channelData={channel}
-              />
+                className="flex flex-col gap-2"
+              >
+                <ChatBubble messageData={message} channelData={channel} />
+              </div>
             );
           })
         ) : (

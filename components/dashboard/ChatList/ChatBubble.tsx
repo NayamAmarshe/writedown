@@ -10,9 +10,10 @@ import Modal from "@/components/ui/Modal";
 interface ChatBubbleProps {
   messageData: IMessageData;
   channelData?: IChannelData;
+  ref?: any;
 }
 
-const ChatBubble = ({ messageData, channelData }: ChatBubbleProps) => {
+const ChatBubble = ({ messageData, channelData, ref }: ChatBubbleProps) => {
   const [edited, setEdited] = useState(messageData.updated);
   const [input, setInput] = useState(messageData.text);
   const [clearInput, setClearInput] = useState(false);
