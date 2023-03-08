@@ -93,12 +93,13 @@ const ChatList = ({
   }, []);
 
   useEffect(() => {
-    if (!selectedChannelId || !user || !channel || messages.length !== 0)
-      return;
+    if (!selectedChannelId || !user || !channel) return;
 
     if (messageCache[selectedChannelId]) {
       setMessages(messageCache[selectedChannelId]);
     }
+
+    console.log("New Message! ");
 
     // Fetch messages for selected channel ID from Firestore
     const messagesQuery = query(
@@ -157,7 +158,6 @@ const ChatList = ({
   }, [selectedChannelId, channel]);
 
   const handleLoadMore = useCallback(async () => {
-    console.log("CHNLDATA: ", channel);
     if (!selectedChannelId || !user || !channel) return;
     if (!lastMessage || !hasMore) return;
 
