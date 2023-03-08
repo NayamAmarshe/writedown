@@ -1,4 +1,8 @@
-import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import {
+  IChannelData,
+  IChatLinkData,
+  IMessageData,
+} from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import React, { useState } from "react";
 import { User } from "firebase/auth";
@@ -10,9 +14,15 @@ interface ChatScreenProps {
   user?: User | null;
   channels?: IChannelData[];
   messages?: IMessageData[];
+  chatLink?: IChatLinkData | null;
 }
 
-const ChatScreen = ({ user, channels, messages }: ChatScreenProps) => {
+const ChatScreen = ({
+  user,
+  channels,
+  messages,
+  chatLink,
+}: ChatScreenProps) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedChannelId, setSelectedChannelId] = useAtom(
     selectedChannelIdAtom
@@ -36,6 +46,7 @@ const ChatScreen = ({ user, channels, messages }: ChatScreenProps) => {
         user={user}
         selectedChannelId={selectedChannelId}
         setSelectedChannelId={setSelectedChannelId}
+        chatLink={chatLink || null}
       />
     </>
   );

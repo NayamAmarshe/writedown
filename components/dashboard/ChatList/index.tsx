@@ -22,9 +22,9 @@ import {
   channelConverter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
+import { IChatLinkData, IMessageData } from "@/types/utils/firebaseOperations";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { IMessageData } from "@/types/utils/firebaseOperations";
 import { createNewMessage } from "@/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useInView } from "react-intersection-observer";
@@ -42,11 +42,13 @@ import { useAtom } from "jotai";
 interface ChatListProps {
   selectedChannelId: string | null;
   setSelectedChannelId: (id: string | null) => void;
+  chatLink?: IChatLinkData | null;
 }
 
 const ChatList = ({
   user,
   selectedChannelId,
+  chatLink,
 }: IFirebaseAuth & ChatListProps) => {
   const [input, setInput] = useState("");
   const [clear, setClear] = useState(false);
@@ -67,9 +69,13 @@ const ChatList = ({
   // FETCH CHANNEL DETAILS
   const [channel] = useDocumentData(
     selectedChannelId && user
-      ? doc(db, "users", user.uid, "channels", selectedChannelId).withConverter(
-          channelConverter
-        )
+      ? doc(
+          db,
+          "users",
+          chatLink ? chatLink.userId : user.uid,
+          "channels",
+          chatLink ? chatLink.channelId : selectedChannelId
+        ).withConverter(channelConverter)
       : null,
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -92,9 +98,9 @@ const ChatList = ({
       collection(
         db,
         "users",
-        user?.uid,
+        chatLink ? chatLink.userId : user?.uid,
         "channels",
-        selectedChannelId,
+        chatLink ? chatLink.channelId : selectedChannelId,
         "messages"
       ),
       orderBy("createdAt", "desc"),
@@ -154,9 +160,9 @@ const ChatList = ({
       collection(
         db,
         "users",
-        user?.uid,
+        chatLink ? chatLink.userId : user?.uid,
         "channels",
-        selectedChannelId,
+        chatLink ? chatLink.channelId : selectedChannelId,
         "messages"
       ),
       orderBy("createdAt", "desc"),
