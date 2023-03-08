@@ -1,19 +1,29 @@
+import {
+  createChannel,
+  deleteChannel,
+  editChannel,
+} from "@/utils/firebaseOperations";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { deleteChannel, editChannel } from "@/utils/firebaseOperations";
 import { IChannelData } from "@/types/utils/firebaseOperations";
 import EmojiSelector from "@/components/ui/EmojiSelector";
+import { collection, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import { toast } from "react-hot-toast";
+import { uuidv4 } from "@firebase/util";
+import { db } from "@/lib/firebase";
+import { nanoid } from "nanoid";
 
 const ChannelDetailsBar = ({
   userId,
   channel,
+  homeChannel,
 }: {
   userId?: string;
   channel?: IChannelData;
+  homeChannel?: boolean | undefined;
 }) => {
   const [channelName, setChannelName] = useState<string | null>(null);
   const [showPicker, setShowPicker] = useState(false);
@@ -47,6 +57,22 @@ const ChannelDetailsBar = ({
     resetAddChannelForm();
   };
 
+  const joinHandler = async () => {
+    if (userId && channel)
+      createChannel(userId, {
+        name: channel.name,
+        emoji: channel.emoji,
+        emojiBackground: channel.emojiBackground,
+        id: channel.id,
+        messages: channel.messages,
+        userId: channel.userId,
+        slug: channel.slug,
+        type: channel.type,
+        createdAt: channel.createdAt,
+        updatedAt: channel.updatedAt,
+      });
+  };
+
   useEffect(() => {
     if (!channel) return;
 
@@ -61,7 +87,13 @@ const ChannelDetailsBar = ({
 
   return (
     <>
-      <div className="left-auto z-10 flex h-16 cursor-pointer select-none items-center justify-between bg-gray-300 bg-opacity-60 px-2 backdrop-blur-lg">
+      <div
+        className="left-auto z-10 flex h-16 cursor-pointer select-none items-center justify-between bg-gray-300 bg-opacity-60 px-2 backdrop-blur-lg"
+        onClick={() => {
+          navigator.clipboard.writeText(channel?.userId + "/" + channel?.id);
+          toast.success("Copied to Clipboard! paste after dashboard/");
+        }}
+      >
         <div className="flex items-center justify-center gap-3">
           {/* CHANNEL PIC */}
           {channel ? (
@@ -102,12 +134,25 @@ const ChannelDetailsBar = ({
             Delete
           </button>
           {/* EDIT BUTTON */}
-          <button
-            className="rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
-            data-hs-overlay="#edit-channel"
-          >
-            Edit
-          </button>
+          {!homeChannel && (
+            <button
+              className="rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
+              data-hs-overlay="#edit-channel"
+            >
+              Edit
+            </button>
+          )}
+
+          {/* JOIN BUTTON */}
+          {!homeChannel && (
+            <button
+              className="rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
+              data-hs-overlay="#join-channel"
+              onClick={joinHandler}
+            >
+              Join
+            </button>
+          )}
         </div>
       </div>
 

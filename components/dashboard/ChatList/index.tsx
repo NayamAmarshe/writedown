@@ -11,6 +11,11 @@ import {
   startAfter,
   Timestamp,
 } from "firebase/firestore";
+import {
+  IChannelData,
+  IChatLinkData,
+  IMessageData,
+} from "@/types/utils/firebaseOperations";
 import React, {
   FormEvent,
   memo,
@@ -22,7 +27,6 @@ import {
   channelConverter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
-import { IChatLinkData, IMessageData } from "@/types/utils/firebaseOperations";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { createNewMessage } from "@/utils/firebaseOperations";
@@ -42,6 +46,7 @@ import { useAtom } from "jotai";
 interface ChatListProps {
   selectedChannelId: string | null;
   setSelectedChannelId: (id: string | null) => void;
+  channels?: IChannelData[];
   chatLink?: IChatLinkData | null;
 }
 
@@ -49,6 +54,7 @@ const ChatList = ({
   user,
   selectedChannelId,
   chatLink,
+  channels,
 }: IFirebaseAuth & ChatListProps) => {
   const [input, setInput] = useState("");
   const [clear, setClear] = useState(false);
@@ -63,7 +69,7 @@ const ChatList = ({
   const { ref, inView, entry } = useInView({
     trackVisibility: true,
     delay: 100,
-    threshold: 0.8,
+    threshold: 1,
   });
 
   // FETCH CHANNEL DETAILS
@@ -87,7 +93,8 @@ const ChatList = ({
   }, []);
 
   useEffect(() => {
-    if (!selectedChannelId || !user) return;
+    if (!selectedChannelId || !user || !channel || messages.length !== 0)
+      return;
 
     if (messageCache[selectedChannelId]) {
       setMessages(messageCache[selectedChannelId]);
@@ -98,7 +105,7 @@ const ChatList = ({
       collection(
         db,
         "users",
-        chatLink ? chatLink.userId : user?.uid,
+        chatLink ? chatLink.userId : channel.userId,
         "channels",
         chatLink ? chatLink.channelId : selectedChannelId,
         "messages"
@@ -147,10 +154,11 @@ const ChatList = ({
       messagesSubscription();
       // moreMessagesSubscription();
     };
-  }, [selectedChannelId]);
+  }, [selectedChannelId, channel]);
 
   const handleLoadMore = useCallback(async () => {
-    if (!selectedChannelId || !user) return;
+    console.log("CHNLDATA: ", channel);
+    if (!selectedChannelId || !user || !channel) return;
     if (!lastMessage || !hasMore) return;
 
     console.log("Loading more messages");
@@ -160,7 +168,7 @@ const ChatList = ({
       collection(
         db,
         "users",
-        chatLink ? chatLink.userId : user?.uid,
+        chatLink ? chatLink.userId : channel.userId,
         "channels",
         chatLink ? chatLink.channelId : selectedChannelId,
         "messages"
@@ -174,6 +182,7 @@ const ChatList = ({
       const newMessages = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
       }));
+      if (newMessages.length < 3) setHasMore(false);
 
       if (!messageCache[selectedChannelId]) {
         setMessageCache((prev) => ({
@@ -181,19 +190,20 @@ const ChatList = ({
           [selectedChannelId]: newMessages,
         }));
       }
-      if (newMessages[newMessages.length - 1] === messages[messages.length - 1])
-        setHasMore(false);
 
       // Update messages
-      setMessages((prev) => [...prev, ...newMessages]);
+      setMessages((prev) => Array.from(new Set([...prev, ...newMessages])));
       setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
 
     return () => messagesSubscription();
-  }, [lastMessage, selectedChannelId]);
+  }, [lastMessage, selectedChannelId, channel]);
 
   useEffect(() => {
-    if (selectedChannelId) setMessages(messageCache[selectedChannelId] || []);
+    if (selectedChannelId) {
+      setMessages(messageCache[selectedChannelId] || []);
+      setHasMore(true);
+    }
   }, [messageCache, selectedChannelId]);
 
   useEffect(() => {
@@ -230,7 +240,11 @@ const ChatList = ({
 
   return (
     <div className="flex h-full w-full select-none flex-col justify-between">
-      <ChannelDetailsBar userId={user?.uid} channel={channel} />
+      <ChannelDetailsBar
+        userId={user?.uid}
+        channel={channel}
+        homeChannel={channels?.some((x) => x.id === chatLink?.channelId)}
+      />
 
       <div className="m-4 mb-auto flex flex-col-reverse gap-4 overflow-y-auto p-2">
         {selectedChannelId && messages.length > 0 ? (

@@ -15,6 +15,7 @@ interface ChatScreenProps {
   channels?: IChannelData[];
   messages?: IMessageData[];
   chatLink?: IChatLinkData | null;
+  setChatLink: React.Dispatch<React.SetStateAction<IChatLinkData | null>>;
 }
 
 const ChatScreen = ({
@@ -22,6 +23,7 @@ const ChatScreen = ({
   channels,
   messages,
   chatLink,
+  setChatLink,
 }: ChatScreenProps) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedChannelId, setSelectedChannelId] = useAtom(
@@ -40,11 +42,14 @@ const ChatScreen = ({
           messages={messages}
           selectedChannelId={selectedChannelId}
           setSelectedChannelId={setSelectedChannelId}
+          chatLink={chatLink || null}
+          setChatLink={setChatLink}
         />
       </div>
       <ChatList
         user={user}
         selectedChannelId={selectedChannelId}
+        channels={channels}
         setSelectedChannelId={setSelectedChannelId}
         chatLink={chatLink || null}
       />

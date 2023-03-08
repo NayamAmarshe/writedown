@@ -69,25 +69,35 @@ export const createChannel = async (
       channelsRef,
       {
         id: channelData.id,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt:
+          channelData.userId === userId
+            ? serverTimestamp()
+            : channelData.createdAt,
+        updatedAt:
+          channelData.userId === userId
+            ? serverTimestamp()
+            : channelData.updatedAt,
         name: channelData.name,
         emoji: channelData.emoji,
         emojiBackground: channelData.emojiBackground,
-        userId: userId,
+        userId: channelData.userId,
+        type: channelData.type,
       },
       { merge: true }
     );
 
     await createNewMessage(channelData.id, userId, {
       id: uuidv4(),
-      text: "New Channel Created!",
+      text:
+        channelData.userId === userId
+          ? "New Channel Created!"
+          : channelData.userId + " has joined",
       type: "info",
       createdAt: serverTimestamp() as Timestamp,
       channelId: channelData.id,
       updated: false,
       slug: channelData.slug,
-      userId: userId,
+      userId: channelData.userId === userId ? channelData.userId : userId,
     });
   } catch (error) {
     console.log("🚀 => file: operations.ts:37 => error", error);

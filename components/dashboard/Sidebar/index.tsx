@@ -1,10 +1,14 @@
 import {
+  IChannelData,
+  IChatLinkData,
+  IMessageData,
+} from "@/types/utils/firebaseOperations";
+import {
   AiFillPlusCircle,
   AiOutlineLogout,
   AiOutlineSetting,
 } from "react-icons/ai";
 import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
 import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
@@ -33,6 +37,8 @@ interface SidebarProps {
   messages?: IMessageData[];
   selectedChannelId: string | null;
   setSelectedChannelId: (id: string | null) => void;
+  chatLink?: IChatLinkData | null;
+  setChatLink: React.Dispatch<React.SetStateAction<IChatLinkData | null>>;
 }
 
 const Sidebar = ({
@@ -41,6 +47,8 @@ const Sidebar = ({
   messages,
   selectedChannelId,
   setSelectedChannelId,
+  chatLink,
+  setChatLink,
 }: SidebarProps & IFirebaseAuth) => {
   const [channelName, setChannelName] = useState("");
   const [showPicker, setShowPicker] = useState(false);
@@ -48,10 +56,15 @@ const Sidebar = ({
     native: "🙂",
   });
   const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
+  const [channelPublic, setChannelPublic] = useState(false);
 
   useEffect(() => {
     if (channels && channels.length > 0) {
-      setSelectedChannelId(channels[0].id);
+      if (chatLink && channels.find((x) => x.id === chatLink.channelId))
+        setSelectedChannelId(
+          channels[channels.findIndex((x) => x.id === chatLink.channelId)].id
+        );
+      else setSelectedChannelId(channels[0].id);
     }
     console.log(messages);
   }, [channels, messages]);
@@ -80,7 +93,7 @@ const Sidebar = ({
       messages: [],
       userId: user.uid,
       slug: nanoid(),
-      type: "private",
+      type: channelPublic ? "public" : "private",
     });
     resetAddChannelForm();
   };
@@ -110,6 +123,16 @@ const Sidebar = ({
             placeholder="Enter Channel Name"
             onChange={(e) => {
               setChannelName(e.target.value);
+            }}
+          />
+          <Input
+            id="channel-type"
+            label="Set as public"
+            type="checkbox"
+            value="public"
+            onChange={(e) => {
+              if (e.target.checked) setChannelPublic(true);
+              else setChannelPublic(false);
             }}
           />
         </div>
@@ -151,6 +174,7 @@ const Sidebar = ({
                   channel={item as IChannelData}
                   onClick={() => {
                     setSelectedChannelId(item.id);
+                    setChatLink(null);
                   }}
                 />
               );
