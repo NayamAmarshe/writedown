@@ -175,6 +175,8 @@ const ChatList = ({
           [selectedChannelId]: newMessages,
         }));
       }
+      if (newMessages[newMessages.length - 1] === messages[messages.length - 1])
+        setHasMore(false);
 
       // Update messages
       setMessages((prev) => [...prev, ...newMessages]);
