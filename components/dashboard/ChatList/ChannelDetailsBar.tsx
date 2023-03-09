@@ -124,17 +124,19 @@ const ChannelDetailsBar = ({
         {/* CHANNEL ACTIONS */}
         <div className="flex flex-row gap-2">
           {/* DELETE BUTTON */}
-          <button
-            className="rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
-            onClick={() => {
-              if (!userId || !channel) return;
-              deleteChannel(channel.id, userId);
-            }}
-          >
-            Delete
-          </button>
+          {homeChannel && (
+            <button
+              className="rounded-md bg-red-200 py-1 px-2 text-xs font-medium text-red-900 group-hover:block"
+              onClick={() => {
+                if (!userId || !channel) return;
+                deleteChannel(channel.id, userId);
+              }}
+            >
+              Delete
+            </button>
+          )}
           {/* EDIT BUTTON */}
-          {!homeChannel && (
+          {homeChannel && (
             <button
               className="rounded-md bg-green-200 py-1 px-2 text-xs font-medium text-green-900 group-hover:block"
               data-hs-overlay="#edit-channel"

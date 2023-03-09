@@ -60,7 +60,7 @@ const Sidebar = ({
 
   useEffect(() => {
     if (channels && channels.length > 0) {
-      if (chatLink && channels.find((x) => x.id === chatLink.channelId))
+      if (chatLink && channels.some((x) => x.id === chatLink.channelId))
         setSelectedChannelId(
           channels[channels.findIndex((x) => x.id === chatLink.channelId)].id
         );

@@ -159,6 +159,7 @@ const ChatList = ({
 
   const handleLoadMore = useCallback(async () => {
     if (!selectedChannelId || !user || !channel) return;
+
     if (!lastMessage || !hasMore) return;
 
     console.log("Loading more messages");
@@ -175,7 +176,7 @@ const ChatList = ({
       ),
       orderBy("createdAt", "desc"),
       startAfter(lastMessage),
-      limit(3)
+      limit(10)
     ).withConverter(messagesConverter);
 
     const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
@@ -207,10 +208,8 @@ const ChatList = ({
   }, [messageCache, selectedChannelId]);
 
   useEffect(() => {
-    if (inView) {
-      handleLoadMore();
-    }
-  }, [inView, handleLoadMore]);
+    if (inView) handleLoadMore();
+  }, [inView]);
 
   const messageSubmitHandler = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -243,7 +242,9 @@ const ChatList = ({
       <ChannelDetailsBar
         userId={user?.uid}
         channel={channel}
-        homeChannel={channels?.some((x) => x.id === chatLink?.channelId)}
+        homeChannel={
+          chatLink ? channels?.some((x) => x.id === chatLink.channelId) : true
+        }
       />
 
       <div className="m-4 mb-auto flex flex-col-reverse gap-4 overflow-y-auto p-2">
