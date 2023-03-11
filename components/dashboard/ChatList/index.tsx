@@ -90,16 +90,10 @@ const ChatList = ({
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+  }, [selectedChannelId]);
 
   useEffect(() => {
     if (!selectedChannelId || !user || !channel) return;
-
-    if (messageCache[selectedChannelId]) {
-      setMessages(messageCache[selectedChannelId]);
-    }
-
-    console.log("New Message! ");
 
     // Fetch messages for selected channel ID from Firestore
     const messagesQuery = query(
@@ -115,6 +109,8 @@ const ChatList = ({
       limit(3)
     ).withConverter(messagesConverter);
 
+    console.log("New Message! ");
+
     const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
       const newMessages = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -125,10 +121,25 @@ const ChatList = ({
           ...prev,
           [selectedChannelId]: newMessages,
         }));
-      }
+        setMessages(newMessages);
+      } else {
+        setMessageCache((prev) => ({
+          ...prev,
+          [selectedChannelId]: [
+            ...newMessages,
+            ...prev[selectedChannelId],
+          ].filter(
+            (value, index, self) =>
+              index === self.findIndex((t) => t.id === value.id)
+          ),
+        }));
 
-      // Update messages
-      setMessages(newMessages);
+        setMessages(messageCache[selectedChannelId]);
+        console.log(
+          "messageCache[selectedChannelId]: ",
+          messageCache[selectedChannelId]
+        );
+      }
       if (querySnapshot.docs.length > 0)
         setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
@@ -158,9 +169,8 @@ const ChatList = ({
   }, [selectedChannelId, channel]);
 
   const handleLoadMore = useCallback(async () => {
-    if (!selectedChannelId || !user || !channel) return;
-
-    if (!lastMessage || !hasMore) return;
+    if (!selectedChannelId || !user || !channel || !lastMessage || !hasMore)
+      return;
 
     console.log("Loading more messages");
 
@@ -183,22 +193,26 @@ const ChatList = ({
       const newMessages = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
       }));
-      if (newMessages.length < 3) setHasMore(false);
+      if (newMessages.length < 10) setHasMore(false);
 
-      if (!messageCache[selectedChannelId]) {
-        setMessageCache((prev) => ({
-          ...prev,
-          [selectedChannelId]: newMessages,
-        }));
-      }
+      setMessageCache((prev) => ({
+        ...prev,
+        [selectedChannelId]: [
+          ...prev[selectedChannelId],
+          ...newMessages,
+        ].filter(
+          (value, index, self) =>
+            index === self.findIndex((t) => t.id === value.id)
+        ),
+      }));
 
       // Update messages
-      setMessages((prev) => Array.from(new Set([...prev, ...newMessages])));
+      setMessages(messageCache[selectedChannelId]);
       setLastMessage(querySnapshot.docs[querySnapshot.docs.length - 1]);
     });
 
     return () => messagesSubscription();
-  }, [lastMessage, selectedChannelId, channel]);
+  }, [inView, selectedChannelId, channel]);
 
   useEffect(() => {
     if (selectedChannelId) {
@@ -208,7 +222,10 @@ const ChatList = ({
   }, [messageCache, selectedChannelId]);
 
   useEffect(() => {
-    if (inView) handleLoadMore();
+    console.log(inView);
+    if (inView) {
+      handleLoadMore();
+    }
   }, [inView]);
 
   const messageSubmitHandler = useCallback(
