@@ -20,6 +20,11 @@ export interface IChannelEditData {
   type?: "private" | "public";
 }
 
+export interface IChatLinkData {
+  userId: string;
+  channelId: string;
+}
+
 export interface IMessageData {
   id: string;
   createdAt?: Timestamp;
