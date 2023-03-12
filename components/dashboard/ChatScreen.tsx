@@ -1,8 +1,10 @@
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import React, { memo, useState } from "react";
+import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import React, { useState } from "react";
 import { User } from "firebase/auth";
 import ChatList from "./ChatList";
 import Sidebar from "./Sidebar";
+import { useAtom } from "jotai";
 
 interface ChatScreenProps {
   user?: User | null;
@@ -12,6 +14,9 @@ interface ChatScreenProps {
 
 const ChatScreen = ({ user, channels, messages }: ChatScreenProps) => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [selectedChannelId, setSelectedChannelId] = useAtom(
+    selectedChannelIdAtom
+  );
 
   return (
     <>
@@ -23,11 +28,17 @@ const ChatScreen = ({ user, channels, messages }: ChatScreenProps) => {
           user={user}
           channels={channels}
           messages={messages}
+          selectedChannelId={selectedChannelId}
+          setSelectedChannelId={setSelectedChannelId}
         />
       </div>
-      <ChatList user={user} />
+      <ChatList
+        user={user}
+        selectedChannelId={selectedChannelId}
+        setSelectedChannelId={setSelectedChannelId}
+      />
     </>
   );
 };
 
-export default memo(ChatScreen);
+export default ChatScreen;
