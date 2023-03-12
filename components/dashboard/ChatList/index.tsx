@@ -22,6 +22,7 @@ import {
   channelConverter,
   messagesConverter,
 } from "@/utils/firestoreDataConverter";
+import { CHAT_MESSAGES_PAGE_SIZE } from "@/constants/chat-settings";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { IMessageData } from "@/types/utils/firebaseOperations";
@@ -56,9 +57,8 @@ const ChatList = ({
   const [lastMessage, setLastMessage] =
     useState<QueryDocumentSnapshot<IMessageData> | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
 
-  const { ref, inView, entry } = useInView({
+  const { ref, inView } = useInView({
     trackVisibility: true,
     delay: 100,
     threshold: 0.8,
@@ -83,7 +83,7 @@ const ChatList = ({
   useEffect(() => {
     if (!selectedChannelId || !user) return;
 
-    if (messageCache[selectedChannelId]) {
+    if (messageCache[selectedChannelId]?.length > messages.length) {
       setMessages(messageCache[selectedChannelId]);
     }
 
@@ -98,13 +98,15 @@ const ChatList = ({
         "messages"
       ),
       orderBy("createdAt", "desc"),
-      limit(3)
+      limit(CHAT_MESSAGES_PAGE_SIZE)
     ).withConverter(messagesConverter);
 
     const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
       const newMessages = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
       }));
+
+      if (newMessages.length !== 0) setHasMore(true);
 
       if (!messageCache[selectedChannelId]) {
         setMessageCache((prev) => ({
@@ -143,11 +145,16 @@ const ChatList = ({
     };
   }, [selectedChannelId]);
 
+  useEffect(() => {
+    console.log("Messages useEffect:", messages);
+  }, [messages]);
+
   const handleLoadMore = useCallback(async () => {
     if (!selectedChannelId || !user) return;
     if (!lastMessage || !hasMore) return;
 
     console.log("Loading more messages");
+    console.log("Message Cache:", messageCache);
 
     // Fetch messages for selected channel ID from Firestore
     const messagesQuery = query(
@@ -161,7 +168,7 @@ const ChatList = ({
       ),
       orderBy("createdAt", "desc"),
       startAfter(lastMessage),
-      limit(3)
+      limit(CHAT_MESSAGES_PAGE_SIZE)
     ).withConverter(messagesConverter);
 
     const messagesSubscription = onSnapshot(messagesQuery, (querySnapshot) => {
@@ -169,14 +176,36 @@ const ChatList = ({
         ...doc.data(),
       }));
 
-      if (!messageCache[selectedChannelId]) {
+      if (newMessages.length < CHAT_MESSAGES_PAGE_SIZE) setHasMore(false);
+      if (newMessages.length === 0) return;
+
+      const mergedMessages: IMessageData[] = [];
+
+      if (!(selectedChannelId in messageCache)) {
         setMessageCache((prev) => ({
           ...prev,
-          [selectedChannelId]: newMessages,
+          [selectedChannelId]: [...newMessages],
+        }));
+      } else {
+        console.log("CHANNEL DATA EXISTS", messageCache, newMessages);
+
+        const messageCacheIdSet = new Set(
+          messageCache[selectedChannelId].map((m) => m.id)
+        );
+
+        for (let i = 0; i < newMessages.length; i++) {
+          if (!messageCacheIdSet.has(newMessages[i].id)) {
+            mergedMessages.push(newMessages[i]);
+          }
+        }
+
+        setMessageCache((prev) => ({
+          ...prev,
+          [selectedChannelId]: [...mergedMessages, ...prev[selectedChannelId]],
         }));
       }
-      if (newMessages[newMessages.length - 1] === messages[messages.length - 1])
-        setHasMore(false);
+
+      if (newMessages.length < CHAT_MESSAGES_PAGE_SIZE) setHasMore(false);
 
       // Update messages
       setMessages((prev) => [...prev, ...newMessages]);
@@ -185,10 +214,6 @@ const ChatList = ({
 
     return () => messagesSubscription();
   }, [lastMessage, selectedChannelId]);
-
-  useEffect(() => {
-    if (selectedChannelId) setMessages(messageCache[selectedChannelId] || []);
-  }, [messageCache, selectedChannelId]);
 
   useEffect(() => {
     if (inView) {
