@@ -3,6 +3,7 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
+import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -37,6 +38,7 @@ const Dashboard = () => {
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       />
+      <TextArea shiftLeft={showSidebar} />
     </div>
   );
 };
