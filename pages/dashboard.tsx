@@ -31,7 +31,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900">
+    <div className="max-w-screen flex h-screen max-h-screen flex-row bg-slate-200 p-5 text-gray-900">
       <Sidebar
         user={user}
         showSidebar={showSidebar}
