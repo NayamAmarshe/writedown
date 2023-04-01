@@ -1,7 +1,9 @@
+import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import XCircle from "@/components/icons/XCircle";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -13,7 +15,11 @@ interface SidebarProps {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
+const Sidebar = ({
+  user,
+  showSidebar,
+  setShowSidebar,
+}: SidebarProps & IFirebaseAuth) => {
   const [notes] = useCollectionData(
     user &&
       query(
@@ -27,7 +33,14 @@ const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   };
 
   return (
-    <aside className="m-10 flex w-96 flex-col gap-5 rounded-xl bg-white p-4">
+    <aside className="relative flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4">
+      <button
+        onClick={() => setShowSidebar(!showSidebar)}
+        className="absolute top-1/2 -right-5 z-10 rounded-full bg-white p-3 shadow-lg shadow-slate-400/40"
+      >
+        <ChevronDoubleLeft className="h-5 w-5" />
+      </button>
+
       {user ? (
         <h4 className="text-xl font-semibold text-slate-500">
           Hi there, <span className="text-slate-900">{user?.displayName}</span>
