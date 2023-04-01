@@ -18,7 +18,7 @@ const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
 
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // AUTH STATE HOOK
   const [user] = useAuthState(auth, {
