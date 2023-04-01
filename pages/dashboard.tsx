@@ -17,7 +17,7 @@ const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
 
-  const [showNewPostModal, setShowNewPostModal] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   // AUTH STATE HOOK
   const [user] = useAuthState(auth, {
@@ -30,21 +30,13 @@ const Dashboard = () => {
     },
   });
 
-  const [notes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "notes"),
-        orderBy("createdAt", "desc")
-      ).withConverter(notesConverter)
-  );
-
-  const newPostClickHandler = () => {
-    setShowNewPostModal(true);
-  };
-
   return (
     <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900">
-      <Sidebar user={user} />
+      <Sidebar
+        user={user}
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+      />
     </div>
   );
 };

@@ -1,65 +1,26 @@
-import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { notesConverter } from "@/utils/firestoreDataConverter";
+import { collection, orderBy, query } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import React, { memo } from "react";
+import { db } from "@/lib/firebase";
+import React from "react";
 
 interface SidebarProps {
-  id: string;
-  // showSidebar: boolean;
-  // setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  // channels?: IChannelData[];
-  // messages?: IMessageData[];
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
-  // const [channelName, setChannelName] = useState("");
-  // const [showPicker, setShowPicker] = useState(false);
-  // const [selectEmoji, setSelectEmoji] = useState({
-  //   native: "🙂",
-  // });
-  // const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
-
-  // const [selectedChannelId, setSelectedChannelId] = useAtom(
-  //   selectedChannelIdAtom
-  // );
-
-  // useEffect(() => {
-  //   if (channels && channels.length > 0) {
-  //     setSelectedChannelId(channels[0].id);
-  //   }
-  //   console.log(messages);
-  // }, [channels, messages]);
-
-  // const resetAddChannelForm = () => {
-  //   setChannelName("");
-  //   setSelectEmoji({
-  //     native: "🙂",
-  //   });
-  //   setEmojiBackgroundIndex(0);
-  // };
-
-  // const saveChannelHandler = async () => {
-  //   if (channelName.length === 0) {
-  //     toast.error("Please enter a channel name");
-  //     return;
-  //   }
-
-  //   if (!user) return;
-
-  //   createChannel(user.uid, {
-  //     name: channelName,
-  //     emoji: selectEmoji.native,
-  //     emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
-  //     id: uuidv4(),
-  //     messages: [],
-  //     userId: user.uid,
-  //     slug: nanoid(),
-  //     type: "private",
-  //   });
-  //   resetAddChannelForm();
-  // };
+  const [notes] = useCollectionData(
+    user &&
+      query(
+        collection(db, "notes"),
+        orderBy("createdAt", "desc")
+      ).withConverter(notesConverter)
+  );
 
   const newPostClickHandler = () => {
     console.log("new post");
