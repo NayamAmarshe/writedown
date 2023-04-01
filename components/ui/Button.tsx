@@ -28,7 +28,7 @@ const Button = ({
   const getButtonClass = () => {
     switch (variant) {
       case "primary":
-        return "inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-blue-500 py-4 px-4 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800";
+        return "inline-flex items-center justify-center px-5 py-2.5 bg-white border rounded-full border-gray-900 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-all duration-300";
       case "solid":
         return "py-4 px-4 inline-flex justify-center items-center gap-2 rounded-full border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800";
       case "outline":

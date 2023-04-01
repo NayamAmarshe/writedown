@@ -31,3 +31,14 @@ export interface IMessageData {
   type: "info" | "message";
   slug: string;
 }
+
+export type TNotesData = {
+  id: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+  title: string;
+  content: string;
+  userId: string;
+  slug: string;
+  public: boolean;
+};

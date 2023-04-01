@@ -1,25 +1,17 @@
-import {
-  channelConverter,
-  messagesConverter,
-} from "@/utils/firestoreDataConverter";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
-import ChatScreen from "@/components/dashboard/ChatScreen";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
-import ChatList from "@/components/dashboard/ChatList";
-import Sidebar from "@/components/dashboard/Sidebar";
-import React, { useEffect, useState } from "react";
-import Skeleton from "react-loading-skeleton";
+import Button from "@/components/ui/Button";
 import { useRouter } from "next/router";
 import { db } from "@/lib/firebase";
 import { auth } from "./_app";
+import React from "react";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
-
-  const [showChatScreen, setShowChatScreen] = useState(false);
 
   // AUTH STATE HOOK
   const [user] = useAuthState(auth, {
@@ -32,35 +24,33 @@ const Dashboard = () => {
     },
   });
 
-  const [channels] = useCollectionData(
+  const [notes] = useCollectionData(
     user &&
       query(
-        collection(db, "users", user.uid, "channels"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(channelConverter)
-  );
-
-  const [messages] = useCollectionData(
-    user &&
-      query(
-        collection(db, "messages"),
+        collection(db, "notes"),
         orderBy("createdAt", "desc")
-      ).withConverter(messagesConverter)
+      ).withConverter(notesConverter)
   );
-
-  useEffect(() => {
-    if (user) {
-      setShowChatScreen(true);
-    }
-  }, [user]);
 
   return (
-    <div className="flex h-screen w-screen flex-row">
-      {showChatScreen ? (
-        <ChatScreen channels={channels} messages={messages} user={user} />
-      ) : (
-        <Skeleton className="h-screen w-screen" />
-      )}
+    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900">
+      <aside className="m-10 flex w-96 flex-col gap-10 rounded-xl bg-white p-5">
+        {user && (
+          <h4 className="text-xl font-semibold text-slate-500">
+            Hi there,{" "}
+            <span className="text-slate-900">{user?.displayName}</span>
+          </h4>
+        )}
+
+        <div className="">
+          <Button variant="primary">New Post</Button>
+          <div>
+            {notes?.map((note) => (
+              <div key={note.id}>{note.title}</div>
+            ))}
+          </div>
+        </div>
+      </aside>
     </div>
   );
 };
