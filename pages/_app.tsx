@@ -1,3 +1,4 @@
+import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
 import { Toaster } from "react-hot-toast";
@@ -13,7 +14,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider>
       {/* EXTRA DIV IS BECAUSE OF TOAST */}
       <Toaster />
-      <Component {...pageProps} />
+      <SkeletonTheme
+        baseColor="#e2e8f0"
+        highlightColor="#f8fafc"
+        borderRadius={10}
+      >
+        <Component {...pageProps} />
+      </SkeletonTheme>
     </Provider>
   );
 }

@@ -17,6 +17,7 @@ import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
+import Badge from "@/components/ui/Badge";
 import { toast } from "react-hot-toast";
 import { uuidv4 } from "@firebase/util";
 import ChannelCard from "./ChannelCard";
@@ -85,97 +86,88 @@ const Sidebar = ({
     resetAddChannelForm();
   };
 
+  const newPostClickHandler = () => {};
+
   return (
-    <div className="flex h-full select-none flex-col justify-between overflow-hidden bg-gray-100 py-4">
-      <Modal
-        title="Add New Channel"
-        saveButtonLabel="Add"
-        id="add-new-channel"
-        saveHandler={saveChannelHandler}
-      >
-        <div className="flex flex-col gap-5">
-          <EmojiSelector
-            showPicker={showPicker}
-            setShowPicker={setShowPicker}
-            selectEmoji={selectEmoji}
-            setSelectEmoji={setSelectEmoji}
-            emojiBackgroundIndex={emojiBackgroundIndex}
-            setEmojiBackgroundIndex={setEmojiBackgroundIndex}
-          />
-          <Input
-            id="channel-name"
-            label="Channel Name"
-            type="text"
-            value={channelName}
-            placeholder="Enter Channel Name"
-            onChange={(e) => {
-              setChannelName(e.target.value);
-            }}
-          />
-        </div>
-      </Modal>
-      {/* TOP BAR */}
-      <div className="flex w-full flex-row items-center justify-center px-2 lg:justify-between">
-        {/* LOGO */}
-        <h4 className="flex cursor-pointer flex-row items-center gap-2 pb-4 text-xl font-semibold lg:border-none lg:pb-0">
-          <img src="/logo.svg" alt="Logo" className="w-12 lg:w-8" />
-          <span className={`hidden lg:block`}>WriteDown</span>
+    <aside className="m-10 flex w-96 flex-col gap-5 rounded-xl bg-white p-4">
+      {user ? (
+        <h4 className="text-xl font-semibold text-slate-500">
+          Hi there, <span className="text-slate-900">{user?.displayName}</span>
         </h4>
-      </div>
+      ) : (
+        <Skeleton className="h-6 w-2/3" />
+      )}
 
-      {/* CHANNELS SECTION */}
-      <div className="flex h-2 basis-full flex-col gap-3 p-2">
-        {/* CHANNELS HEADING */}
-        <h4
-          className={`mt-4 hidden text-sm font-medium text-gray-600 lg:block`}
-        >
-          CHANNELS
-        </h4>
-        {/* NEW CHANNEL BUTTON */}
-        <button
-          className="flex flex-row items-center justify-center rounded-full bg-gray-200 p-5 md:w-full md:gap-2 lg:h-16 lg:p-2"
-          data-hs-overlay="#add-new-channel"
-        >
-          <AiFillPlusCircle className="text-3xl lg:text-xl" />
-          <span className={`hidden lg:block`}>New Channel</span>
-        </button>
+      <Button onClick={newPostClickHandler}>Create New Post</Button>
 
-        {/* CHANNEL LIST */}
-        <div className="flex h-full flex-col gap-5 overflow-auto">
-          {selectedChannelId ? (
-            channels?.map((item) => {
-              return (
-                <ChannelCard
-                  key={item.id}
-                  highlight={selectedChannelId === item.id}
-                  channel={item as IChannelData}
-                  onClick={() => {
-                    setSelectedChannelId(item.id);
-                  }}
-                />
-              );
-            })
-          ) : (
-            <Skeleton className="w-full" count={10} />
-          )}
-          {selectedChannelId && channels && channels.length === 0 && (
-            <p className="text-center text-gray-500">
-              No Channels to show. Start by creating one 🤓
-            </p>
-          )}
+      <div className="flex flex-col gap-3">
+        <h6 className="font-semibold">Posts</h6>
+        <div className="flex flex-col gap-2">
+          {/* {notes?.map((note) => (
+              <div key={note.id}>{note.title}</div>
+            ))} */}
+          <div className="flex flex-col gap-2 rounded-xl bg-slate-50 p-4">
+            <h6 className="font-medium">My first post 🚀</h6>
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-slate-600">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor,
+                possimus...
+              </p>
+              <div className="flex flex-row flex-wrap gap-1">
+                <Badge color="yellow">UI</Badge>
+                <Badge color="green">Development</Badge>
+                <Badge color="red">UX</Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 rounded-xl border-2 border-slate-300 bg-slate-200 p-4">
+            <h6 className="font-medium">My first post 🚀</h6>
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-slate-600">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor,
+                possimus...
+              </p>
+              <div className="flex flex-row flex-wrap gap-1">
+                <Badge color="yellow">UI</Badge>
+                <Badge color="green">Development</Badge>
+                <Badge color="red">UX</Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 rounded-xl bg-slate-50 p-4">
+            <h6 className="font-medium">My first post 🚀</h6>
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-slate-600">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor,
+                possimus...
+              </p>
+              <div className="flex flex-row flex-wrap gap-1">
+                <Badge color="yellow">UI</Badge>
+                <Badge color="green">Development</Badge>
+                <Badge color="red">UX</Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 rounded-xl bg-slate-50 p-4">
+            <h6 className="font-medium">My first post 🚀</h6>
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-slate-600">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor,
+                possimus...
+              </p>
+              <div className="flex flex-row flex-wrap gap-1">
+                <Badge color="yellow">UI</Badge>
+                <Badge color="green">Development</Badge>
+                <Badge color="red">UX</Badge>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* BOTTOM BAR */}
-      <div className="flex flex-row items-center justify-center gap-2">
-        <Button variant="outline-gray" onClick={() => auth.signOut()}>
-          <AiOutlineLogout className="text-xl" />
-          <span className={`hidden lg:inline`}> Logout</span>
-        </Button>
-        {/* <AiOutlineSetting className="text-2xl" />
-        <AiOutlineLogout className="text-2xl" /> */}
-      </div>
-    </div>
+    </aside>
   );
 };
 

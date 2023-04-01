@@ -3,15 +3,20 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
+import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import Modal from "@/components/ui/Modal";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "./_app";
-import React from "react";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
+
+  const [showNewPostModal, setShowNewPostModal] = useState(false);
 
   // AUTH STATE HOOK
   const [user] = useAuthState(auth, {
@@ -32,26 +37,12 @@ const Dashboard = () => {
       ).withConverter(notesConverter)
   );
 
-  return (
-    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900">
-      <aside className="m-10 flex w-96 flex-col gap-10 rounded-xl bg-white p-5">
-        {user && (
-          <h4 className="text-xl font-semibold text-slate-500">
-            Hi there,{" "}
-            <span className="text-slate-900">{user?.displayName}</span>
-          </h4>
-        )}
+  const newPostClickHandler = () => {
+    setShowNewPostModal(true);
+  };
 
-        <div className="">
-          <Button variant="primary">New Post</Button>
-          <div>
-            {notes?.map((note) => (
-              <div key={note.id}>{note.title}</div>
-            ))}
-          </div>
-        </div>
-      </aside>
-    </div>
+  return (
+    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900"></div>
   );
 };
 

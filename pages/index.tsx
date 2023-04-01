@@ -32,7 +32,7 @@ const Home: NextPage = () => {
             </h4>
             <div>
               <Link href="/login">
-                <Button variant="solid-black">Get Started</Button>
+                <Button>Get Started</Button>
               </Link>
             </div>
           </div>
