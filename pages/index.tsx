@@ -12,7 +12,7 @@ const Home: NextPage = () => {
         </div>
         <div className="flex flex-row">
           <Link href="/login">
-            <Button variant="solid-black">Login</Button>
+            <Button>Login</Button>
           </Link>
         </div>
       </div>
