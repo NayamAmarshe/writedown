@@ -1,30 +1,9 @@
-import {
-  AiFillPlusCircle,
-  AiOutlineLogout,
-  AiOutlineSetting,
-} from "react-icons/ai";
-import { channelBackgroundColors } from "@/constants/channel-background-colors";
 import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { collection, orderBy, query } from "firebase/firestore";
-import { createChannel } from "@/utils/firebaseOperations";
-import EmojiSelector from "@/components/ui/EmojiSelector";
-import { useAuthState } from "react-firebase-hooks/auth";
-import React, { memo, useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
-import Input from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
-import { toast } from "react-hot-toast";
-import { uuidv4 } from "@firebase/util";
-import ChannelCard from "./ChannelCard";
-import { db } from "@/lib/firebase";
-import { auth } from "@/pages/_app";
-import { nanoid } from "nanoid";
-import { useAtom } from "jotai";
+import React, { memo } from "react";
 
 interface SidebarProps {
   id: string;
@@ -39,54 +18,56 @@ const Sidebar = ({
   channels,
   messages,
 }: SidebarProps & IFirebaseAuth) => {
-  const [channelName, setChannelName] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
-  const [selectEmoji, setSelectEmoji] = useState({
-    native: "🙂",
-  });
-  const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
+  // const [channelName, setChannelName] = useState("");
+  // const [showPicker, setShowPicker] = useState(false);
+  // const [selectEmoji, setSelectEmoji] = useState({
+  //   native: "🙂",
+  // });
+  // const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
 
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
-  );
+  // const [selectedChannelId, setSelectedChannelId] = useAtom(
+  //   selectedChannelIdAtom
+  // );
 
-  useEffect(() => {
-    if (channels && channels.length > 0) {
-      setSelectedChannelId(channels[0].id);
-    }
-    console.log(messages);
-  }, [channels, messages]);
+  // useEffect(() => {
+  //   if (channels && channels.length > 0) {
+  //     setSelectedChannelId(channels[0].id);
+  //   }
+  //   console.log(messages);
+  // }, [channels, messages]);
 
-  const resetAddChannelForm = () => {
-    setChannelName("");
-    setSelectEmoji({
-      native: "🙂",
-    });
-    setEmojiBackgroundIndex(0);
+  // const resetAddChannelForm = () => {
+  //   setChannelName("");
+  //   setSelectEmoji({
+  //     native: "🙂",
+  //   });
+  //   setEmojiBackgroundIndex(0);
+  // };
+
+  // const saveChannelHandler = async () => {
+  //   if (channelName.length === 0) {
+  //     toast.error("Please enter a channel name");
+  //     return;
+  //   }
+
+  //   if (!user) return;
+
+  //   createChannel(user.uid, {
+  //     name: channelName,
+  //     emoji: selectEmoji.native,
+  //     emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
+  //     id: uuidv4(),
+  //     messages: [],
+  //     userId: user.uid,
+  //     slug: nanoid(),
+  //     type: "private",
+  //   });
+  //   resetAddChannelForm();
+  // };
+
+  const newPostClickHandler = () => {
+    console.log("new post");
   };
-
-  const saveChannelHandler = async () => {
-    if (channelName.length === 0) {
-      toast.error("Please enter a channel name");
-      return;
-    }
-
-    if (!user) return;
-
-    createChannel(user.uid, {
-      name: channelName,
-      emoji: selectEmoji.native,
-      emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
-      id: uuidv4(),
-      messages: [],
-      userId: user.uid,
-      slug: nanoid(),
-      type: "private",
-    });
-    resetAddChannelForm();
-  };
-
-  const newPostClickHandler = () => {};
 
   return (
     <aside className="m-10 flex w-96 flex-col gap-5 rounded-xl bg-white p-4">
