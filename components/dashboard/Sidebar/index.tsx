@@ -1,3 +1,4 @@
+import ChevronDoubleRight from "@/components/icons/ChevronDoubleRight";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
@@ -33,12 +34,20 @@ const Sidebar = ({
   };
 
   return (
-    <aside className="relative flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4">
+    <aside
+      className={`relative flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
+        showSidebar ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <button
         onClick={() => setShowSidebar(!showSidebar)}
         className="absolute top-1/2 -right-5 z-10 rounded-full bg-white p-3 shadow-lg shadow-slate-400/40"
       >
-        <ChevronDoubleLeft className="h-5 w-5" />
+        <ChevronDoubleLeft
+          className={`h-5 w-5 transition-transform duration-300 ${
+            showSidebar ? "" : "rotate-180"
+          }`}
+        />
       </button>
 
       {user ? (
