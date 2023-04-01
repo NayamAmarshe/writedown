@@ -7,17 +7,13 @@ import React, { memo } from "react";
 
 interface SidebarProps {
   id: string;
-  showSidebar: boolean;
-  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  channels?: IChannelData[];
-  messages?: IMessageData[];
+  // showSidebar: boolean;
+  // setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  // channels?: IChannelData[];
+  // messages?: IMessageData[];
 }
 
-const Sidebar = ({
-  user,
-  channels,
-  messages,
-}: SidebarProps & IFirebaseAuth) => {
+const Sidebar = ({ user }: SidebarProps & IFirebaseAuth) => {
   // const [channelName, setChannelName] = useState("");
   // const [showPicker, setShowPicker] = useState(false);
   // const [selectEmoji, setSelectEmoji] = useState({
@@ -152,4 +148,4 @@ const Sidebar = ({
   );
 };
 
-export default memo(Sidebar);
+export default Sidebar;
