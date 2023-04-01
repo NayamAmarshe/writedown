@@ -10,6 +10,7 @@
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
+    "@headlessui/react": "^1.7.13",
     "@milkdown/core": "^7.0.0-next.6",
     "@milkdown/ctx": "^7.0.0-next.6",
     "@milkdown/plugin-clipboard": "^7.0.0",
