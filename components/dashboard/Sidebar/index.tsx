@@ -35,7 +35,7 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`fixed flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
+      className={`fixed z-50 flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
         showSidebar ? "translate-x-0" : "ml-50 -translate-x-full"
       }`}
     >
