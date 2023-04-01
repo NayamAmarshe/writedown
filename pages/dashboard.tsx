@@ -3,6 +3,7 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createUser } from "@/utils/firebaseOperations";
+import Sidebar from "@/components/dashboard/Sidebar";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -42,7 +43,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900"></div>
+    <div className="flex h-screen w-screen flex-row bg-slate-200 text-gray-900">
+      <Sidebar user={user} />
+    </div>
   );
 };
 
