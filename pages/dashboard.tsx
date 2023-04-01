@@ -38,7 +38,7 @@ const Dashboard = () => {
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       />
-      <TextArea shiftLeft={showSidebar} />
+      <TextArea shiftRight={showSidebar} />
     </div>
   );
 };

@@ -1,17 +1,13 @@
 import React from "react";
 
 type TextAreaProps = {
-  shiftLeft?: boolean;
+  shiftRight?: boolean;
 };
 
-const TextArea = ({ shiftLeft }: TextAreaProps) => {
+const TextArea = ({ shiftRight }: TextAreaProps) => {
   return (
-    <div className="w-full overflow-y-auto">
-      <div
-        className={`mt-52 h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
-          shiftLeft ? "translate-x-96" : "-translate-x-96"
-        }`}
-      >
+    <div className="flex w-full items-start justify-center overflow-y-auto">
+      <div className="mt-52 h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300">
         Text Area
       </div>
     </div>
