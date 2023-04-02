@@ -17,9 +17,8 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [input, setInput] = useState("");
   const [title, setTitle] = useState("");
-
+  const [input, setInput] = useState("");
   const { updateNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
@@ -48,7 +47,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
-    if (!notes || !selectedNoteId) return;
+    if (!selectedNoteId || !user) return;
     updateNote({
       id: selectedNoteId,
       title: title === "" ? "Untitled" : title,
@@ -57,24 +56,30 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [title, input]);
 
   return (
-    <div className="flex w-full items-start justify-center overflow-y-auto">
+    <div className="flex w-full items-start justify-center overflow-y-scroll">
       <div
-        className={`mt-52 min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+        key={selectedNoteId}
+        className={`mt-52 h-fit min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
         <input
           type="text"
-          className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed"
+          className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+          value={title}
         />
 
         <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
 
+        <div className="h-0.5 w-full bg-slate-300"></div>
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="prose h-full min-w-full outline-none"
+            className="markdown prose h-full min-w-full focus:outline-none"
           />
         </MilkdownProvider>
       </div>
