@@ -69,9 +69,17 @@ const Sidebar = ({
         <h6 className="font-semibold">Posts</h6>
         {/* POSTS LIST */}
         <div className="flex flex-col gap-2">
-          {notes?.map((note) => (
-            <PostRow key={note.id} />
-          ))}
+          {notes ? (
+            notes.map((note) => (
+              <PostRow
+                key={note.id}
+                title={note.title}
+                content={note.content}
+              />
+            ))
+          ) : (
+            <Skeleton className="mb-2 h-20 p-4" count={4} />
+          )}
         </div>
       </div>
     </aside>

@@ -5,7 +5,7 @@ import {
 } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, getFirestore } from "firebase/firestore";
-import { createUser } from "@/utils/firebaseOperations";
+import useUser from "@/components/hooks/useUser";
 import { AiFillGithub } from "react-icons/ai";
 import { firebaseApp } from "@/lib/firebase";
 import Button from "@/components/ui/Button";
@@ -17,6 +17,7 @@ import React from "react";
 const LoginPage = () => {
   // NEXT ROUTER
   const router = useRouter();
+  const { createUser } = useUser();
 
   // GOOGLE SIGN IN HOOK
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
