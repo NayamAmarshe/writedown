@@ -1,5 +1,6 @@
 import ChevronDoubleRight from "@/components/icons/ChevronDoubleRight";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
@@ -12,6 +13,7 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { db } from "@/lib/firebase";
 import PostRow from "./PostRow";
+import { useAtom } from "jotai";
 import React from "react";
 
 interface SidebarProps {
@@ -24,6 +26,8 @@ const Sidebar = ({
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+
   const [notes] = useCollectionData(
     user &&
       query(
@@ -73,8 +77,10 @@ const Sidebar = ({
             notes.map((note) => (
               <PostRow
                 key={note.id}
+                selected={selectedNoteId === note.id}
                 title={note.title}
                 content={note.content}
+                onClick={() => setSelectedNoteId(note.id)}
               />
             ))
           ) : (
