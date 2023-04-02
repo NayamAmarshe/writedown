@@ -1,22 +1,15 @@
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { notesConverter } from "@/utils/firestoreDataConverter";
-import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { createUser } from "@/utils/firebaseOperations";
 import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
-import Skeleton from "react-loading-skeleton";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
-import Modal from "@/components/ui/Modal";
+import useUser from "@/components/hooks/useUser";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { db } from "@/lib/firebase";
 import { auth } from "./_app";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
+  const { createUser } = useUser();
 
   const [showSidebar, setShowSidebar] = useState(true);
 
