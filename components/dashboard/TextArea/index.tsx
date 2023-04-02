@@ -28,7 +28,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   const notes = useMemo(() => {
     if (!firestoreNotes) return;
-    setSelectedNoteId(firestoreNotes[0].id);
+    if (firestoreNotes.length > 0) setSelectedNoteId(firestoreNotes[0].id);
     return firestoreNotes;
   }, [firestoreNotes]);
 
