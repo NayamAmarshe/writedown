@@ -39,6 +39,8 @@ const Sidebar = ({
     }
   );
 
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+
   const notes = useMemo(() => {
     return firestoreNotes;
   }, [firestoreNotes]);
@@ -48,7 +50,9 @@ const Sidebar = ({
   const { createNote } = useNotes({ userId: user?.uid });
 
   const newPostClickHandler = () => {
-    createNote();
+    createNote().then((x) => {
+      setSelectedNoteId(x || null);
+    });
   };
 
   return (

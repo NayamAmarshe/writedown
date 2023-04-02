@@ -7,6 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { useAtom, useAtomValue } from "jotai";
+import { toast } from "react-hot-toast";
 import { stringify } from "querystring";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -31,7 +32,8 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   const notes = useMemo(() => {
     if (!firestoreNotes) return;
-    if (firestoreNotes.length > 0) setSelectedNoteId(firestoreNotes[0].id);
+    if (firestoreNotes.length > 0 && !selectedNoteId)
+      setSelectedNoteId(firestoreNotes[0].id);
     return firestoreNotes;
   }, [firestoreNotes]);
 
@@ -48,20 +50,33 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   useEffect(() => {
     if (!selectedNoteId || !user) return;
-    const interval = setInterval(() => {
+    const interval = setTimeout(() => {
       updateNote({
         id: selectedNoteId,
         title: title === "" ? "Untitled" : title,
         content: input,
       });
-      console.log("This function will run every 1 minute");
-    }, 60000); // 1 minute = 60,000 milliseconds
+      toast.success("Autosaved!");
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [title, input]);
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-scroll">
+      <button
+        type="button"
+        onClick={(e) => {
+          updateNote({
+            id: selectedNoteId!,
+            title: title === "" ? "Untitled" : title,
+            content: input,
+          });
+          toast.success("Saved!");
+        }}
+      >
+        Save
+      </button>
       <div
         className={`mt-52 h-fit min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
@@ -83,6 +98,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
             input={input}
             setInput={setInput}
             className="markdown prose h-full min-w-full focus:outline-none"
+            notes={notes}
           />
         </MilkdownProvider>
       </div>

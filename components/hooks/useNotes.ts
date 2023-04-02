@@ -51,6 +51,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     try {
       // Create a document inside channelsRef array
       await setDoc(notesRef, noteData, { merge: true });
+      return id;
     } catch (error) {
       console.log("🚀 => file: operations.ts:37 => error", error);
     }
