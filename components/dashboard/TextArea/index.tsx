@@ -55,10 +55,10 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [title, input]);
 
   return (
-    <div className="flex w-full items-start justify-center overflow-y-auto">
+    <div className="flex w-full items-start justify-center overflow-y-scroll">
       <div
         key={selectedNoteId}
-        className={`h-fit min-h-[75%] w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+        className={`mt-52 h-fit min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
