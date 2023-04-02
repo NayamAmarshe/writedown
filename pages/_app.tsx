@@ -1,13 +1,14 @@
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
-import { getAuth } from "firebase/auth";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
 
 export const auth = getAuth(firebaseApp);
+connectAuthEmulator(auth, "http://localhost:9099");
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
