@@ -5,6 +5,7 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import IconButton from "@/components/ui/IconButton";
+import useNotes from "@/components/hooks/useNotes";
 import XCircle from "@/components/icons/XCircle";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -31,8 +32,10 @@ const Sidebar = ({
       ).withConverter(notesConverter)
   );
 
+  const { createNote } = useNotes({ userId: user?.uid });
+
   const newPostClickHandler = () => {
-    console.log("new post");
+    createNote();
   };
 
   return (
@@ -43,7 +46,7 @@ const Sidebar = ({
     >
       <IconButton onClick={() => setShowSidebar(!showSidebar)}>
         <ChevronDoubleLeft
-          className={`h-5 w-5 transition-transform duration-500 ${
+          className={`duration-400 h-5 w-5 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
