@@ -4,6 +4,7 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useMemo, useState } from "react";
+import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { useAtom, useAtomValue } from "jotai";
 import { stringify } from "querystring";
@@ -17,6 +18,9 @@ type TextAreaProps = {
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [input, setInput] = useState("");
+  const [title, setTitle] = useState("");
+
+  const { updateNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -39,7 +43,17 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
 
     setInput(selectedNote?.content || "");
+    setTitle(selectedNote?.title || "");
   }, [notes, selectedNoteId]);
+
+  useEffect(() => {
+    if (!notes || !selectedNoteId) return;
+    updateNote({
+      id: selectedNoteId,
+      title: title === "" ? "Untitled" : title,
+      content: input,
+    });
+  }, [title, input]);
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-auto">

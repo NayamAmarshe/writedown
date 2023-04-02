@@ -23,7 +23,7 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
       <button className="flex flex-col gap-2">
         <p className="text-sm text-slate-600">
           {content === (undefined || null) && <Skeleton />}
-          {content || "..."}
+          {content.slice(0, 30) || "..."}
         </p>
 
         {/* TODO: Add tags  */}
