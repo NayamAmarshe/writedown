@@ -1,12 +1,47 @@
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { notesConverter } from "@/utils/firestoreDataConverter";
+import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
+import React, { useEffect, useMemo, useState } from "react";
 import { MilkdownProvider } from "@milkdown/react";
-import React, { useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { User } from "firebase/auth";
+import { db } from "@/lib/firebase";
 type TextAreaProps = {
+  user?: User | null;
   shiftRight?: boolean;
 };
 
-const TextArea = ({ shiftRight }: TextAreaProps) => {
+const TextArea = ({ user, shiftRight }: TextAreaProps) => {
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+
   const [input, setInput] = useState("");
+
+  const [firestoreNotes] = useCollectionData(
+    user &&
+      query(
+        collection(db, "users", user.uid, "notes"),
+        orderBy("createdAt", "desc")
+      ).withConverter(notesConverter)
+  );
+
+  const notes = useMemo(() => {
+    if (!firestoreNotes) return;
+    setSelectedNoteId(firestoreNotes[0].id);
+    return firestoreNotes;
+  }, [firestoreNotes]);
+
+  useEffect(() => {
+    if (!notes) return;
+
+    const selectedNoteContent = notes.find(
+      (note) => note.id === selectedNoteId
+    )?.content;
+
+    setInput(selectedNoteContent || "");
+  }, [notes]);
+
   return (
     <div className="flex w-full items-start justify-center overflow-y-auto">
       <div

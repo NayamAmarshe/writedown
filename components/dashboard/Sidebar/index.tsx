@@ -31,7 +31,12 @@ const Sidebar = ({
       query(
         collection(db, "users", user.uid, "notes"),
         orderBy("createdAt", "desc")
-      ).withConverter(notesConverter)
+      ).withConverter(notesConverter),
+    {
+      snapshotListenOptions: {
+        includeMetadataChanges: true,
+      },
+    }
   );
 
   const notes = useMemo(() => {
