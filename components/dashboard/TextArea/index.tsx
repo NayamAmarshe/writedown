@@ -47,17 +47,21 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   useEffect(() => {
     if (!selectedNoteId || !user) return;
-    updateNote({
-      id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
-      content: input,
-    });
-  }, [title, input]);
+    const interval = setInterval(() => {
+      updateNote({
+        id: selectedNoteId,
+        title: title === "" ? "Untitled" : title,
+        content: input,
+      });
+      console.log("This function will run every 1 minute");
+    }, 60000); // 1 minute = 60,000 milliseconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-scroll">
       <div
-        key={selectedNoteId}
         className={`mt-52 h-fit min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
