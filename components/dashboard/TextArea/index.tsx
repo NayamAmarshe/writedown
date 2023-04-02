@@ -74,7 +74,6 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
         <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
 
-        <div className="h-0.5 w-full bg-slate-300"></div>
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
