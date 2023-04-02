@@ -56,7 +56,23 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     }
   }, [userId]);
 
-  return { createNote };
+  const updateNote = useCallback(
+    async (note: { id: string; title: string; content: string }) => {
+      if (!userId || !note) return;
+
+      const notesRef = doc(db, "users", userId, "notes", note.id);
+
+      try {
+        // Create a document inside channelsRef array
+        await updateDoc(notesRef, note);
+      } catch (error) {
+        console.log("🚀 => file: operations.ts:37 => error", error);
+      }
+    },
+    [userId]
+  );
+
+  return { createNote, updateNote };
 };
 
 export default useNotes;
