@@ -17,7 +17,6 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
 
   const { updateNote } = useNotes({ userId: user?.uid });
@@ -39,9 +38,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   useEffect(() => {
     if (!notes) return;
 
-    const selectedNoteContent = notes.find(
-      (note) => note.id === selectedNoteId
-    )?.content;
+    const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
     const selectedNoteTitle = notes.find(
       (note) => note.id === selectedNoteId
@@ -81,7 +78,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="markdown prose h-full min-w-full focus:outline-none"
+            className="prose h-full min-w-full outline-none"
           />
         </MilkdownProvider>
       </div>
