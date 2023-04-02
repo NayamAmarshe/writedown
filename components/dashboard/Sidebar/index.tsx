@@ -76,7 +76,7 @@ const Sidebar = ({
       {notes ? (
         <Button onClick={newPostClickHandler}>Create New Post</Button>
       ) : (
-        <Skeleton className="h-10 w-full" borderRadius={50} />
+        <Skeleton className="h-9 w-full" borderRadius={50} />
       )}
 
       {/* POSTS SECTION */}
@@ -95,7 +95,7 @@ const Sidebar = ({
               />
             ))
           ) : (
-            <Skeleton className="mb-2 h-16 p-4" count={4} />
+            <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
         </div>
       </div>
