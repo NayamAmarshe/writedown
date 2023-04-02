@@ -12,8 +12,8 @@ import { Milkdown, useEditor } from "@milkdown/react";
 import { history } from "@milkdown/plugin-history";
 import { nord } from "@milkdown/theme-nord";
 import { gfm } from "@milkdown/preset-gfm";
+import React, { useEffect } from "react";
 import "@milkdown/theme-nord/style.css";
-import React from "react";
 
 interface editorProps {
   input: string;
