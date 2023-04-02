@@ -9,9 +9,11 @@ const TextArea = ({ shiftRight }: TextAreaProps) => {
   const [input, setInput] = useState("");
   return (
     <div className="flex w-full items-start justify-center overflow-y-auto">
-      <div className="h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300">
-        {/* <input type="text" /> */}
-        {/* Milkdown  */}
+      <div
+        className={`mt-52 h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+          shiftRight ? "translate-x-52" : "translate-x-0"
+        }`}
+      >
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
