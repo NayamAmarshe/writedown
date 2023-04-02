@@ -1,9 +1,10 @@
 import {
-  enableIndexedDbPersistence,
+  connectFirestoreEmulator,
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
-import { getApps, initializeApp } from "firebase/app";
+import { connectAuthEmulator } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 
 const firebaseConfig = {
@@ -19,6 +20,10 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
+
+if (!(db as any)._settingsFrozen) {
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
 
 if (!(db as any)._firestoreClient) {
   enableMultiTabIndexedDbPersistence(db);
