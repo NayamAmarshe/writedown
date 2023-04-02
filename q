@@ -1,0 +1,663 @@
+[33mcommit 1fe27b374d3a8050500279ef96a8260368a05003[m[33m ([m[1;36mHEAD -> [m[1;32mray/update-MilkdownEditor[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Nayam Amarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 26 10:32:28 2023 +0530
+
+    Fixed empty dashboard
+
+[33mcommit 8180d0e20feadbb572b5538dc30ab3a627f5e7f3[m[33m ([m[1;32mmain[m[33m)[m
+Merge: 7e2d341 3fdeb73
+Author: TGS963 <46394656+TGS963@users.noreply.github.com>
+Date:   Sat Feb 25 18:04:49 2023 +0530
+
+    Merge pull request #14 from NayamAmarshe/channel-edit-delete
+    
+    Channel edit delete
+
+[33mcommit 3fdeb73610c416cf0a2e5e203137c320fe7624f5[m[33m ([m[1;31morigin/channel-edit-delete[m[33m)[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 18:03:00 2023 +0530
+
+    fixed ordering
+
+[33mcommit c9af87900f10613058acb7699e1fb931bc786aae[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 18:01:12 2023 +0530
+
+    fixed ordering
+
+[33mcommit d963847d92212401b14926f4a91d8ef15643c72c[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 17:39:13 2023 +0530
+
+    fixed disrepancy problem
+
+[33mcommit 7e2d341cc5393bf01069006b7788fba27090f981[m
+Merge: d7f283e 60833b7
+Author: TGS963 <46394656+TGS963@users.noreply.github.com>
+Date:   Sat Feb 25 17:22:25 2023 +0530
+
+    Merge pull request #12 from NayamAmarshe/channel-edit-delete
+    
+    added channel edit and delete options
+
+[33mcommit 60833b7cf2e0a8be910d7d842015b66a3a5df8d4[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 17:14:34 2023 +0530
+
+    added channel edit and delete options
+
+[33mcommit d7f283e1ef4856ecf7d24451939aa481a4986b25[m
+Merge: 41b41a1 844a4f0
+Author: TGS963 <46394656+TGS963@users.noreply.github.com>
+Date:   Sat Feb 25 15:26:08 2023 +0530
+
+    Merge pull request #11 from NayamAmarshe/clipboard-support-plugin
+    
+    added milkdown plugin for clipboard support
+
+[33mcommit 844a4f02031997312003bc9ebea0a72dce5fb838[m[33m ([m[1;31morigin/clipboard-support-plugin[m[33m)[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 14:49:55 2023 +0530
+
+    added milkdown plugin for clipboard support
+
+[33mcommit 41b41a140b4e91c2d2497c3447d941d48728fdd8[m
+Author: Suvojit Ghosh <ghoshsuvojit2012@gmail.com>
+Date:   Sat Feb 25 11:51:52 2023 +0530
+
+    fixed edited marker not changing
+
+[33mcommit f8d09762de47250a00a2d0c580e911a523cc07cc[m
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 11:05:46 2023 +0530
+
+    Update README.md
+
+[33mcommit f2ec7e3ef05dc1de13eb0486ad86301ec33102c7[m
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 11:04:17 2023 +0530
+
+    Update README.md
+
+[33mcommit f3cf6b8f8245273ee9325616b19acf9ebfc6ce5b[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 10:48:18 2023 +0530
+
+    Added channel details
+
+[33mcommit 756d8ec3b7527d788f113276fb15c51d102709bc[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 10:14:15 2023 +0530
+
+    Added logout
+
+[33mcommit 3ddead1ebf495b93388ac4d0fe59d2a4bce1dc4b[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 09:43:46 2023 +0530
+
+    Fixed bubbles and formatting
+
+[33mcommit 7da64e06b666a01105caf5aba4cd945313557037[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 24 07:51:51 2023 +0530
+
+    Fixed milkdown and added react-markdown
+
+[33mcommit a4c016cef5a63d480fed796eaba72b450aaad3a6[m
+Merge: 761902f 8cee4c5
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Wed Feb 22 19:31:22 2023 +0530
+
+    Merge pull request #10 from NayamAmarshe/ray/update-MilkdownEditor
+    
+    Updated MilkdownEditor
+
+[33mcommit 8cee4c5939d26452196041da9ced4a0c1fe546c6[m[33m ([m[1;31morigin/ray/update-MilkdownEditor[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Wed Feb 22 19:30:17 2023 +0530
+
+    Updated .gitignore & tsconfig.json
+
+[33mcommit 8e2eda36390f79742d10438a2b1be86777392553[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Tue Feb 21 16:38:24 2023 +0530
+
+    Updated MilkdownEditor
+
+[33mcommit 761902f09d0590e67dacc55e0d861facc18b8c65[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 21 07:04:04 2023 +0530
+
+    Added milkdown editor
+
+[33mcommit 12a73af29499e289c639adc3ae0f0f735cd5c3ca[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 21 06:48:18 2023 +0530
+
+    Added milkdown, added slug and updated function
+
+[33mcommit 9adfd08e9606175e26b3d520a91d57a0a02a07ca[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 20 18:02:24 2023 +0530
+
+    Updated message and channel types
+
+[33mcommit 408765943d0c417fa9f1441ebf0f40e4060942a6[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 20 17:54:07 2023 +0530
+
+    Fixed channel last message
+
+[33mcommit 110e241cc935d401414fc794ba97d3faded37ea3[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 20 12:56:36 2023 +0530
+
+    Added basic page
+
+[33mcommit f0ab34ceb16f3215952943f2890e1ca1b13bf8d5[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 21:25:37 2023 +0530
+
+    Fixed hydration error
+
+[33mcommit 09298e176833ec2754d52415abc37b6414ef6931[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 12:31:11 2023 +0530
+
+    Fixed fullscreen editor
+
+[33mcommit 167ccbdb19b6c13dc5ddffc90453a591656df298[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 12:29:21 2023 +0530
+
+    Added fullscreen options
+
+[33mcommit 8c11a2c342ccfe1a2f4069b2a2ba86ef9358e22a[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 12:16:39 2023 +0530
+
+    Fixed more imports
+
+[33mcommit fbad2f7f45ebd4c489a2f72fe762636633056ef0[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 12:15:47 2023 +0530
+
+    Fixed imports
+
+[33mcommit 4324bc8da394ea1401546774ee5abbf22065317e[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 12:02:25 2023 +0530
+
+    Updated folder structure
+
+[33mcommit 356dab690faa45087de6e691c271c7eb2aafb95e[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 18 11:49:59 2023 +0530
+
+    Updated edited badge
+
+[33mcommit c64887fdb3c545016ab4438155f6dae1a9bc60b2[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Thu Feb 16 21:04:22 2023 +0530
+
+    fixed edited flag not working
+
+[33mcommit 7340b294bec7705d541f6b86df17afcd3af6b3aa[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Thu Feb 16 20:54:10 2023 +0530
+
+    fixed edit modal, added edited flag, message textbox now resets
+
+[33mcommit f967831d254e740ccf24862703ae0b393fcd05e3[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Thu Feb 16 18:52:00 2023 +0530
+
+    added edit functionality
+
+[33mcommit 64c7823036dfdf27d68d3acb71cfdf0a60451f53[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 09:19:16 2023 +0530
+
+    Removed redundant lines
+
+[33mcommit f6ccadecd88a66721105c07ccb4439525faf2998[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 09:17:25 2023 +0530
+
+    Remove autofocus
+
+[33mcommit 2dc6e1813daffb030bf1b3a50b79448a89fd0cb7[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 09:16:14 2023 +0530
+
+    Update message id
+
+[33mcommit c288db9bdb40bc81420bd8ec81c30cd00c000aaf[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 09:06:02 2023 +0530
+
+    Updated time
+
+[33mcommit 4a1b862feaa1f9a21fed643a92882d2b9265561f[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 07:23:41 2023 +0530
+
+    Added delete functionality
+
+[33mcommit 0d53ae055ca680fa6691d13677d33eef56db52ea[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Thu Feb 16 06:43:13 2023 +0530
+
+    Updated font
+
+[33mcommit 5774b5049e204c5439e34404ab15a99dbe49b2c7[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Wed Feb 15 23:06:12 2023 +0530
+
+    Fixed chat screen
+
+[33mcommit 9fe785a1c9b638ef5df9761b23f80bcfc886dfc3[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Wed Feb 15 22:28:11 2023 +0530
+
+    Added prose
+
+[33mcommit d98a4e606e88ba5c5dbb92a22c56d589270ee86e[m
+Merge: e5d4ab2 fc3585b
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Wed Feb 15 19:28:02 2023 +0530
+
+    Merge pull request #9 from NayamAmarshe/ray/update-sidebar
+    
+    Updated sidebar
+
+[33mcommit fc3585b0f010a35ce912506002f97fb98d5b9852[m[33m ([m[1;31morigin/ray/update-sidebar[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Wed Feb 15 12:38:14 2023 +0530
+
+    Removed chat input
+
+[33mcommit cacc349bacf21a2cd2d3241d4b2bfee997d9c590[m[33m ([m[1;31morigin/ray/update-chat-list[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Wed Feb 15 11:52:28 2023 +0530
+
+    Updated sidebar
+
+[33mcommit e5d4ab218b8ec1f0109c5bc9476d8cbc4582551b[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:54:41 2023 +0530
+
+    Added CKEditor
+
+[33mcommit 7a9841b910b2e250c0fb9cf2ecbe5d7921030235[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:44:50 2023 +0530
+
+    Updated firestore init
+
+[33mcommit 4f38900d9a2c9827f3df60bc6ded4a1454de127a[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:39:28 2023 +0530
+
+    Removed bandle.dev & Added ckEditor
+
+[33mcommit d861513213f7c5a83d1c121553384a5e4218a9e1[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:34:21 2023 +0530
+
+    Added bangle.dev
+
+[33mcommit c181e272f8fcb796fbbeb874a21133f2e7c61054[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:33:28 2023 +0530
+
+    Added try catch on DbPersistence
+
+[33mcommit 86c5ccd95745fa9ccdfd760f9bed56b833263153[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Tue Feb 14 10:19:56 2023 +0530
+
+    Added firebase persistence
+
+[33mcommit 8777229f17a53b1513e073498be166ed0fd4cbaf[m
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 23:43:26 2023 +0530
+
+    Delete useSelectAtom.ts
+
+[33mcommit 7e09807e8623ab8a06f557f2fe8f78123b3f9383[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 21:37:54 2023 +0530
+
+    Fixed Chat UI
+
+[33mcommit d3915b09424ecbbe2374c919bb113a541c19ffd3[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 20:12:57 2023 +0530
+
+    Removed redundant atom
+
+[33mcommit cec63bcf0a54ebf68eb6c8bdcbb75b3c04abf838[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 19:51:31 2023 +0530
+
+    Updated hook query
+
+[33mcommit e65f272a46aaf94abb952f5ea135ff999c5a0783[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 19:51:17 2023 +0530
+
+    Updated createNewMessage function
+
+[33mcommit 696e22def2192e7805f6041627b12fee106dbd21[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 19:25:53 2023 +0530
+
+    Added Jotai
+
+[33mcommit 59a5b20734bc717bf9028c6434a604dcd7fc181d[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Mon Feb 13 11:46:17 2023 +0530
+
+    small index fix
+
+[33mcommit 14c056d49b04757cb94be3f64117536ef6f627bb[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Mon Feb 13 11:44:16 2023 +0530
+
+    implemented hooks instead of manual
+
+[33mcommit 4d8fc994df62796464e7ea9ba2108a900deed561[m
+Author: TGS963 <ghoshsuvojit2012@gmail.com>
+Date:   Mon Feb 13 11:16:14 2023 +0530
+
+    added creating messages in chatList
+
+[33mcommit b046fddc3727854ae242673a64665169c0d700f3[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Mon Feb 13 07:07:01 2023 +0530
+
+    Added message fetching
+
+[33mcommit c6586036bcc20076cf1b5a304fd22231c1537842[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 22:05:58 2023 +0530
+
+    Added message create function
+
+[33mcommit cdf63707f7d3205131cbd37d035eeea3fdaeadd8[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 21:48:00 2023 +0530
+
+    Fixed UI
+
+[33mcommit aa2a0453d9bc31455034f4fd93eb5a49cfc97f1c[m
+Merge: 79d765c 0daf7b9
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 18:40:33 2023 +0530
+
+    Merge pull request #8 from NayamAmarshe/add-channel-creation
+    
+    Added channel creation
+
+[33mcommit 0daf7b96a431b986d55797a81e271d2af5e68290[m[33m ([m[1;31morigin/add-channel-creation[m[33m)[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 18:39:05 2023 +0530
+
+    Added channel creations
+
+[33mcommit 79d765c2ff5c3c2a9f5b73c40c2aece48e44bd60[m
+Merge: dc9360d 27c52a3
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 15:46:08 2023 +0530
+
+    Merge pull request #7 from NayamAmarshe/ray/update-emoji-selector
+    
+    Added EmojiSelector
+
+[33mcommit 27c52a3a56c1e7570ca8135065e141680c78be50[m[33m ([m[1;31morigin/ray/update-emoji-selector[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sun Feb 12 15:42:24 2023 +0530
+
+    Updated EmojiSelector
+
+[33mcommit 67263d1c5c9795f23a9069d6d5e31c4057ab29fc[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sun Feb 12 14:47:20 2023 +0530
+
+    Added EmojiSelector
+
+[33mcommit dc9360d31adea892430db5df9aa76677f0e9cb30[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 09:18:55 2023 +0530
+
+    Added createChannel
+
+[33mcommit 5aecf8bd86042669fea9f3cdee15d31994efa70a[m
+Merge: 7405340 0a456cc
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sun Feb 12 06:16:46 2023 +0530
+
+    Merge pull request #6 from NayamAmarshe/ray/add-login-page
+    
+    Added Emoji picker
+
+[33mcommit 0a456cc5f6d986ceb8a784e49f79bdacc6712e62[m[33m ([m[1;31morigin/ray/add-login-page[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 21:59:53 2023 +0530
+
+    Added Emoji picker
+
+[33mcommit 7405340f0cce16638023802c14768ec8c8d4d35e[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 21:29:59 2023 +0530
+
+    Updated sidebar
+
+[33mcommit d31ad8831d38b31bb6ba4a599bbaa5234f4bbcbd[m[33m ([m[1;32mswitch[m[33m)[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 13:42:37 2023 +0530
+
+    Update Input
+
+[33mcommit 36cb79eda9331ca373d497e5c446971f51d18111[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 13:24:44 2023 +0530
+
+    Added Input
+
+[33mcommit 6c8503c294697dc3dab51fcea8d18438083a9ee8[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 12:28:02 2023 +0530
+
+    Added Modal
+
+[33mcommit b81ff84aee511de310a87dac9161aab3dbb8ff62[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 12:14:46 2023 +0530
+
+    Added chat list and sidebar
+
+[33mcommit 9b23ef910da79755505be05b84076ad4c5951fa6[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 11:07:49 2023 +0530
+
+    Added sidebar
+
+[33mcommit 72230844d9516223b2c28ac4d383f88cf9dbdf7f[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 10:08:06 2023 +0530
+
+    Updated prettier config
+
+[33mcommit 699f70776295d033633edd306fe33a4747cdf592[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:58:56 2023 +0530
+
+    Added husky
+
+[33mcommit 39d312996addad97d5e421586a97fb8cece23f89[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:54:59 2023 +0530
+
+    Fixed colors
+
+[33mcommit 33ea89e6ef0e1f64a1ee9c911d28426d6bd25172[m
+Merge: a0051cf 6047fff
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:54:20 2023 +0530
+
+    Merge remote-tracking branch 'refs/remotes/origin/main'
+
+[33mcommit a0051cf9ff362216d026eaa5e1c0d11af3e8e87e[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:53:26 2023 +0530
+
+    Updated eslint
+
+[33mcommit 6047fff802257905c543367ef9a70d41bf3b527c[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 09:49:52 2023 +0530
+
+    Updated button colors
+
+[33mcommit ccb9375f8c43c8e4e596b559aae70a02491d98ba[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:36:21 2023 +0530
+
+    Removed eslint
+
+[33mcommit 49825ac80f9aa65dd429031ef81deeebee1d38af[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 09:33:15 2023 +0530
+
+    Fixed main page
+
+[33mcommit 601bb31602df53723099dada5a3e69fd7d1bc19c[m
+Merge: 6c9cee1 4b3c1d4
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 08:58:04 2023 +0530
+
+    Merge pull request #4 from NayamAmarshe/add-license-1
+    
+    Create LICENSE
+
+[33mcommit 4b3c1d401d6299e181166fd14c7afd7bbbb6a83a[m[33m ([m[1;31morigin/add-license-1[m[33m)[m
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Sat Feb 11 08:57:54 2023 +0530
+
+    Create LICENSE
+
+[33mcommit 6c9cee1a1c07271b3b7a444444cc2e8306dbc79d[m
+Merge: a6e0fca 5fc8e03
+Author: RAY <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 01:44:29 2023 +0530
+
+    Merge pull request #2 from NayamAmarshe/ray/add-login-page
+    
+    Added more button colors & login UI update
+
+[33mcommit 5fc8e03b5c6a4e82e0acf9684a7653a6d309a9ac[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Sat Feb 11 01:35:58 2023 +0530
+
+    Removed unnecessary stuff
+
+[33mcommit 2e5efcae7410cfa6d402f62c156ac5fb40070c5b[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Fri Feb 10 23:36:51 2023 +0530
+
+    Added more button colors & login UI update
+
+[33mcommit a6e0fca0ad98ea935c0d54e4b539c4f2bbb19bc1[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 23:14:05 2023 +0530
+
+    Added signIn logic
+
+[33mcommit c69611c59152cbd08e4eba43687c2910ba1872e3[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 22:54:17 2023 +0530
+
+    Updated Button and firebase
+
+[33mcommit 1abf0ed464b4f33e8f8ecbbafbbbcb7cb3c237ad[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 22:03:26 2023 +0530
+
+    Fixed preline and login
+
+[33mcommit 5f7daab63faa1fe20747a25d10942cbaf765e2c7[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 21:30:53 2023 +0530
+
+    Updated Button and added react-icons
+
+[33mcommit b2152a7d05871f68e66f041cfb87de3df14e5f29[m
+Author: Feenix <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 21:15:37 2023 +0530
+
+    Added extension recommendation
+
+[33mcommit b9f50a69e8ad4a17504d290d6cba04aa5c315934[m
+Merge: efb5425 21770da
+Author: NayamAmarshe <25067102+NayamAmarshe@users.noreply.github.com>
+Date:   Fri Feb 10 19:07:37 2023 +0530
+
+    Merge pull request #1 from NayamAmarshe/ray/add-login-page
+    
+    added pages/login.tsx
+
+[33mcommit 21770dab443655dc58f95a24503d6ba021556770[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Fri Feb 10 17:05:17 2023 +0530
+
+    moved Button.tsx to components/
+
+[33mcommit ac4150f148781a9d9de23670260931a79d4fa106[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Fri Feb 10 16:21:33 2023 +0530
+
+    added button as component
+
+[33mcommit a11c2c4c8083236d2eab5d782b88363066033d6a[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Fri Feb 10 00:51:13 2023 +0530
+
+    added page/login.tsx
+
+[33mcommit efb54255fa53f678668e9c5122a00b232501dc91[m
+Author: presi300 <canaryisle1@hotmail.com>
+Date:   Thu Feb 9 17:46:41 2023 +0200
+
+    Fixed the app not starting
+
+[33mcommit 34a81a7c25c044ff93d3b42d8d1fa02a135d7dab[m
+Author: presi300 <canaryisle1@hotmail.com>
+Date:   Wed Feb 8 20:31:47 2023 +0200
+
+    Firebase setup
+
+[33mcommit 556b584d26d35df7256da59bff850825ce3ba6c6[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Wed Feb 8 23:54:51 2023 +0530
+
+    removed test.tsx
+
+[33mcommit 7349fb0556c37b72b5cd3d17f93c078410e3af96[m
+Author: ImRayy <souradeep20roy01@gmail.com>
+Date:   Wed Feb 8 23:25:00 2023 +0530
+
+    preline added
+
+[33mcommit 0be92591e3d5ffee9970f3ece5e6b18e602fe7fc[m
+Author: presi300 <canaryisle1@hotmail.com>
+Date:   Wed Feb 8 19:46:10 2023 +0200
+
+    Firebase setup... hopefully?
+
+[33mcommit cdd1b2ffb3722e71deec2d41bfa5a7e4bca8da8d[m
+Author: presi300 <canaryisle1@hotmail.com>
+Date:   Wed Feb 8 18:10:06 2023 +0200
+
+    Initial commit from Create Next App

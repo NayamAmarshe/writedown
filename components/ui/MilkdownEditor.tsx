@@ -14,23 +14,25 @@ import { Milkdown, useEditor } from "@milkdown/react";
 import { history } from "@milkdown/plugin-history";
 import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
+import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
 import "@milkdown/theme-nord/style.css";
 import { useAtom } from "jotai";
+
 interface editorProps {
   channelData?: IChannelData;
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  clearSwitch: boolean;
-  setClearSwitch: React.Dispatch<React.SetStateAction<boolean>>;
+  // clearSwitch: boolean;
+  // setClearSwitch: React.Dispatch<React.SetStateAction<boolean>>;
   className?: React.HTMLAttributes<HTMLDivElement>["className"];
 }
 
 const MilkdownEditor = ({
   setInput,
   input,
-  clearSwitch,
-  setClearSwitch,
+  // clearSwitch,
+  // setClearSwitch,
   className,
 }: editorProps) => {
   const [selectedChannelId, setSelectedChannelId] = useAtom(
@@ -59,17 +61,18 @@ const MilkdownEditor = ({
       .use(commonmark)
       .use(history)
       .use(clipboard)
+      .use(gfm)
   );
 
-  useEffect(() => {
-    if (clearSwitch === false) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (clearSwitch === false) {
+  //     return;
+  //   }
 
-    editor.get()?.action(replaceAll(""));
+  //   editor.get()?.action(replaceAll(""));
 
-    setClearSwitch(false);
-  }, [clearSwitch]);
+  //   setClearSwitch(false);
+  // }, [clearSwitch]);
 
   /* NOT SURE IF WE WANT THE TEXT FIELD TO RESET IF THE ACTIVE CHANNEL IS CHANGED
 useEffect(() => {
