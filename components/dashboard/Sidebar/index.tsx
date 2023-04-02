@@ -27,10 +27,11 @@ const Sidebar = ({
   const [notes] = useCollectionData(
     user &&
       query(
-        collection(db, "notes"),
+        collection(db, "users", user.uid, "notes"),
         orderBy("createdAt", "desc")
       ).withConverter(notesConverter)
   );
+  console.log("🚀 => file: index.tsx:34 => notes:", notes);
 
   const { createNote } = useNotes({ userId: user?.uid });
 
@@ -68,13 +69,9 @@ const Sidebar = ({
         <h6 className="font-semibold">Posts</h6>
         {/* POSTS LIST */}
         <div className="flex flex-col gap-2">
-          {/* {notes?.map((note) => (
-              <div key={note.id}>{note.title}</div>
-            ))} */}
-          <PostRow />
-          <PostRow />
-          <PostRow />
-          <PostRow />
+          {notes?.map((note) => (
+            <PostRow key={note.id} />
+          ))}
         </div>
       </div>
     </aside>
