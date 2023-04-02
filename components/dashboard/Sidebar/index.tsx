@@ -11,10 +11,10 @@ import XCircle from "@/components/icons/XCircle";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import React, { useMemo } from "react";
 import { db } from "@/lib/firebase";
 import PostRow from "./PostRow";
 import { useAtom } from "jotai";
-import React from "react";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -26,15 +26,18 @@ const Sidebar = ({
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-
-  const [notes] = useCollectionData(
+  const [firestoreNotes] = useCollectionData(
     user &&
       query(
         collection(db, "users", user.uid, "notes"),
         orderBy("createdAt", "desc")
       ).withConverter(notesConverter)
   );
+
+  const notes = useMemo(() => {
+    return firestoreNotes;
+  }, [firestoreNotes]);
+
   console.log("🚀 => file: index.tsx:34 => notes:", notes);
 
   const { createNote } = useNotes({ userId: user?.uid });
@@ -77,10 +80,9 @@ const Sidebar = ({
             notes.map((note) => (
               <PostRow
                 key={note.id}
-                selected={selectedNoteId === note.id}
                 title={note.title}
                 content={note.content}
-                onClick={() => setSelectedNoteId(note.id)}
+                noteId={note.id}
               />
             ))
           ) : (
