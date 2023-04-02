@@ -17,6 +17,7 @@
     "@milkdown/plugin-cursor": "^7.0.0-next.6",
     "@milkdown/plugin-history": "^7.0.0",
     "@milkdown/plugin-listener": "^7.0.0-next.6",
+    "@milkdown/plugin-prism": "^7.1.1",
     "@milkdown/plugin-tooltip": "^7.0.0-next.6",
     "@milkdown/preset-commonmark": "^7.0.0-next.6",
     "@milkdown/preset-gfm": "^7.0.0-next.6",
