@@ -6,6 +6,7 @@ import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useMemo, useState } from "react";
 import { MilkdownProvider } from "@milkdown/react";
 import { useAtom, useAtomValue } from "jotai";
+import { stringify } from "querystring";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 type TextAreaProps = {
@@ -15,9 +16,9 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-
   const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
+  const [key, setKey] = useState("");
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -45,9 +46,10 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     )?.title;
 
     setInput(selectedNoteContent || "");
+    setKey(selectedNoteId || Math.random().toString());
     setTitle(selectedNoteTitle || "");
-  }, [notes]);
-
+  }, [notes, selectedNoteId]);
+  
   return (
     <div className="flex w-full flex-col items-center justify-center gap-10 overflow-y-auto">
       <div
@@ -70,6 +72,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
       >
         <MilkdownProvider>
           <MilkdownEditor
+            key={key}
             input={input}
             setInput={setInput}
             className="markdown prose h-full min-w-full focus:outline-none"
