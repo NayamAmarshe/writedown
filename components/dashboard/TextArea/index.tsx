@@ -1,11 +1,13 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useMemo, useState } from "react";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
+import { isSyncedAtom } from "@/stores/isSynced";
 import { useAtom, useAtomValue } from "jotai";
 import { toast } from "react-hot-toast";
 import { stringify } from "querystring";
@@ -18,8 +20,9 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [title, setTitle] = useState("");
-  const [input, setInput] = useState("");
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
+  const [title, setTitle] = useAtom(titleAtom);
+  const [input, setInput] = useAtom(inputAtom);
   const { updateNote, deleteNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
@@ -49,6 +52,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
+    setIsSynced(false);
     if (!selectedNoteId || !user) return;
     const interval = setTimeout(() => {
       updateNote({
@@ -57,6 +61,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
         content: input,
       });
       toast.success("Autosaved!");
+      setIsSynced(true);
     }, 3000);
 
     return () => clearInterval(interval);
@@ -79,6 +84,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
                 title: title === "" ? "Untitled" : title,
                 content: input,
               });
+              setIsSynced(true);
               toast.success("Saved!");
             }}
           >
@@ -86,14 +92,21 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           </button>
           <button
             type="button"
+            className="rounded-full bg-red-200 p-2 text-red-600"
             onClick={(e) => {
               if (!firestoreNotes || !selectedNoteId) return;
               deleteNote(selectedNoteId);
               toast.success("Deleted!");
+              if (selectedNoteId === firestoreNotes[0].id) {
+                setInput("");
+                setTitle("");
+                setSelectedNoteId(null);
+                return;
+              }
               setSelectedNoteId(firestoreNotes[0].id);
             }}
           >
-            Delete
+            Delete Post
           </button>
         </div>
         <input
