@@ -13,8 +13,8 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
 
   return (
-    <button
-      className={`flex flex-col gap-2 rounded-xl p-4 ${
+    <div
+      className={`flex cursor-pointer flex-col gap-2 rounded-xl p-4 ${
         selectedNoteId === noteId ? "bg-slate-200" : "bg-slate-50"
       }`}
       onClick={() => setSelectedNoteId(noteId)}
@@ -33,7 +33,7 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
           <Badge color="red">UX</Badge>
         </div> */}
       </button>
-    </button>
+    </div>
   );
 };
 

@@ -17,7 +17,6 @@ type TextAreaProps = {
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [input, setInput] = useState("");
-  const [key, setKey] = useState("");
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -37,6 +36,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     if (!notes) return;
 
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
+    console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
 
     setInput(selectedNote?.content || "");
   }, [notes, selectedNoteId]);
