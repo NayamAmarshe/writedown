@@ -4,6 +4,7 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useMemo, useState } from "react";
+import EditorButtons from "@/components/ui/EditorButtons";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { useAtom, useAtomValue } from "jotai";
@@ -77,8 +78,8 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
         />
 
         <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
-
         <MilkdownProvider>
+          <EditorButtons />
           <MilkdownEditor
             input={input}
             setInput={setInput}
