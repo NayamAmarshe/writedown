@@ -42,8 +42,9 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
 
-    setInput(selectedNote?.content || "");
-    setTitle(selectedNote?.title || "");
+    if (!selectedNote) return;
+    setInput(selectedNote.content);
+    setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
@@ -62,6 +63,13 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
+        <input
+          type="text"
+          className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed"
+        />
+
+        <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
+
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
