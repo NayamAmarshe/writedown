@@ -53,10 +53,13 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       .use(gfm)
   );
   useEffect(() => {
-    if (!notes || !selectedNoteId) return;
-    const currentnote = notes.find((note) => note.id === selectedNoteId);
-    if (!currentnote) return;
-    editor.get()?.action(replaceAll(currentnote.content));
+    if (!notes || !selectedNoteId) {
+      editor.get()?.action(replaceAll(""));
+      return;
+    }
+    const currentNote = notes.find((note) => note.id === selectedNoteId);
+    if (!currentNote) return;
+    editor.get()?.action(replaceAll(currentNote.content));
   }, [selectedNoteId]);
 
   return <Milkdown />;

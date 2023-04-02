@@ -51,7 +51,7 @@ const Sidebar = ({
 
   const newPostClickHandler = () => {
     createNote().then((x) => {
-      setSelectedNoteId(x || null);
+      x && setSelectedNoteId(x);
     });
   };
 
@@ -93,6 +93,7 @@ const Sidebar = ({
             notes.map((note) => (
               <PostRow
                 key={note.id}
+                userId={user?.uid}
                 title={note.title}
                 content={note.content}
                 noteId={note.id}
