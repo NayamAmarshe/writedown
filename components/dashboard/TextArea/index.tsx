@@ -38,16 +38,11 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   useEffect(() => {
     if (!notes) return;
 
-    const selectedNoteContent = notes.find(
-      (note) => note.id === selectedNoteId
-    )?.content;
+    const selectedNote = notes.find((note) => note.id === selectedNoteId);
+    console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
 
-    const selectedNoteTitle = notes.find(
-      (note) => note.id === selectedNoteId
-    )?.title;
-
-    setInput(selectedNoteContent || "");
-    setTitle(selectedNoteTitle || "");
+    setInput(selectedNote?.content || "");
+    setTitle(selectedNote?.title || "");
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
@@ -60,7 +55,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [title, input]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-10 overflow-y-auto">
+    <div className="flex w-full items-start justify-center overflow-y-auto">
       <div
         key={selectedNoteId}
         className={`h-fit min-h-[75%] w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
