@@ -17,8 +17,8 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
-
   const { updateNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
@@ -38,7 +38,9 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   useEffect(() => {
     if (!notes) return;
 
-    const selectedNote = notes.find((note) => note.id === selectedNoteId);
+    const selectedNoteContent = notes.find(
+      (note) => note.id === selectedNoteId
+    )?.content;
 
     const selectedNoteTitle = notes.find(
       (note) => note.id === selectedNoteId
@@ -49,7 +51,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
-    if (!notes || !selectedNoteId) return;
+    if (!selectedNoteId || !user) return;
     updateNote({
       id: selectedNoteId,
       title: title === "" ? "Untitled" : title,
@@ -60,25 +62,24 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-10 overflow-y-auto">
       <div
+        key={selectedNoteId}
         className={`h-fit min-h-[75%] w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
-        <MilkdownProvider>
-          <div>
-            <MilkdownEditor
-              input={title}
-              setInput={setTitle}
-              className="markdown prose h-fit min-w-full focus:outline-none"
-            />
-          </div>
-        </MilkdownProvider>
+        <input
+          className="text-3xl font-bold focus:outline-none"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+          value={title}
+        />
         <div className="h-0.5 w-full bg-slate-300"></div>
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="prose h-full min-w-full outline-none"
+            className="markdown prose h-full min-w-full focus:outline-none"
           />
         </MilkdownProvider>
       </div>
