@@ -19,7 +19,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
-  const { updateNote } = useNotes({ userId: user?.uid });
+  // const { updateNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -46,14 +46,14 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
-  useEffect(() => {
-    if (!selectedNoteId || !user) return;
-    updateNote({
-      id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
-      content: input,
-    });
-  }, [title, input]);
+  // useEffect(() => {
+  //   if (!selectedNoteId || !user) return;
+  //   updateNote({
+  //     id: selectedNoteId,
+  //     title: title === "" ? "Untitled" : title,
+  //     content: input,
+  //   });
+  // }, [title, input]);
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-scroll">
