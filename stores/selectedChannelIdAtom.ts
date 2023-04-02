@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const selectedChannelIdAtom = atom<string | null>(null);
+export const selectedNoteIdAtom = atom<string | null>(null);

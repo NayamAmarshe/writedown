@@ -5,22 +5,19 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
-import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
-import { IChannelData } from "@/types/utils/firebaseOperations";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { clipboard } from "@milkdown/plugin-clipboard";
 import { Milkdown, useEditor } from "@milkdown/react";
 import { history } from "@milkdown/plugin-history";
-import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
 import { gfm } from "@milkdown/preset-gfm";
-import React, { useEffect } from "react";
 import "@milkdown/theme-nord/style.css";
 import { useAtom } from "jotai";
+import React from "react";
 
 interface editorProps {
-  channelData?: IChannelData;
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   // clearSwitch: boolean;
@@ -35,9 +32,7 @@ const MilkdownEditor = ({
   // setClearSwitch,
   className,
 }: editorProps) => {
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
-  );
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
 
   const editor = useEditor((root) =>
     Editor.make()
