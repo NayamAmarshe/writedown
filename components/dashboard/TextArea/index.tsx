@@ -16,7 +16,6 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
   const [key, setKey] = useState("");
 
@@ -37,45 +36,23 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   useEffect(() => {
     if (!notes) return;
 
-    const selectedNoteContent = notes.find(
-      (note) => note.id === selectedNoteId
-    )?.content;
+    const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
-    const selectedNoteTitle = notes.find(
-      (note) => note.id === selectedNoteId
-    )?.title;
-
-    setInput(selectedNoteContent || "");
-    setKey(selectedNoteId || Math.random().toString());
-    setTitle(selectedNoteTitle || "");
+    setInput(selectedNote?.content || "");
   }, [notes, selectedNoteId]);
-  
+
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-10 overflow-y-auto">
+    <div className="flex w-full items-start justify-center overflow-y-auto">
       <div
-        className={`mt-24 h-fit w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+        className={`mt-52 min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
         <MilkdownProvider>
           <MilkdownEditor
-            input={title}
-            setInput={setTitle}
-            className="markdown prose h-full min-w-full focus:outline-none"
-          />
-        </MilkdownProvider>
-      </div>
-      <div
-        className={`h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
-          shiftRight ? "translate-x-52" : "translate-x-0"
-        }`}
-      >
-        <MilkdownProvider>
-          <MilkdownEditor
-            key={key}
             input={input}
             setInput={setInput}
-            className="markdown prose h-full min-w-full focus:outline-none"
+            className="prose h-full min-w-full outline-none"
           />
         </MilkdownProvider>
       </div>
