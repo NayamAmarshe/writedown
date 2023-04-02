@@ -20,7 +20,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [title, setTitle] = useState("");
   const [input, setInput] = useState("");
-  const { updateNote } = useNotes({ userId: user?.uid });
+  const { updateNote, deleteNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -64,24 +64,38 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-scroll">
-      <button
-        type="button"
-        onClick={(e) => {
-          updateNote({
-            id: selectedNoteId!,
-            title: title === "" ? "Untitled" : title,
-            content: input,
-          });
-          toast.success("Saved!");
-        }}
-      >
-        Save
-      </button>
       <div
         className={`mt-52 h-fit min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              if (!selectedNoteId) return;
+              updateNote({
+                id: selectedNoteId,
+                title: title === "" ? "Untitled" : title,
+                content: input,
+              });
+              toast.success("Saved!");
+            }}
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              if (!firestoreNotes || !selectedNoteId) return;
+              deleteNote(selectedNoteId);
+              toast.success("Deleted!");
+              setSelectedNoteId(firestoreNotes[0].id);
+            }}
+          >
+            Delete
+          </button>
+        </div>
         <input
           type="text"
           className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none"
@@ -97,7 +111,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="markdown prose h-full min-w-full focus:outline-none"
+            className="markdown prose h-max min-w-full focus:outline-none"
             notes={notes}
           />
         </MilkdownProvider>
