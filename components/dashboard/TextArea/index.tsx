@@ -22,7 +22,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     user &&
       query(
         collection(db, "users", user.uid, "notes"),
-        orderBy("createdAt", "desc")
+        orderBy("updatedAt", "desc")
       ).withConverter(notesConverter)
   );
 
