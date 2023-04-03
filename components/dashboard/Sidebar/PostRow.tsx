@@ -3,6 +3,7 @@ import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
+import RemoveMarkdown from "remove-markdown";
 import toast from "react-hot-toast";
 import { useAtom } from "jotai";
 import React from "react";
@@ -43,9 +44,9 @@ const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
     >
       <h6 className="font-medium">{title || <Skeleton className="w-1/2" />}</h6>
       <button className="flex flex-col gap-2">
-        <p className="text-sm text-slate-600">
+        <p className="w-full truncate text-left text-sm text-slate-600">
           {content === (undefined || null) && <Skeleton />}
-          {content.slice(0, 30) || "..."}
+          {RemoveMarkdown(content.slice(0, 50)) || "..."}
         </p>
 
         {/* TODO: Add tags  */}

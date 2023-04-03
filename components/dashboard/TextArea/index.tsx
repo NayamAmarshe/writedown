@@ -127,7 +127,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           {/* TITLE OF THE POST */}
           <input
             type="text"
-            className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none focus:ring-0"
+            className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0"
             onChange={(e) => {
               if (title === "") {
                 setTitle("Untitled");
