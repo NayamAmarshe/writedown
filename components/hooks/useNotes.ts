@@ -1,4 +1,5 @@
 import {
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -51,6 +52,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     try {
       // Create a document inside channelsRef array
       await setDoc(notesRef, noteData, { merge: true });
+      return id;
     } catch (error) {
       console.log("🚀 => file: operations.ts:37 => error", error);
     }
@@ -72,7 +74,23 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     [userId]
   );
 
-  return { createNote, updateNote };
+  const deleteNote = useCallback(
+    async (noteId: string) => {
+      if (!userId || !noteId) return;
+
+      const notesRef = doc(db, "users", userId, "notes", noteId);
+
+      try {
+        // Create a document inside channelsRef array
+        await deleteDoc(notesRef);
+      } catch (error) {
+        console.log("🚀 => file: operations.ts:37 => error", error);
+      }
+    },
+    [userId]
+  );
+
+  return { createNote, updateNote, deleteNote };
 };
 
 export default useNotes;

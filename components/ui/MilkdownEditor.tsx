@@ -5,24 +5,30 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import { TNotesData } from "@/types/utils/firebaseOperations";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { clipboard } from "@milkdown/plugin-clipboard";
 import { Milkdown, useEditor } from "@milkdown/react";
 import { history } from "@milkdown/plugin-history";
+import { replaceAll } from "@milkdown/utils";
 import { nord } from "@milkdown/theme-nord";
 import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
 import "@milkdown/theme-nord/style.css";
+import { useAtom } from "jotai";
 
 interface editorProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   className?: React.HTMLAttributes<HTMLDivElement>["className"];
+  notes?: TNotesData[] | undefined;
 }
 
-const MilkdownEditor = ({ setInput, input, className }: editorProps) => {
-  useEditor((root) =>
+const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const editor = useEditor((root) =>
     Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root);
@@ -46,6 +52,15 @@ const MilkdownEditor = ({ setInput, input, className }: editorProps) => {
       .use(clipboard)
       .use(gfm)
   );
+  useEffect(() => {
+    if (!notes || !selectedNoteId) {
+      editor.get()?.action(replaceAll(""));
+      return;
+    }
+    const currentNote = notes.find((note) => note.id === selectedNoteId);
+    if (!currentNote) return;
+    editor.get()?.action(replaceAll(currentNote.content));
+  }, [selectedNoteId]);
 
   return <Milkdown />;
 };

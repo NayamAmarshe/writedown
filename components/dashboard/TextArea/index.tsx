@@ -1,5 +1,6 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
@@ -7,7 +8,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import EditorButtons from "@/components/ui/EditorButtons";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
+import { isSyncedAtom } from "@/stores/isSynced";
 import { useAtom, useAtomValue } from "jotai";
+import { toast } from "react-hot-toast";
 import { stringify } from "querystring";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -18,9 +21,10 @@ type TextAreaProps = {
 
 const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [title, setTitle] = useState("");
-  const [input, setInput] = useState("");
-  const { updateNote } = useNotes({ userId: user?.uid });
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
+  const [title, setTitle] = useAtom(titleAtom);
+  const [input, setInput] = useAtom(inputAtom);
+  const { updateNote, deleteNote } = useNotes({ userId: user?.uid });
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -32,7 +36,8 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   const notes = useMemo(() => {
     if (!firestoreNotes) return;
-    if (firestoreNotes.length > 0) setSelectedNoteId(firestoreNotes[0].id);
+    if (firestoreNotes.length > 0 && !selectedNoteId)
+      setSelectedNoteId(firestoreNotes[0].id);
     return firestoreNotes;
   }, [firestoreNotes]);
 
@@ -48,18 +53,20 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
+    setIsSynced(false);
     if (!selectedNoteId || !user) return;
-    const interval = setInterval(() => {
+    const interval = setTimeout(() => {
       updateNote({
         id: selectedNoteId,
         title: title === "" ? "Untitled" : title,
         content: input,
       });
-      console.log("This function will run every 1 minute");
-    }, 60000); // 1 minute = 60,000 milliseconds
+      toast.success("Autosaved!");
+      setIsSynced(true);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [title, input]);
 
   return (
     <div className="flex w-full items-start justify-center overflow-y-scroll">
@@ -68,6 +75,41 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              if (!selectedNoteId) return;
+              updateNote({
+                id: selectedNoteId,
+                title: title === "" ? "Untitled" : title,
+                content: input,
+              });
+              setIsSynced(true);
+              toast.success("Saved!");
+            }}
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            className="rounded-full bg-red-200 p-2 text-red-600"
+            onClick={(e) => {
+              if (!firestoreNotes || !selectedNoteId) return;
+              deleteNote(selectedNoteId);
+              toast.success("Deleted!");
+              if (selectedNoteId === firestoreNotes[0].id) {
+                setInput("");
+                setTitle("");
+                setSelectedNoteId(null);
+                return;
+              }
+              setSelectedNoteId(firestoreNotes[0].id);
+            }}
+          >
+            Delete Post
+          </button>
+        </div>
         <input
           type="text"
           className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none"
@@ -83,7 +125,8 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="markdown prose h-full min-w-full focus:outline-none"
+            className="markdown prose h-max min-w-full focus:outline-none"
+            notes={notes}
           />
         </MilkdownProvider>
       </div>
