@@ -24,6 +24,7 @@
     "@milkdown/react": "^7.1.1",
     "@milkdown/theme-nord": "^7.1.1",
     "@milkdown/transformer": "^7.1.1",
+    "@milkdown/utils": "^7.1.1",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.17.1",
     "jotai": "^2.0.1",
