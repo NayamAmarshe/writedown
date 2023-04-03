@@ -10,7 +10,6 @@ import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import { useAtom, useAtomValue } from "jotai";
 import { toast } from "react-hot-toast";
-import { stringify } from "querystring";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 type TextAreaProps = {
@@ -119,7 +118,6 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
         />
 
         <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
-
         <MilkdownProvider>
           <MilkdownEditor
             input={input}
