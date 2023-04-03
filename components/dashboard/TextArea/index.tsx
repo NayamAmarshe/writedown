@@ -44,15 +44,23 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [firestoreNotes]);
 
   useEffect(() => {
-    if (!notes) return;
     if (!selectedNoteId) {
-      return;
+      createNote().then((newId) => {
+        if (!newId) return;
+        if (!isSynced && selectedNoteId) {
+          updateNote({
+            id: selectedNoteId,
+            title: title,
+            content: input,
+          });
+          toast.success("Autosaved!");
+          setIsSynced(true);
+        }
+        setSelectedNoteId(newId);
+      });
     }
-    if (notes.length < 1) {
-      setTitle("");
-      setInput("");
-      return;
-    }
+    if (!notes) return;
+
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
     if (!selectedNote) return;
@@ -113,6 +121,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
             Save
           </button>
           <button
+            id="del"
             type="button"
             className="rounded-full bg-red-200 p-2 text-red-600"
             onClick={(e) => {
@@ -120,7 +129,16 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
               deleteNote(selectedNoteId);
               toast.success("Deleted!");
 
-              setSelectedNoteId(firestoreNotes[0].id);
+              const noteIndex = firestoreNotes.findIndex(
+                (note) => note.id === selectedNoteId
+              );
+              const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
+              setSelectedNoteId(firestoreNotes[newIndex]?.id || null);
+              if (firestoreNotes.length < 2) {
+                setTitle("");
+                setInput("");
+                return;
+              }
             }}
           >
             Delete Post
