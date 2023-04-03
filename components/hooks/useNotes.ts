@@ -6,10 +6,14 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { TNotesData } from "@/types/utils/firebaseOperations";
+import { isSyncedAtom } from "@/stores/isSynced";
 import { useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
+import { useAtom } from "jotai";
 
 type UseNotesProps = {
   userId: string | undefined;
@@ -51,7 +55,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
     try {
       // Create a document inside channelsRef array
-      await setDoc(notesRef, noteData, { merge: true });
+      setDoc(notesRef, noteData, { merge: true });
       return id;
     } catch (error) {
       console.log("🚀 => file: operations.ts:37 => error", error);
