@@ -57,6 +57,7 @@ const Sidebar = ({
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
+
     if (!newId) return;
     if (!isSynced && selectedNoteId) {
       updateNote({
@@ -101,11 +102,11 @@ const Sidebar = ({
       )}
 
       {/* POSTS SECTION */}
-      <div className="flex flex-col gap-3">
+      <div className="flex h-full flex-col gap-3">
         {/* POSTS HEADING */}
         <h6 className="font-semibold">Posts</h6>
         {/* POSTS LIST */}
-        <div className="flex flex-col gap-2">
+        <div className="flex h-full flex-col gap-2 overflow-y-auto p-1">
           {notes ? (
             notes.map((note) => (
               <PostRow
