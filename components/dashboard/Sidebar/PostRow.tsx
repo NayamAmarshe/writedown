@@ -1,5 +1,9 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
+import useNotes from "@/components/hooks/useNotes";
+import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
+import toast from "react-hot-toast";
 import { useAtom } from "jotai";
 import React from "react";
 
@@ -7,17 +11,33 @@ type PostRowProps = {
   title: string;
   content: string;
   noteId: string;
+  userId: string | undefined;
 };
 
-const PostRow = ({ title, content, noteId }: PostRowProps) => {
+const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
+  const [editorTitle, setEditorTitle] = useAtom(titleAtom);
+  const [input, setInput] = useAtom(inputAtom);
+  const { updateNote, deleteNote } = useNotes({ userId: userId });
 
   return (
     <div
       className={`flex cursor-pointer flex-col gap-2 rounded-xl p-4 ${
         selectedNoteId === noteId ? "bg-slate-200" : "bg-slate-50"
       }`}
-      onClick={() => setSelectedNoteId(noteId)}
+      onClick={() => {
+        if (!isSynced && selectedNoteId) {
+          updateNote({
+            id: selectedNoteId,
+            title: editorTitle,
+            content: input,
+          });
+          toast.success("Autosaved!");
+          setIsSynced(true);
+        }
+        setSelectedNoteId(noteId);
+      }}
     >
       <h6 className="font-medium">{title || <Skeleton className="w-1/2" />}</h6>
       <button className="flex flex-col gap-2">
