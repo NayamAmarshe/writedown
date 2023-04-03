@@ -23,7 +23,9 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
   const [input, setInput] = useAtom(inputAtom);
-  const { updateNote, deleteNote } = useNotes({ userId: user?.uid });
+  const { updateNote, deleteNote, createNote } = useNotes({
+    userId: user?.uid,
+  });
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -35,25 +37,41 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   const notes = useMemo(() => {
     if (!firestoreNotes) return;
-    if (firestoreNotes.length > 0 && !selectedNoteId)
+    if (firestoreNotes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(firestoreNotes[0].id);
+    }
     return firestoreNotes;
   }, [firestoreNotes]);
 
   useEffect(() => {
     if (!notes) return;
-
+    if (!selectedNoteId) {
+      return;
+    }
+    if (notes.length < 1) {
+      setTitle("");
+      setInput("");
+      return;
+    }
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
-
     if (!selectedNote) return;
+
     setInput(selectedNote.content);
     setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
+    //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
+    if (
+      selectedNoteId ===
+        notes?.find((note) => input === note.content && title === note.title)
+          ?.id ||
+      !selectedNoteId ||
+      !user
+    )
+      return;
     setIsSynced(false);
-    if (!selectedNoteId || !user) return;
     const interval = setTimeout(() => {
       updateNote({
         id: selectedNoteId,
@@ -78,7 +96,11 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           <button
             type="button"
             onClick={() => {
-              if (!selectedNoteId) return;
+              if (
+                !selectedNoteId ||
+                !notes?.find((note) => note.id === selectedNoteId)
+              )
+                return;
               updateNote({
                 id: selectedNoteId,
                 title: title === "" ? "Untitled" : title,
@@ -97,12 +119,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
               if (!firestoreNotes || !selectedNoteId) return;
               deleteNote(selectedNoteId);
               toast.success("Deleted!");
-              if (selectedNoteId === firestoreNotes[0].id) {
-                setInput("");
-                setTitle("");
-                setSelectedNoteId(null);
-                return;
-              }
+
               setSelectedNoteId(firestoreNotes[0].id);
             }}
           >
