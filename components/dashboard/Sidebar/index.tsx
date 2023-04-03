@@ -68,10 +68,11 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`fixed z-50 flex h-full max-h-full w-96 flex-col gap-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
-        showSidebar ? "translate-x-0" : "ml-50 -translate-x-full"
+      className={`absolute z-50 flex h-[calc(96%)] w-96 flex-col space-y-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
+        showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
+      {/* SIDEBAR TOGGLE BUTTON */}
       <IconButton onClick={() => setShowSidebar(!showSidebar)}>
         <ChevronDoubleLeft
           className={`duration-400 h-5 w-5 transition-transform ${
@@ -80,6 +81,7 @@ const Sidebar = ({
         />
       </IconButton>
 
+      {/* USER  GREETING SECTION */}
       {user ? (
         <div className="flex items-center gap-2">
           <button
@@ -105,6 +107,7 @@ const Sidebar = ({
         <Skeleton className="h-6 w-2/3" />
       )}
 
+      {/* CREATE NEW POST BUTTON */}
       {notes ? (
         <Button onLoad={newPostClickHandler} onClick={newPostClickHandler}>
           <span className="flex items-center justify-center gap-1">
@@ -117,11 +120,11 @@ const Sidebar = ({
       )}
 
       {/* POSTS SECTION */}
-      <div className="flex h-full flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {/* POSTS HEADING */}
         <h6 className="font-semibold">Posts</h6>
         {/* POSTS LIST */}
-        <div className="flex h-full flex-col gap-2 overflow-y-auto p-1">
+        <div className="flex flex-col gap-2 p-1">
           {notes ? (
             notes.map((note) => (
               <PostRow

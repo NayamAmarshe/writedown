@@ -29,6 +29,16 @@ type PostButtonsProps = {
   shiftRight?: boolean;
 };
 
+const formatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: undefined,
+  hour12: true,
+});
+
 const PostButtons = ({
   isSynced,
   setIsSynced,
@@ -89,7 +99,7 @@ const PostButtons = ({
       {currentNote ? (
         <p className="flex items-center justify-center text-sm font-medium text-slate-500">
           Last Updated{" "}
-          {(currentNote?.updatedAt as Timestamp)?.toDate()?.getTime()}
+          {formatter.format((currentNote.updatedAt as Timestamp).toDate())}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
