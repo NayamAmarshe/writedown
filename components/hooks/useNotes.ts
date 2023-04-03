@@ -6,12 +6,9 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { TNotesData } from "@/types/utils/firebaseOperations";
-import { isSyncedAtom } from "@/stores/isSynced";
+import { isSyncingAtom } from "@/stores/isSyncing";
 import { useCallback, useMemo } from "react";
-import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useAtom } from "jotai";
 
@@ -20,6 +17,7 @@ type UseNotesProps = {
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
+  const [isSyncing, setIsSyncing] = useAtom(isSyncingAtom);
   // const notes = useMemo(async () => {
   //   if (!userId) return;
 
@@ -65,12 +63,14 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   const updateNote = useCallback(
     async (note: { id: string; title: string; content: string }) => {
       if (!userId || !note) return;
+      setIsSyncing(true);
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
 
       try {
         // Create a document inside channelsRef array
-        await updateDoc(notesRef, note);
+        updateDoc(notesRef, note);
+        setIsSyncing(false);
       } catch (error) {
         console.log("🚀 => file: operations.ts:37 => error", error);
       }

@@ -27,7 +27,7 @@ const EditorButtons = () => {
     return editor.get()?.action(callCommand(command, payload));
   }
   return (
-    <div className="flex w-full gap-4 pb-4">
+    <div className="flex w-full justify-around">
       <button onClick={() => call(wrapInHeadingCommand.key)}>
         <MaterialHeadingOne />
       </button>
