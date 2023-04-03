@@ -52,7 +52,26 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
     if (!selectedNote) return;
     setInput(selectedNote.content);
     setTitle(selectedNote.title);
-  }, [notes, selectedNoteId, notes]);
+  }, [notes, selectedNoteId]);
+
+  useEffect(() => {
+    if (!notes) return;
+    if (notes.length === 0) {
+      createNote().then((newId) => {
+        if (!newId) return;
+        if (!isSynced && selectedNoteId) {
+          updateNote({
+            id: selectedNoteId,
+            title: title,
+            content: input,
+          });
+          toast.success("Autosaved!");
+          setIsSynced(true);
+        }
+        setSelectedNoteId(newId);
+      });
+    }
+  }, [notes]);
 
   useEffect(() => {
     //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
