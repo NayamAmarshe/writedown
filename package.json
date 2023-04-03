@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "firebase": "firebase emulators:start",
     "prepare": "husky install"
   },
   "dependencies": {
