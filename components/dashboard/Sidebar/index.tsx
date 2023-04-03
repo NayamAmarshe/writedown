@@ -53,10 +53,11 @@ const Sidebar = ({
 
   console.log("🚀 => file: index.tsx:34 => notes:", notes);
 
-  const { createNote } = useNotes({ userId: user?.uid });
+  const { createNote, updateNote } = useNotes({ userId: user?.uid });
 
   const newPostClickHandler = async () => {
-    const newId = createNote();
+    const newId = await createNote();
+    if (!newId) return;
     if (!isSynced && selectedNoteId) {
       updateNote({
         id: selectedNoteId,
@@ -66,6 +67,7 @@ const Sidebar = ({
       toast.success("Autosaved!");
       setIsSynced(true);
     }
+    setSelectedNoteId(newId);
   };
 
   return (

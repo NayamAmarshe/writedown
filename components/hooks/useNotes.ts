@@ -55,8 +55,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
     try {
       // Create a document inside channelsRef array
-      console.log("new note id: ", id);
-      //setSelectedNoteId(id);
       setDoc(notesRef, noteData, { merge: true });
       return id;
     } catch (error) {
