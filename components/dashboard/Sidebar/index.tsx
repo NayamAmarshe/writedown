@@ -3,15 +3,18 @@ import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import React, { useEffect, useMemo } from "react";
 import XCircle from "@/components/icons/XCircle";
+import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import React, { useMemo } from "react";
+import toast from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import PostRow from "./PostRow";
 import { useAtom } from "jotai";
@@ -40,6 +43,9 @@ const Sidebar = ({
   );
 
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
+  const [title, setTitle] = useAtom(titleAtom);
+  const [input, setInput] = useAtom(inputAtom);
 
   const notes = useMemo(() => {
     return firestoreNotes;
@@ -49,10 +55,17 @@ const Sidebar = ({
 
   const { createNote } = useNotes({ userId: user?.uid });
 
-  const newPostClickHandler = () => {
-    createNote().then((x) => {
-      x && setSelectedNoteId(x);
-    });
+  const newPostClickHandler = async () => {
+    const newId = createNote();
+    if (!isSynced && selectedNoteId) {
+      updateNote({
+        id: selectedNoteId,
+        title: title,
+        content: input,
+      });
+      toast.success("Autosaved!");
+      setIsSynced(true);
+    }
   };
 
   return (
@@ -78,7 +91,9 @@ const Sidebar = ({
       )}
 
       {notes ? (
-        <Button onClick={newPostClickHandler}>Create New Post</Button>
+        <Button onLoad={newPostClickHandler} onClick={newPostClickHandler}>
+          Create New Post
+        </Button>
       ) : (
         <Skeleton className="h-9 w-full" borderRadius={50} />
       )}
