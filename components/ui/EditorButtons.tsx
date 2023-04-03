@@ -20,36 +20,46 @@ import { useEditor } from "@milkdown/react";
 import "@milkdown/theme-nord/style.css";
 import React from "react";
 
-const EditorButtons = () => {
+type EditorButtonsProps = {
+  shiftRight?: boolean;
+};
+
+const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   const editor = useEditor(() => Editor.make());
 
   function call<T>(command: CmdKey<T>, payload?: T) {
     return editor.get()?.action(callCommand(command, payload));
   }
   return (
-    <div className="flex w-full justify-around">
-      <button onClick={() => call(wrapInHeadingCommand.key)}>
-        <MaterialHeadingOne />
-      </button>
-      <button onClick={() => call(toggleStrongCommand.key)}>
-        <MaterialFormatBold />
-      </button>
-      <button onClick={() => call(toggleEmphasisCommand.key)}>
-        <MaterialFormatItalic />
-      </button>
-      <button onClick={() => call(wrapInBlockquoteCommand.key)}>
-        <MingcuteQuoteRight />
-      </button>
-      <button onClick={() => call(toggleStrikethroughCommand.key)}>
-        <OutlineStrikethrough />
-      </button>
-      <button onClick={() => call(wrapInOrderedListCommand.key)}>
-        <MaterialUnorderedList />
-      </button>
-      <button onClick={() => call(toggleInlineCodeCommand.key)}>
-        <MaterialCodeRounded />
-      </button>
+    <div
+      className={`m-4 flex w-full max-w-3xl rounded-xl bg-white p-2 transition-transform duration-300 ${
+        shiftRight ? "translate-x-52" : "translate-x-0"
+      }`}
+    >
+      <div className="flex w-full justify-around">
+        <button onClick={() => call(wrapInHeadingCommand.key)}>
+          <MaterialHeadingOne />
+        </button>
+        <button onClick={() => call(toggleStrongCommand.key)}>
+          <MaterialFormatBold />
+        </button>
+        <button onClick={() => call(toggleEmphasisCommand.key)}>
+          <MaterialFormatItalic />
+        </button>
+        <button onClick={() => call(wrapInBlockquoteCommand.key)}>
+          <MingcuteQuoteRight />
+        </button>
+        <button onClick={() => call(toggleStrikethroughCommand.key)}>
+          <OutlineStrikethrough />
+        </button>
+        <button onClick={() => call(wrapInOrderedListCommand.key)}>
+          <MaterialUnorderedList />
+        </button>
+        <button onClick={() => call(toggleInlineCodeCommand.key)}>
+          <MaterialCodeRounded />
+        </button>
+      </div>
     </div>
   );
 };
-export default EditorButtons;
+export default React.memo(EditorButtons);

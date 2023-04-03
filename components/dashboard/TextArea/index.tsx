@@ -5,13 +5,18 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useMemo, useState } from "react";
+import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import EditorButtons from "@/components/ui/EditorButtons";
+import ArrowPath from "@/components/icons/ArrowPath";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import { useAtom, useAtomValue } from "jotai";
+import Check from "@/components/icons/Check";
+import Trash from "@/components/icons/Trash";
 import { toast } from "react-hot-toast";
+import PostButtons from "./PostButtons";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 type TextAreaProps = {
@@ -24,12 +29,11 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
   const [input, setInput] = useAtom(inputAtom);
-  const [isSyncing, setIsSyncing] = useAtom(isSyncingAtom);
   const { updateNote, deleteNote, createNote } = useNotes({
     userId: user?.uid,
   });
 
-  const [firestoreNotes] = useCollectionData(
+  const [notes] = useCollectionData(
     user &&
       query(
         collection(db, "users", user.uid, "notes"),
@@ -37,68 +41,18 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const notes = useMemo(() => {
-    if (!firestoreNotes) return;
-    if (firestoreNotes.length > 0 && !selectedNoteId) {
-      setSelectedNoteId(firestoreNotes[0].id);
-    }
-    return firestoreNotes;
-  }, [firestoreNotes]);
-
-  const saveNoteHandler = () => {
-    if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
-      return;
-    updateNote({
-      id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
-      content: input,
-    });
-    setIsSynced(true);
-    toast.success("Saved!");
-  };
-
-  const deleteNoteHandler = () => {
-    if (!firestoreNotes || !selectedNoteId) return;
-    deleteNote(selectedNoteId);
-    toast.success("Deleted!");
-
-    const noteIndex = firestoreNotes.findIndex(
-      (note) => note.id === selectedNoteId
-    );
-    const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
-    setSelectedNoteId(firestoreNotes[newIndex]?.id || null);
-    if (firestoreNotes.length < 2) {
-      setTitle("");
-      setInput("");
-      return;
-    }
-  };
-
   useEffect(() => {
-    if (!selectedNoteId) {
-      createNote().then((newId) => {
-        if (!newId) return;
-        if (!isSynced && selectedNoteId) {
-          updateNote({
-            id: selectedNoteId,
-            title: title,
-            content: input,
-          });
-          toast.success("Autosaved!");
-          setIsSynced(true);
-        }
-        setSelectedNoteId(newId);
-      });
-    }
     if (!notes) return;
+    if (notes.length > 0 && !selectedNoteId) {
+      setSelectedNoteId(notes[0].id);
+    }
 
+    if (!notes) return;
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
-    console.log("🚀 => file: index.tsx:40 => selectedNote:", selectedNote);
     if (!selectedNote) return;
-
     setInput(selectedNote.content);
     setTitle(selectedNote.title);
-  }, [notes, selectedNoteId]);
+  }, [notes, selectedNoteId, notes]);
 
   useEffect(() => {
     //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
@@ -127,40 +81,24 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-start overflow-y-scroll">
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
-      <div
-        className={`mt-52 flex w-full max-w-3xl select-none items-end justify-between gap-4 transition-transform duration-300 ${
-          shiftRight ? "translate-x-52" : "translate-x-0"
-        }`}
-      >
-        <div>Last Updated at NA</div>
-        <div className="flex gap-4">
-          <button
-            id="del"
-            type="button"
-            className="rounded-full border-2 border-red-600 bg-red-100 p-2 font-bold text-red-600"
-            onClick={deleteNoteHandler}
-          >
-            Delete Post
-          </button>
-          <button
-            type="button"
-            className="rounded-full border-2 border-indigo-600 bg-indigo-100 p-2 font-bold text-indigo-600"
-            onClick={saveNoteHandler}
-          >
-            {isSyncing ? "Saving..." : isSynced ? "Saved" : "Save Note"}
-          </button>
-        </div>
-      </div>
+      <PostButtons
+        deleteNote={deleteNote}
+        selectedNoteId={selectedNoteId}
+        setSelectedNoteId={setSelectedNoteId}
+        isSynced={isSynced}
+        setIsSynced={setIsSynced}
+        input={input}
+        title={title}
+        setInput={setInput}
+        setTitle={setTitle}
+        notes={notes}
+        updateNote={updateNote}
+        shiftRight={shiftRight}
+      />
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <MilkdownProvider>
-        <div
-          className={`m-4 flex w-full max-w-3xl rounded-xl bg-white p-2 transition-transform duration-300 ${
-            shiftRight ? "translate-x-52" : "translate-x-0"
-          }`}
-        >
-          <EditorButtons />
-        </div>
+        <EditorButtons shiftRight={shiftRight} />
 
         <div
           className={`min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
