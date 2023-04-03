@@ -60,7 +60,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     const currentNote = notes.find((note) => note.id === selectedNoteId);
     if (!currentNote) return;
     editor.get()?.action(replaceAll(currentNote.content));
-  }, [selectedNoteId]);
+  }, [selectedNoteId, notes]);
 
   return <Milkdown />;
 };
