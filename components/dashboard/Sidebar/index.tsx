@@ -6,6 +6,7 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import React, { useEffect, useMemo } from "react";
@@ -16,6 +17,7 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import toast from "react-hot-toast";
 import { db } from "@/lib/firebase";
+import { auth } from "@/pages/_app";
 import PostRow from "./PostRow";
 import { useAtom } from "jotai";
 
@@ -57,17 +59,10 @@ const Sidebar = ({
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
+    console.log("🚀 => file: index.tsx:60 => newId:", newId);
 
     if (!newId) return;
-    if (!isSynced && selectedNoteId) {
-      updateNote({
-        id: selectedNoteId,
-        title: title,
-        content: input,
-      });
-      toast.success("Autosaved!");
-      setIsSynced(true);
-    }
+
     setSelectedNoteId(newId);
   };
 
@@ -86,16 +81,36 @@ const Sidebar = ({
       </IconButton>
 
       {user ? (
-        <h4 className="text-xl font-semibold text-slate-500">
-          Hi there, <span className="text-slate-900">{user?.displayName}</span>
-        </h4>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              auth.signOut();
+            }}
+          >
+            <img
+              src={
+                user.photoURL ||
+                `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+              }
+              alt="User Photo"
+              className="h-8 w-8"
+            />
+          </button>
+          <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
+            Hi there,{" "}
+            <span className="text-slate-900">{user?.displayName}</span>
+          </h4>
+        </div>
       ) : (
         <Skeleton className="h-6 w-2/3" />
       )}
 
       {notes ? (
         <Button onLoad={newPostClickHandler} onClick={newPostClickHandler}>
-          Create New Post
+          <span className="flex items-center justify-center gap-1">
+            <PlusCircle className="h-5 w-5" />
+            Create New Post
+          </span>
         </Button>
       ) : (
         <Skeleton className="h-9 w-full" borderRadius={50} />

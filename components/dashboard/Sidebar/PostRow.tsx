@@ -24,7 +24,9 @@ const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
   return (
     <div
       className={`flex cursor-pointer flex-col gap-2 rounded-xl p-4 ${
-        selectedNoteId === noteId ? "bg-slate-200" : "bg-slate-50"
+        selectedNoteId === noteId
+          ? "bg-slate-200"
+          : "bg-slate-50 hover:bg-slate-100"
       }`}
       onClick={() => {
         if (!isSynced && selectedNoteId) {
