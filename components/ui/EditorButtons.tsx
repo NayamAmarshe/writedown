@@ -1,23 +1,19 @@
 import {
   toggleEmphasisCommand,
   toggleStrongCommand,
-  wrapInBulletListCommand,
   wrapInOrderedListCommand,
   wrapInBlockquoteCommand,
   toggleInlineCodeCommand,
   wrapInHeadingCommand,
 } from "@milkdown/preset-commonmark";
-import {
-  AiOutlineItalic,
-  AiOutlineOrderedList,
-  AiOutlineUnorderedList,
-  AiOutlineStrikethrough,
-  AiOutlineUnderline,
-  AiOutlineBold,
-} from "react-icons/ai";
+import MaterialUnorderedList from "../icons/MaterialUnorderedList";
 import { toggleStrikethroughCommand } from "@milkdown/preset-gfm";
-import { VscQuote, VscCode } from "react-icons/vsc";
-import { CgFormatHeading } from "react-icons/cg";
+import OutlineStrikethrough from "../icons/OutlineStrikethrough";
+import MaterialFormatItalic from "../icons/MaterialFormatItalic";
+import MaterialCodeRounded from "../icons/MaterialCodeRounded";
+import MaterialFormatBold from "../icons/MaterialFormatBold";
+import MingcuteQuoteRight from "../icons/MingcuteQuoteRight";
+import MaterialHeadingOne from "../icons/MaterialHeadingOne";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
@@ -33,28 +29,25 @@ const EditorButtons = () => {
   return (
     <div className="flex w-full gap-4 pb-4">
       <button onClick={() => call(wrapInHeadingCommand.key)}>
-        <CgFormatHeading size={20} />
+        <MaterialHeadingOne />
       </button>
       <button onClick={() => call(toggleStrongCommand.key)}>
-        <AiOutlineBold />
+        <MaterialFormatBold />
       </button>
       <button onClick={() => call(toggleEmphasisCommand.key)}>
-        <AiOutlineItalic />
+        <MaterialFormatItalic />
       </button>
       <button onClick={() => call(wrapInBlockquoteCommand.key)}>
-        <VscQuote />
+        <MingcuteQuoteRight />
       </button>
       <button onClick={() => call(toggleStrikethroughCommand.key)}>
-        <AiOutlineStrikethrough />
-      </button>
-      <button onClick={() => call(wrapInBulletListCommand.key)}>
-        <AiOutlineUnorderedList />
+        <OutlineStrikethrough />
       </button>
       <button onClick={() => call(wrapInOrderedListCommand.key)}>
-        <AiOutlineOrderedList />
+        <MaterialUnorderedList />
       </button>
       <button onClick={() => call(toggleInlineCodeCommand.key)}>
-        <VscCode size={20} />
+        <MaterialCodeRounded />
       </button>
     </div>
   );
