@@ -37,6 +37,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     if (!userId) return;
 
     const id = crypto.randomUUID();
+    const serverTime = serverTimestamp();
 
     const noteData: TNotesData = {
       id,
@@ -45,8 +46,8 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       slug: id,
       title: "Untitled",
       userId,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
+      createdAt: serverTime,
+      updatedAt: serverTime,
     };
 
     const notesRef = doc(db, "users", userId, "notes", id);

@@ -120,25 +120,30 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
         <EditorButtons shiftRight={shiftRight} />
 
         <div
-          className={`min-h-full w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+          className={`h-fit w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
           }`}
         >
+          {/* TITLE OF THE POST */}
           <input
             type="text"
-            className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none"
+            className="w-full appearance-none border-none p-0 text-3xl font-bold leading-relaxed focus:outline-none focus:ring-0"
             onChange={(e) => {
+              if (title === "") {
+                setTitle("Untitled");
+              }
               setTitle(e.target.value);
             }}
             value={title}
           />
 
+          {/* SEPARATOR */}
           <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
 
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="markdown prose h-full min-w-full focus:outline-none"
+            className="prose focus:outline-none"
             notes={notes}
           />
         </div>
