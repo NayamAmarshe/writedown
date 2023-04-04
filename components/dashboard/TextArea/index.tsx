@@ -120,7 +120,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
         <EditorButtons shiftRight={shiftRight} />
 
         <div
-          className={`h-fit w-full max-w-3xl rounded-xl bg-white p-5 transition-transform duration-300 ${
+          className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
           }`}
         >
@@ -138,12 +138,12 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
           />
 
           {/* SEPARATOR */}
-          <div className="mb-5 mt-3 h-0.5 w-full rounded-full bg-slate-200" />
+          <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200" />
 
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="prose focus:outline-none"
+            className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
             notes={notes}
           />
         </div>
