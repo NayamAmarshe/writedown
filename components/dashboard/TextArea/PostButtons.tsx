@@ -99,7 +99,7 @@ const PostButtons = ({
       {currentNote ? (
         <p className="flex items-center justify-center text-sm font-medium text-slate-500">
           Last Updated{" "}
-          {formatter.format((currentNote.updatedAt as Timestamp).toDate())}
+          {formatter.format((currentNote.updatedAt as Timestamp)?.toDate())}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
