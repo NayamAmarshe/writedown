@@ -68,7 +68,7 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`absolute z-50 flex h-[calc(96%)] w-96 flex-col space-y-5 rounded-xl bg-white p-4 transition-transform duration-300 ${
+      className={`absolute z-50 flex h-[calc(96%)] w-96 flex-col space-y-5 bg-white p-4 transition-transform duration-300 md:rounded-xl ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
