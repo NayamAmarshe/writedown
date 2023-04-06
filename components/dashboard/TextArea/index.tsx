@@ -123,7 +123,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
         <div
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
-            shiftRight ? "translate-x-52" : "translate-x-0"
+            shiftRight ? "translate-x-24" : "translate-x-0"
           }`}
         >
           {/* TITLE OF THE POST */}
