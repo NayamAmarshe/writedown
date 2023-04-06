@@ -95,7 +95,7 @@ const Sidebar = ({
                 `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
               }
               alt="User Photo"
-              className="h-8 w-8"
+              className="h-8 w-8 rounded-full object-cover"
             />
           </button>
           <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
