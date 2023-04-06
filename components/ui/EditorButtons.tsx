@@ -32,34 +32,53 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   }
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl rounded-xl bg-white p-2 transition-transform duration-300 ${
+      className={`m-4 flex w-full max-w-3xl flex-row items-center justify-around rounded-xl bg-white p-1 transition-transform duration-300 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
-      <div className="flex w-full justify-around">
-        <button onClick={() => call(wrapInHeadingCommand.key)}>
-          <MaterialHeadingOne />
-        </button>
-        <button onClick={() => call(toggleStrongCommand.key)}>
-          <MaterialFormatBold />
-        </button>
-        <button onClick={() => call(toggleEmphasisCommand.key)}>
-          <MaterialFormatItalic />
-        </button>
-        <button onClick={() => call(wrapInBlockquoteCommand.key)}>
-          <MingcuteQuoteRight />
-        </button>
-        <button onClick={() => call(toggleStrikethroughCommand.key)}>
-          <OutlineStrikethrough />
-        </button>
-        <button onClick={() => call(wrapInOrderedListCommand.key)}>
-          <MaterialUnorderedList />
-        </button>
-        <button onClick={() => call(toggleInlineCodeCommand.key)}>
-          <MaterialCodeRounded />
-        </button>
-      </div>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(wrapInHeadingCommand.key)}
+      >
+        <MaterialHeadingOne />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(toggleStrongCommand.key)}
+      >
+        <MaterialFormatBold />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(toggleEmphasisCommand.key)}
+      >
+        <MaterialFormatItalic />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(wrapInBlockquoteCommand.key)}
+      >
+        <MingcuteQuoteRight />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(toggleStrikethroughCommand.key)}
+      >
+        <OutlineStrikethrough />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(wrapInOrderedListCommand.key)}
+      >
+        <MaterialUnorderedList />
+      </button>
+      <button
+        className="rounded-xl p-2 hover:bg-slate-200"
+        onClick={() => call(toggleInlineCodeCommand.key)}
+      >
+        <MaterialCodeRounded />
+      </button>
     </div>
   );
 };
-export default React.memo(EditorButtons);
+export default EditorButtons;

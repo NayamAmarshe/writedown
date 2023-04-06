@@ -98,7 +98,9 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
   }, [title, input]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-start overflow-y-scroll">
+    <div
+      className={`flex w-full flex-col items-center justify-start overflow-y-scroll`}
+    >
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons
         deleteNote={deleteNote}
