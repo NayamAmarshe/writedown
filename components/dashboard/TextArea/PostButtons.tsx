@@ -91,7 +91,7 @@ const PostButtons = ({
 
   return (
     <div
-      className={`mt-52 flex w-full max-w-3xl select-none items-center justify-between gap-4 transition-transform duration-300 ${
+      className={`mt-4 flex w-full max-w-3xl select-none items-center justify-between gap-4 px-4 transition-transform duration-300 md:mt-52 md:px-0 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
@@ -115,7 +115,7 @@ const PostButtons = ({
         >
           <span className="flex items-center justify-center gap-1">
             <Trash className="h-5 w-5" />
-            Delete Post
+            <p className="hidden md:inline">Delete Post</p>
           </span>
         </button>
 
@@ -128,19 +128,19 @@ const PostButtons = ({
           {isSyncing && (
             <span className="flex items-center justify-center gap-1">
               <ArrowPath className="h-5 w-5" />
-              Saving
+              <p className="hidden md:inline">Saving</p>
             </span>
           )}
           {!isSyncing && isSynced && (
             <span className="flex items-center justify-center gap-1">
               <Check className="h-5 w-5" />
-              Saved
+              <p className="hidden md:inline">Saved</p>
             </span>
           )}
           {!isSyncing && !isSynced && (
             <span className="flex items-center justify-center gap-1">
               <CloudArrowUp className="h-5 w-5" />
-              Save Note
+              <p className="hidden md:inline">Save Note</p>
             </span>
           )}
         </button>
