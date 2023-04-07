@@ -29,7 +29,7 @@ const Sidebar = ({
     user &&
       query(
         collection(db, "users", user.uid, "notes"),
-        orderBy("createdAt", "desc")
+        orderBy("updatedAt", "asc")
       ).withConverter(notesConverter),
     {
       snapshotListenOptions: {

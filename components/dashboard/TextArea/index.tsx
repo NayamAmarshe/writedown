@@ -64,7 +64,9 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
             title: title,
             content: input,
           });
-          toast.success("Autosaved!");
+          toast.success("Autosaved!", {
+            position: "bottom-right",
+          });
           setIsSynced(true);
         }
         setSelectedNoteId(newId);
@@ -89,7 +91,9 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
         title: title === "" ? "Untitled" : title,
         content: input,
       });
-      toast.success("Autosaved!");
+      toast.success("Autosaved!", {
+        position: "bottom-right",
+      });
       setIsSynced(true);
     }, 3000);
 
@@ -153,7 +157,7 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
+            className="!max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
             notes={notes}
           />
         </div>
