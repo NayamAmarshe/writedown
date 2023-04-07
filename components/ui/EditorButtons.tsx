@@ -33,7 +33,7 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   return (
     <div
       className={`m-4 flex w-full max-w-3xl flex-row items-center justify-around rounded-xl bg-white p-1 transition-transform duration-300 ${
-        shiftRight ? "translate-x-24" : "translate-x-0"
+        shiftRight ? "translate-x-24 md:translate-x-52" : "translate-x-0"
       }`}
     >
       <button
