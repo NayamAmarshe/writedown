@@ -32,11 +32,11 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   }
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl rounded-xl bg-white p-1 transition-transform duration-300 ${
+      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 sm:justify-start ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
-      <div className="flex w-full flex-row items-center gap-2 overflow-x-auto">
+      <div className="flex flex-row items-center gap-2 overflow-x-auto sm:w-full sm:justify-evenly">
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key)}
