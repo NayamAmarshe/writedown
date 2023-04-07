@@ -21,26 +21,30 @@ import MaterialLink from "../icons/MaterialLink";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
-import Checkbox from "../icons/Checkbox";
 import "@milkdown/theme-nord/style.css";
-import React from "react";
-
+import React, { useState } from "react";
+import Modal from "./Modal";
+import Input from "./Input";
 type EditorButtonsProps = {
   shiftRight?: boolean;
 };
 
 const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+
   const editor = useEditor(() => Editor.make());
 
   function call<T>(command: CmdKey<T>, payload?: T) {
     return editor.get()?.action(callCommand(command, payload));
   }
-  // Function to insert image
-  const link: any = {
-    url: "",
-    title: "",
+  // Object for inserting images
+  const imageHandler = () => {
+    const link = { title: title, url: url };
+    const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
+    call(insertImageCommand.key, image);
   };
-  const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
   return (
     <div
       className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 sm:justify-start ${
@@ -84,21 +88,40 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         >
           <MaterialUnorderedList />
         </button>
-        <button>
-          <Checkbox />
-        </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleInlineCodeCommand.key)}
         >
           <MaterialCodeRounded />
         </button>
-        <button>
+        <button className="rounded-xl p-2 hover:bg-slate-200">
           <MaterialLink />
         </button>
-        <button onClick={() => call(insertImageCommand.key, image)}>
+        <button
+          onClick={() => setIsOpen(isOpen ? false : true)}
+          className="rounded-xl p-2 hover:bg-slate-200"
+        >
           <BootstrapImage />
         </button>
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          title="image"
+          saveText="done"
+          closeText="close"
+          saveHandler={imageHandler}
+        >
+          <Input
+            id="title"
+            placeholder="Enter Title"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Input
+            id="url"
+            placeholder="Enter Url"
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        </Modal>
       </div>
     </div>
   );
