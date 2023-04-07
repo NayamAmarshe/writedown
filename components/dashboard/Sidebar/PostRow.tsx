@@ -36,7 +36,9 @@ const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
             title: editorTitle,
             content: input,
           });
-          toast.success("Autosaved!");
+          toast.success("Autosaved!", {
+            position: "bottom-right",
+          });
           setIsSynced(true);
         }
         setSelectedNoteId(noteId);
