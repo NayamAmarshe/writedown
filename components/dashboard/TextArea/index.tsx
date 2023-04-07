@@ -101,7 +101,7 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
       className={`flex w-full flex-col items-center justify-start overflow-y-scroll p-2 md:p-5`}
     >
       <IconButton
-        extraClasses={`ml-auto transition-transform duration-400 rotate-180 ${
+        extraClasses={`ml-auto md:hidden transition-transform duration-400 rotate-180 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
         onClick={() => setShiftRight(true)}

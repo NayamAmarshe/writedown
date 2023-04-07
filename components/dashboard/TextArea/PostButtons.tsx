@@ -97,7 +97,7 @@ const PostButtons = ({
     >
       {/* LAST UPDATED */}
       {currentNote ? (
-        <p className="flex items-center justify-center text-xs font-medium text-slate-500">
+        <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
           Last Updated{" "}
           {formatter.format((currentNote.updatedAt as Timestamp)?.toDate())}
         </p>
