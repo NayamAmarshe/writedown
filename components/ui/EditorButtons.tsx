@@ -5,6 +5,8 @@ import {
   wrapInBlockquoteCommand,
   toggleInlineCodeCommand,
   wrapInHeadingCommand,
+  insertImageCommand,
+  UpdateImageCommandPayload,
 } from "@milkdown/preset-commonmark";
 import MaterialUnorderedList from "../icons/MaterialUnorderedList";
 import { toggleStrikethroughCommand } from "@milkdown/preset-gfm";
@@ -14,9 +16,12 @@ import MaterialCodeRounded from "../icons/MaterialCodeRounded";
 import MaterialFormatBold from "../icons/MaterialFormatBold";
 import MingcuteQuoteRight from "../icons/MingcuteQuoteRight";
 import MaterialHeadingOne from "../icons/MaterialHeadingOne";
+import BootstrapImage from "../icons/BootstrapImage";
+import MaterialLink from "../icons/MaterialLink";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
+import Checkbox from "../icons/Checkbox";
 import "@milkdown/theme-nord/style.css";
 import React from "react";
 
@@ -30,6 +35,12 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   function call<T>(command: CmdKey<T>, payload?: T) {
     return editor.get()?.action(callCommand(command, payload));
   }
+  // Function to insert image
+  const link: any = {
+    url: "",
+    title: "",
+  };
+  const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
   return (
     <div
       className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 sm:justify-start ${
@@ -73,11 +84,20 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         >
           <MaterialUnorderedList />
         </button>
+        <button>
+          <Checkbox />
+        </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleInlineCodeCommand.key)}
         >
           <MaterialCodeRounded />
+        </button>
+        <button>
+          <MaterialLink />
+        </button>
+        <button onClick={() => call(insertImageCommand.key, image)}>
+          <BootstrapImage />
         </button>
       </div>
     </div>
