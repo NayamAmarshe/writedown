@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "next lint",
     "firebase": "firebase emulators:start",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
