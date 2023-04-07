@@ -40,9 +40,9 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
         }));
         ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
           if (markdown.includes("data:image")) {
-            editor.get()?.action(replaceAll(input));
+            editor.get()?.action(replaceAll(prevMarkdown || ""));
             toast.error(
-              "Pasting images is not supported at the moment! Please upload the image somewhere and paste the link in your note!"
+              "Please paste a link to an image, pasting images from clipboard is not supported yet"
             );
           }
           if (markdown !== prevMarkdown) {
