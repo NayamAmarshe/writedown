@@ -122,7 +122,7 @@ const Sidebar = ({
       )}
 
       {/* POSTS SECTION */}
-      <div className="flex flex-col gap-3">
+      <div className="flex h-full flex-col gap-3 overflow-y-auto">
         {/* POSTS HEADING */}
         <h6 className="font-semibold">Posts</h6>
         {/* POSTS LIST */}
@@ -141,6 +141,13 @@ const Sidebar = ({
             <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
         </div>
+      </div>
+
+      <div className="mt-auto">
+        <p className="text-center text-xs text-slate-400">
+          Copyright © {new Date().getFullYear()}{" "}
+          <span className="font-bold">WriteDown</span>
+        </p>
       </div>
     </aside>
   );
