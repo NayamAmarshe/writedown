@@ -15,6 +15,7 @@ import { history } from "@milkdown/plugin-history";
 import { replaceAll } from "@milkdown/utils";
 import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useAtom } from "jotai";
 
 interface editorProps {
@@ -38,6 +39,12 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
           },
         }));
         ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
+          if (markdown.includes("data:image")) {
+            editor.get()?.action(replaceAll(input));
+            toast.error(
+              "Pasting images is not supported at the moment! Please upload the image somewhere and paste the link in your note!"
+            );
+          }
           if (markdown !== prevMarkdown) {
             setInput(markdown);
           }
@@ -52,6 +59,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   useEffect(() => {
     if (!notes || !selectedNoteId) {
       editor.get()?.action(replaceAll(""));
+
       return;
     }
     const currentNote = notes.find((note) => note.id === selectedNoteId);
