@@ -67,10 +67,10 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       setIsSyncing(true);
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
-
+      const serverTime = serverTimestamp();
       try {
         // Create a document inside channelsRef array
-        updateDoc(notesRef, note);
+        updateDoc(notesRef, { ...note, updatedAt: serverTime });
         setIsSyncing(false);
       } catch (error) {
         console.log("🚀 => file: operations.ts:37 => error", error);
