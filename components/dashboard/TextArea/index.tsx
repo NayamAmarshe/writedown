@@ -1,30 +1,29 @@
+import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
-import React, { useEffect, useMemo, useState } from "react";
-import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import EditorButtons from "@/components/ui/EditorButtons";
-import ArrowPath from "@/components/icons/ArrowPath";
+import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
-import { isSyncingAtom } from "@/stores/isSyncing";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
-import { useAtom, useAtomValue } from "jotai";
-import Check from "@/components/icons/Check";
-import Trash from "@/components/icons/Trash";
+import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
+import { useAtom } from "jotai";
+
 type TextAreaProps = {
   user?: User | null;
-  shiftRight?: boolean;
+  shiftRight: boolean;
+  setShiftRight: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TextArea = ({ user, shiftRight }: TextAreaProps) => {
+const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
@@ -99,8 +98,17 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
   return (
     <div
-      className={`flex w-full flex-col items-center justify-start overflow-y-scroll`}
+      className={`flex w-full flex-col items-center justify-start overflow-y-scroll p-2 md:p-5`}
     >
+      <IconButton
+        extraClasses={`ml-auto transition-transform duration-400 rotate-180 ${
+          shiftRight ? "translate-x-52" : "translate-x-0"
+        }`}
+        onClick={() => setShiftRight(true)}
+      >
+        <ChevronDoubleLeft className="h-5 w-5" />
+      </IconButton>
+
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons
         deleteNote={deleteNote}
@@ -123,7 +131,7 @@ const TextArea = ({ user, shiftRight }: TextAreaProps) => {
 
         <div
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
-            shiftRight ? "translate-x-24 md:translate-x-52" : "translate-x-0"
+            shiftRight ? "translate-x-52" : "translate-x-0"
           }`}
         >
           {/* TITLE OF THE POST */}

@@ -13,7 +13,7 @@ const IconButton = ({
   return (
     <button
       className={
-        "absolute top-1/2 -right-5 z-10 rounded-full bg-white p-3 shadow-lg shadow-slate-400/40 " +
+        "rounded-full bg-white p-3 shadow-lg shadow-slate-400/40 " +
         extraClasses
       }
       {...rest}

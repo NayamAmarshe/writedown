@@ -91,13 +91,13 @@ const PostButtons = ({
 
   return (
     <div
-      className={`mt-4 flex w-full max-w-3xl select-none items-center justify-between gap-4 px-4 transition-transform duration-300 md:mt-52 md:px-0 ${
+      className={`mt-4 flex w-full max-w-3xl select-none items-center justify-between gap-4 transition-transform duration-300 md:mt-52 md:px-4 md:px-0 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
       {/* LAST UPDATED */}
       {currentNote ? (
-        <p className="flex items-center justify-center text-sm font-medium text-slate-500">
+        <p className="flex items-center justify-center text-xs font-medium text-slate-500">
           Last Updated{" "}
           {formatter.format((currentNote.updatedAt as Timestamp)?.toDate())}
         </p>

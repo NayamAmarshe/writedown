@@ -32,52 +32,54 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   }
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl flex-row items-center justify-around rounded-xl bg-white p-1 transition-transform duration-300 ${
-        shiftRight ? "translate-x-24 md:translate-x-52" : "translate-x-0"
+      className={`m-4 flex w-full max-w-3xl rounded-xl bg-white p-1 transition-transform duration-300 ${
+        shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(wrapInHeadingCommand.key)}
-      >
-        <MaterialHeadingOne />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(toggleStrongCommand.key)}
-      >
-        <MaterialFormatBold />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(toggleEmphasisCommand.key)}
-      >
-        <MaterialFormatItalic />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(wrapInBlockquoteCommand.key)}
-      >
-        <MingcuteQuoteRight />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(toggleStrikethroughCommand.key)}
-      >
-        <OutlineStrikethrough />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(wrapInOrderedListCommand.key)}
-      >
-        <MaterialUnorderedList />
-      </button>
-      <button
-        className="rounded-xl p-2 hover:bg-slate-200"
-        onClick={() => call(toggleInlineCodeCommand.key)}
-      >
-        <MaterialCodeRounded />
-      </button>
+      <div className="flex w-full flex-row items-center gap-2 overflow-x-auto">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInHeadingCommand.key)}
+        >
+          <MaterialHeadingOne />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(toggleStrongCommand.key)}
+        >
+          <MaterialFormatBold />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(toggleEmphasisCommand.key)}
+        >
+          <MaterialFormatItalic />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInBlockquoteCommand.key)}
+        >
+          <MingcuteQuoteRight />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(toggleStrikethroughCommand.key)}
+        >
+          <OutlineStrikethrough />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInOrderedListCommand.key)}
+        >
+          <MaterialUnorderedList />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(toggleInlineCodeCommand.key)}
+        >
+          <MaterialCodeRounded />
+        </button>
+      </div>
     </div>
   );
 };
