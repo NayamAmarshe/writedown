@@ -57,7 +57,12 @@ const PostButtons = ({
 
   const currentNote = useMemo(() => {
     if (!notes || !selectedNoteId) return;
-    return notes.find((note) => note.id === selectedNoteId);
+    console.log("note or selectedNoteId changed");
+    return formatter.format(
+      (
+        notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
+      )?.toDate()
+    );
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {
@@ -98,8 +103,7 @@ const PostButtons = ({
       {/* LAST UPDATED */}
       {currentNote ? (
         <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
-          Last Updated{" "}
-          {formatter.format((currentNote.updatedAt as Timestamp)?.toDate())}
+          Last Updated {currentNote}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />

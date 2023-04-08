@@ -61,6 +61,7 @@ const Sidebar = ({
       }`}
     >
       <IconButton
+        id="new"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="ml-auto md:hidden"
       >
