@@ -73,6 +73,7 @@ const Sidebar = ({
 
       {/* SIDEBAR TOGGLE BUTTON */}
       <IconButton
+        id="sidebarToggle"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >

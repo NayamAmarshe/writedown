@@ -121,6 +121,7 @@ const PostButtons = ({
 
         {/* SAVE BUTTON */}
         <button
+          id="save"
           type="button"
           className="rounded-full bg-emerald-200 py-1 px-3 text-sm font-medium text-emerald-800 shadow-md shadow-emerald-900/20 transition-colors duration-300 hover:bg-emerald-300"
           onClick={saveNoteHandler}
