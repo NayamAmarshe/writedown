@@ -112,9 +112,9 @@ const PostButtons = ({
       {/* DELETE BUTTON */}
       <div className="flex items-center justify-center gap-4 md:items-start">
         <button
-          id="del"
+          data-testid="del"
           type="button"
-          className="rounded-full bg-red-200 py-1 px-3 text-sm font-medium text-red-900 shadow-md shadow-red-900/20"
+          className="rounded-full bg-red-200 py-1 px-3 text-sm font-medium text-red-800 shadow-md shadow-red-900/20 transition-colors duration-300 hover:bg-red-300"
           onClick={deleteNoteHandler}
         >
           <span className="flex items-center justify-center gap-1">
@@ -125,9 +125,9 @@ const PostButtons = ({
 
         {/* SAVE BUTTON */}
         <button
-          id="save"
+          data-testid="save"
           type="button"
-          className="rounded-full bg-sky-200 py-1 px-3 text-sm font-medium text-sky-900 shadow-md shadow-sky-900/20"
+          className="rounded-full bg-emerald-200 py-1 px-3 text-sm font-medium text-emerald-800 shadow-md shadow-emerald-900/20 transition-colors duration-300 hover:bg-emerald-300"
           onClick={saveNoteHandler}
         >
           {isSyncing && (

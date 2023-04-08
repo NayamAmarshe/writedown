@@ -5,33 +5,33 @@
 
 /// <reference types="cypress" />
 
-describe("dashboard checks", () => {
+const lorem =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sollicitudin ac orci phasellus egestas tellus rutrum tellus. Neque volutpat ac tincidunt vitae semper quis. Fames ac turpis egestas maecenas. Eu non diam phasellus vestibulum lorem sed risus. Neque convallis a cras semper auctor neque vitae tempus. Vel elit scelerisque mauris pellentesque. Neque viverra justo nec ultrices dui sapien eget mi. Ante metus dictum at tempor commodo ullamcorper. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. A erat nam at lectus. Nec nam aliquam sem et tortor  consequat id porta. Amet consectetur adipiscing elit duis. Sit amet est placerat in egestas. Diam ut venenatis tellus in metus vulputate eu scelerisque. Tristique senectus et netus et malesuada fames ac.";
+
+describe("Dashboard checks", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/dashboard");
-    cy.get("div").should("have.class", "hydrated");
   });
 
-  it("sidebar toggle check", () => {
-    cy.get("#sidebarToggle").click();
-    cy.get("#sidebarToggle").click();
+  it("Checks the milkdown editor element", () => {
+    cy.get(".editor").should("have.value", "").type("Hello");
+    cy.findByTestId("save").click();
+    cy.get(".editor").should("have.text", "Hello");
+    cy.findByTestId("del").click();
   });
 
-  it("TextArea check", () => {
-    cy.get("#noteTitle")
+  it("Checks the sidebar toggle", () => {
+    cy.findByTestId("sidebarToggle").click().click();
+  });
+
+  it("Checks creating a new note", () => {
+    cy.findByTestId("new-note").click();
+    cy.findByTestId("noteTitle")
       .should("have.value", "Untitled")
       .type("This is a test")
       .should("have.value", "UntitledThis is a test");
-    cy.get("#save").click();
-    cy.get("#del").click();
-  });
-
-  it("New note check", () => {
-    cy.get('button:contains("Create New Post")').click();
-    cy.get("#noteTitle")
-      .should("have.value", "Untitled")
-      .type("This is a test")
-      .should("have.value", "UntitledThis is a test");
-    cy.get("#save").click();
-    cy.get("#del").click();
+    cy.get(".milkdown").should("have.value", "").type(lorem);
+    cy.findByTestId("save").click();
+    cy.findByTestId("del").click();
   });
 });

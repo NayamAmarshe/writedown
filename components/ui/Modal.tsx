@@ -65,13 +65,13 @@ const Modal = ({
                   </Dialog.Title>
                 )}
 
-                <Dialog.Description className="mt-2">
+                <Dialog.Description className="mt-2 mb-4">
                   <p className="text-sm text-gray-500">{description}</p>
                 </Dialog.Description>
 
                 {children}
 
-                <div className="mt-4">
+                <div className="mt-4 flex justify-end gap-2">
                   <Button onClick={saveHandler}>{saveText}</Button>
 
                   <Button

@@ -87,10 +87,10 @@ const LoginPage = () => {
           <p className="text-center text-sm">
             Login with one of the following:
           </p>
-          <Button onClick={() => login("google")}>
+          <Button data-testid="google-login" onClick={() => login("google")}>
             <FcGoogle /> Sign in with Google
           </Button>
-          <Button onClick={() => login("github")}>
+          <Button data-testid="github-login" onClick={() => login("github")}>
             <AiFillGithub /> Sign in with GitHub
           </Button>
         </div>
