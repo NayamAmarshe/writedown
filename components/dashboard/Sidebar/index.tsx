@@ -61,6 +61,7 @@ const Sidebar = ({
       }`}
     >
       <IconButton
+        id="new"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="ml-auto md:hidden"
       >
@@ -73,6 +74,7 @@ const Sidebar = ({
 
       {/* SIDEBAR TOGGLE BUTTON */}
       <IconButton
+        id="sidebarToggle"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
@@ -87,6 +89,7 @@ const Sidebar = ({
       {user ? (
         <div className="flex items-center gap-2">
           <button
+            id="logout"
             onClick={() => {
               auth.signOut();
             }}
