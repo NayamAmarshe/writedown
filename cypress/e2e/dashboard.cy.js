@@ -13,25 +13,25 @@ describe("Dashboard checks", () => {
     cy.visit("http://localhost:3000/dashboard");
   });
 
-  it("Checks the TextArea element", () => {
-    cy.get(".editor").should("have.value", "").type("lorem");
-    cy.get("#save").click();
-    cy.get(".editor").should("have.text", "lorem");
-    cy.get("#del").click();
+  it("Checks the milkdown editor element", () => {
+    cy.get(".editor").should("have.value", "").type("Hello");
+    cy.findByTestId("save").click();
+    cy.get(".editor").should("have.text", "Hello");
+    cy.findByTestId("del").click();
   });
 
   it("Checks the sidebar toggle", () => {
-    cy.get("#sidebarToggle").click().click();
+    cy.findByTestId("sidebarToggle").click().click();
   });
 
   it("Checks creating a new note", () => {
-    cy.get('button:contains("Create New Post")').click();
-    cy.get("#noteTitle")
+    cy.findByTestId("new-note").click();
+    cy.findByTestId("noteTitle")
       .should("have.value", "Untitled")
       .type("This is a test")
       .should("have.value", "UntitledThis is a test");
     cy.get(".milkdown").should("have.value", "").type(lorem);
-    cy.get("#save").click();
-    cy.get("#del").click();
+    cy.findByTestId("save").click();
+    cy.findByTestId("del").click();
   });
 });
