@@ -5,11 +5,11 @@ import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
-import EditorButtons from "@/components/ui/EditorButtons";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
+import EditorButtons from "./EditorButtons";
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
@@ -140,7 +140,7 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
         >
           {/* TITLE OF THE POST */}
           <input
-            id="noteTitle"
+            data-testid="noteTitle"
             type="text"
             className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0"
             onChange={(e) => {
