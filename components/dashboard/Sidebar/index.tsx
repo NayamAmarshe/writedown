@@ -73,7 +73,7 @@ const Sidebar = ({
 
       {/* SIDEBAR TOGGLE BUTTON */}
       <IconButton
-        id="sidebarToggle"
+        data-testid="sidebarToggle"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
@@ -88,6 +88,7 @@ const Sidebar = ({
       {user ? (
         <div className="flex items-center gap-2">
           <button
+            data-testid="logout"
             onClick={() => {
               auth.signOut();
             }}
@@ -112,7 +113,11 @@ const Sidebar = ({
 
       {/* CREATE NEW POST BUTTON */}
       {notes ? (
-        <Button onLoad={newPostClickHandler} onClick={newPostClickHandler}>
+        <Button
+          data-testid="new-note"
+          onLoad={newPostClickHandler}
+          onClick={newPostClickHandler}
+        >
           <span className="flex items-center justify-center gap-1">
             <PlusCircle className="h-5 w-5" />
             Create New Post
