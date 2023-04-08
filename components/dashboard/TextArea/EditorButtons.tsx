@@ -8,23 +8,23 @@ import {
   insertImageCommand,
   UpdateImageCommandPayload,
 } from "@milkdown/preset-commonmark";
-import MaterialUnorderedList from "../icons/MaterialUnorderedList";
+import MaterialUnorderedList from "../../icons/MaterialUnorderedList";
+import OutlineStrikethrough from "../../icons/OutlineStrikethrough";
+import MaterialFormatItalic from "../../icons/MaterialFormatItalic";
+import MaterialCodeRounded from "../../icons/MaterialCodeRounded";
 import { toggleStrikethroughCommand } from "@milkdown/preset-gfm";
-import OutlineStrikethrough from "../icons/OutlineStrikethrough";
-import MaterialFormatItalic from "../icons/MaterialFormatItalic";
-import MaterialCodeRounded from "../icons/MaterialCodeRounded";
-import MaterialFormatBold from "../icons/MaterialFormatBold";
-import MingcuteQuoteRight from "../icons/MingcuteQuoteRight";
-import MaterialHeadingOne from "../icons/MaterialHeadingOne";
-import BootstrapImage from "../icons/BootstrapImage";
-import MaterialLink from "../icons/MaterialLink";
+import MaterialFormatBold from "../../icons/MaterialFormatBold";
+import MingcuteQuoteRight from "../../icons/MingcuteQuoteRight";
+import MaterialHeadingOne from "../../icons/MaterialHeadingOne";
+import BootstrapImage from "../../icons/BootstrapImage";
+import MaterialLink from "../../icons/MaterialLink";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
 import "@milkdown/theme-nord/style.css";
 import React, { useState } from "react";
-import Modal from "./Modal";
-import Input from "./Input";
+import Modal from "../../ui/Modal";
+import Input from "../../ui/Input";
 type EditorButtonsProps = {
   shiftRight?: boolean;
 };
@@ -106,21 +106,24 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         <Modal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          title="image"
-          saveText="done"
-          closeText="close"
+          title="Insert Image"
+          description="Enter a title and the link to an image."
+          saveText="Insert"
+          closeText="Cancel"
           saveHandler={imageHandler}
         >
-          <Input
-            id="title"
-            placeholder="Enter Title"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Input
-            id="url"
-            placeholder="Enter Url"
-            onChange={(e) => setUrl(e.target.value)}
-          />
+          <div className="flex flex-col items-center gap-2">
+            <Input
+              id="title"
+              placeholder="Enter Title"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <Input
+              id="url"
+              placeholder="Enter URL"
+              onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
         </Modal>
       </div>
     </div>
