@@ -21,7 +21,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
 
-const env = process.env.NODE_ENV;
+const env = process.env["NODE_ENV"];
 
 if (!(db as any)._settingsFrozen && env === "development") {
   connectFirestoreEmulator(db, "127.0.0.1", 8080);

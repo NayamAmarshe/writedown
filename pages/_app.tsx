@@ -9,8 +9,8 @@ import "@/styles/globals.css";
 
 export const auth = getAuth(firebaseApp);
 
-const env = process.env.NODE_ENV;
-if (env == "development") {
+const env = process.env["NODE_ENV"];
+if (env === "development") {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
