@@ -158,7 +158,7 @@ const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
           <MilkdownEditor
             input={input}
             setInput={setInput}
-            className="!max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
+            className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
             notes={notes}
           />
         </div>
