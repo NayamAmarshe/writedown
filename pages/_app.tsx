@@ -8,7 +8,11 @@ import { Provider } from "jotai";
 import "@/styles/globals.css";
 
 export const auth = getAuth(firebaseApp);
-connectAuthEmulator(auth, "http://localhost:9099");
+
+const env = process.env.NODE_ENV;
+if (env == "development") {
+  connectAuthEmulator(auth, "http://localhost:9099");
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
