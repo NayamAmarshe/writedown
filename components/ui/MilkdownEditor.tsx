@@ -11,7 +11,6 @@ import { history, historyKeymap } from "@milkdown/plugin-history";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
-import { clipboard } from "@milkdown/plugin-clipboard";
 import { Milkdown, useEditor } from "@milkdown/react";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
@@ -30,6 +29,7 @@ import jsx from "refractor/lang/jsx";
 import tsx from "refractor/lang/tsx";
 import cpp from "refractor/lang/cpp";
 import toast from "react-hot-toast";
+import "katex/dist/katex.min.css";
 import "katex/dist/katex.min.css";
 import c from "refractor/lang/c";
 import { useAtom } from "jotai";
@@ -98,7 +98,6 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       .use(gfm)
       .use(prism)
       .use(history)
-      .use(clipboard)
       .use(math)
   );
 
