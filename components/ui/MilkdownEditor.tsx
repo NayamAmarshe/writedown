@@ -12,13 +12,14 @@ import { commonmark } from "@milkdown/preset-commonmark";
 import { clipboard } from "@milkdown/plugin-clipboard";
 import { Milkdown, useEditor } from "@milkdown/react";
 import { history } from "@milkdown/plugin-history";
-import { math } from "@milkdown/plugin-math";
 import { replaceAll } from "@milkdown/utils";
 import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
-import "katex/dist/katex.min.css";
 import { useAtom } from "jotai";
+
+import { math } from "@milkdown/plugin-math";
+import "katex/dist/katex.min.css";
 
 interface editorProps {
   input: string;
@@ -56,8 +57,8 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       .use(listener)
       .use(commonmark)
       .use(history)
-      .use(clipboard)
       .use(math)
+      .use(clipboard)
       .use(gfm)
   );
   useEffect(() => {
