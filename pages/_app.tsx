@@ -4,6 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
+import "@/styles/code-block.css";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
 
