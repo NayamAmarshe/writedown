@@ -30,7 +30,6 @@ import tsx from "refractor/lang/tsx";
 import cpp from "refractor/lang/cpp";
 import toast from "react-hot-toast";
 import "katex/dist/katex.min.css";
-import "katex/dist/katex.min.css";
 import c from "refractor/lang/c";
 import { useAtom } from "jotai";
 

@@ -4,6 +4,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
@@ -21,10 +22,11 @@ interface SidebarProps {
 }
 
 const Sidebar = ({
-  user,
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
+  const [user] = useAuthState(auth);
+
   const [firestoreNotes] = useCollectionData(
     user &&
       query(
