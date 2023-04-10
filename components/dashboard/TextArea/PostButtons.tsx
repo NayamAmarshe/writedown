@@ -4,11 +4,11 @@ import ArrowPath from "@/components/icons/ArrowPath";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
+import { useAtom, useAtomValue } from "jotai";
 import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
-import { useAtom } from "jotai";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -53,11 +53,11 @@ const PostButtons = ({
   deleteNote,
   shiftRight,
 }: PostButtonsProps) => {
-  const [isSyncing, setIsSyncing] = useAtom(isSyncingAtom);
+  const isSyncing = useAtomValue(isSyncingAtom);
 
   const currentNote = useMemo(() => {
     if (!notes || !selectedNoteId) return;
-    console.log("note or selectedNoteId changed");
+    // Format the date for the last updated time of the note
     return formatter.format(
       (
         notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
@@ -66,32 +66,37 @@ const PostButtons = ({
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {
+    // If the note is syncing or synced, don't save
     if (isSyncing || isSynced) return;
 
+    // If there is no note selected or no note available with the selectedNoteId, don't save
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
+
+    // Update the note in the database
     updateNote({
       id: selectedNoteId,
       title: title === "" ? "Untitled" : title,
       content: input,
     });
+
+    // Set the note as synced
     setIsSynced(true);
     toast.success("Saved!");
   };
 
   const deleteNoteHandler = () => {
+    // If there is no note selected or no notes, don't delete
     if (!notes || !selectedNoteId) return;
+
     deleteNote(selectedNoteId);
+
     toast.success("Deleted!");
 
+    // Set the selected note to the next note in the array
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNoteId(notes[newIndex]?.id || null);
-    if (notes.length < 2) {
-      setTitle("");
-      setInput("");
-      return;
-    }
   };
 
   return (
