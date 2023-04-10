@@ -42,33 +42,48 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
+  // SELECT THE FIRST NOTE WHEN selectedNoteId IS NULL
   useEffect(() => {
     if (!notes) return;
+
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
+      setInput(notes[0].content);
+      setTitle(notes[0].title);
+      return;
     }
-
-    if (!notes) return;
-    const selectedNote = notes.find((note) => note.id === selectedNoteId);
-    if (!selectedNote) return;
-    setInput(selectedNote.content);
-    setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
+  // SET INPUT AND TITLE WHEN SELECTEDNOTEID CHANGES
   useEffect(() => {
     if (!notes) return;
+
+    const selectedNote = notes.find((note) => note.id === selectedNoteId);
+    if (!selectedNote) return;
+
+    setInput(selectedNote.content);
+    setTitle(selectedNote.title);
+  }, [selectedNoteId, setInput, setTitle, notes]);
+
+  // CREATE A NEW NOTE WHEN NOTES IS EMPTY
+  useEffect(() => {
+    if (!notes) return;
+
     if (notes.length === 0) {
       createNote().then((newId) => {
         if (!newId) return;
+
         if (!isSynced && selectedNoteId) {
           updateNote({
             id: selectedNoteId,
             title: title,
             content: input,
           });
-          toast.success("Autosaved!", {
+
+          toast.success("Synced Successfully", {
             position: "bottom-right",
           });
+
           setIsSynced(true);
         }
         setSelectedNoteId(newId);
@@ -76,31 +91,35 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     }
   }, [notes]);
 
+  //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
   useEffect(() => {
-    //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
-    if (
-      selectedNoteId ===
-        notes?.find((note) => input === note.content && title === note.title)
-          ?.id ||
-      !selectedNoteId ||
-      !user
-    )
-      return;
+    // FIND A NOTE WITH THE SAME TITLE AND CONTENT AS CURRENT INPUT AND TITLE
+    const currentNote = notes?.find(
+      (note) => input === note.content && title === note.title
+    );
+    const isNoteUnchanged = selectedNoteId === currentNote?.id;
+
+    if (isNoteUnchanged || !selectedNoteId || !user) return;
+
     setIsSynced(false);
+
+    // DEBOUNCING THE UPDATE NOTE FUNCTION
     const interval = setTimeout(() => {
       updateNote({
         id: selectedNoteId,
         title: title === "" ? "Untitled" : title,
         content: input,
       });
-      toast.success("Autosaved!", {
+
+      toast.success("Synced Succesfully", {
         position: "bottom-right",
       });
+
       setIsSynced(true);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [title, input]);
+  }, [title, input, selectedNoteId, notes, user]);
 
   return (
     <div

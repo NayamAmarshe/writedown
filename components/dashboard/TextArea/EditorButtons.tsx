@@ -39,6 +39,7 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   function call<T>(command: CmdKey<T>, payload?: T) {
     return editor.get()?.action(callCommand(command, payload));
   }
+
   // Object for inserting images
   const imageHandler = () => {
     const link = { title: title, url: url };
