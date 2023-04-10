@@ -13,8 +13,8 @@ import Button from "@/components/ui/Button";
 import React, { useMemo } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
+import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
-import { useAtom } from "jotai";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -40,7 +40,7 @@ const Sidebar = ({
     }
   );
 
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
 
   const notes = useMemo(() => {
     return firestoreNotes;
