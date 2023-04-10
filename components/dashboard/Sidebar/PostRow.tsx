@@ -3,9 +3,9 @@ import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
+import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
 import toast from "react-hot-toast";
-import { useAtom } from "jotai";
 import React from "react";
 
 type PostRowProps = {
@@ -18,9 +18,10 @@ type PostRowProps = {
 const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
-  const [editorTitle, setEditorTitle] = useAtom(titleAtom);
-  const [input, setInput] = useAtom(inputAtom);
-  const { updateNote, deleteNote } = useNotes({ userId: userId });
+  const editorTitle = useAtomValue(titleAtom);
+  const input = useAtomValue(inputAtom);
+
+  const { updateNote } = useNotes({ userId: userId });
 
   return (
     <div

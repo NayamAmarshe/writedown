@@ -14,7 +14,6 @@ import EditorButtons from "./EditorButtons";
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
-import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
@@ -42,68 +41,65 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  // SELECT THE FIRST NOTE WHEN selectedNoteId IS NULL
   useEffect(() => {
     if (!notes) return;
 
+    // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
       setTitle(notes[0].title);
       return;
     }
-  }, [notes, selectedNoteId]);
 
-  // SET INPUT AND TITLE WHEN SELECTEDNOTEID CHANGES
-  useEffect(() => {
-    if (!notes) return;
+    if (!selectedNoteId) return;
 
+    // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND SET THE INPUT AND TITLE
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     if (!selectedNote) return;
-
     setInput(selectedNote.content);
     setTitle(selectedNote.title);
-  }, [selectedNoteId, setInput, setTitle, notes]);
+  }, [notes, selectedNoteId]);
 
-  // CREATE A NEW NOTE WHEN NOTES IS EMPTY
   useEffect(() => {
     if (!notes) return;
 
+    const createNewNote = async () => {
+      const newId = await createNote();
+      if (!newId) return;
+
+      if (!isSynced && selectedNoteId) {
+        await updateNote({
+          id: selectedNoteId,
+          title: title,
+          content: input,
+        });
+        setIsSynced(true);
+        toast.success("Synced Successfully", {
+          position: "bottom-right",
+        });
+      }
+
+      setSelectedNoteId(newId);
+    };
+
     if (notes.length === 0) {
-      createNote().then((newId) => {
-        if (!newId) return;
-
-        if (!isSynced && selectedNoteId) {
-          updateNote({
-            id: selectedNoteId,
-            title: title,
-            content: input,
-          });
-
-          toast.success("Synced Successfully", {
-            position: "bottom-right",
-          });
-
-          setIsSynced(true);
-        }
-        setSelectedNoteId(newId);
-      });
+      createNewNote();
     }
   }, [notes]);
 
-  //CHECKING IF SELECTEDNOTEID HAS CHANGED ALONGSIDE TITLE AND INPUT
   useEffect(() => {
-    // FIND A NOTE WITH THE SAME TITLE AND CONTENT AS CURRENT INPUT AND TITLE
+    // FIND THE CURRENT NOTE AND CHECK IF IT IS UNCHANGED
     const currentNote = notes?.find(
       (note) => input === note.content && title === note.title
     );
-    const isNoteUnchanged = selectedNoteId === currentNote?.id;
+    const isNoteUnchanged = currentNote?.id === selectedNoteId;
 
     if (isNoteUnchanged || !selectedNoteId || !user) return;
 
     setIsSynced(false);
 
-    // DEBOUNCING THE UPDATE NOTE FUNCTION
+    // DEBOUNCE THE UPDATE FUNCTION
     const interval = setTimeout(() => {
       updateNote({
         id: selectedNoteId,
@@ -111,15 +107,15 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         content: input,
       });
 
-      toast.success("Synced Succesfully", {
+      toast.success("Synced Successfully", {
         position: "bottom-right",
       });
 
       setIsSynced(true);
-    }, 3000);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [title, input, selectedNoteId, notes, user]);
+  }, [title, input]);
 
   return (
     <div
@@ -143,8 +139,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         setIsSynced={setIsSynced}
         input={input}
         title={title}
-        setInput={setInput}
-        setTitle={setTitle}
         notes={notes}
         updateNote={updateNote}
         shiftRight={shiftRight}

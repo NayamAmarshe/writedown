@@ -4,11 +4,11 @@ import ArrowPath from "@/components/icons/ArrowPath";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
-import { useAtom, useAtomValue } from "jotai";
 import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
+import { useAtomValue } from "jotai";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -16,9 +16,7 @@ type PostButtonsProps = {
   selectedNoteId: string | null;
   setSelectedNoteId: React.Dispatch<React.SetStateAction<string | null>>;
   title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
   input: string;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
   notes: TNotesData[] | undefined;
   updateNote: (note: {
     id: string;
@@ -45,9 +43,7 @@ const PostButtons = ({
   selectedNoteId,
   setSelectedNoteId,
   title,
-  setTitle,
   input,
-  setInput,
   notes,
   updateNote,
   deleteNote,
