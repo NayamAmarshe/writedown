@@ -5,6 +5,7 @@ import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
+import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
@@ -15,15 +16,16 @@ import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
+import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
 
 type TextAreaProps = {
-  user?: User | null;
   shiftRight: boolean;
   setShiftRight: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TextArea = ({ user, shiftRight, setShiftRight }: TextAreaProps) => {
+const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
+  const [user] = useAuthState(auth);
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
