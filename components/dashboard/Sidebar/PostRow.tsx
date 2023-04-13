@@ -31,17 +31,6 @@ const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
           : "bg-slate-50 hover:bg-slate-100"
       }`}
       onClick={() => {
-        if (!isSynced && selectedNoteId) {
-          updateNote({
-            id: selectedNoteId,
-            title: editorTitle,
-            content: input,
-          });
-          toast.success("Autosaved!", {
-            position: "bottom-right",
-          });
-          setIsSynced(true);
-        }
         setSelectedNoteId(noteId);
       }}
     >

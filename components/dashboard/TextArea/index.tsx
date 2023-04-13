@@ -41,6 +41,20 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
+  const instaSync = async () => {
+    if (!isSynced && selectedNoteId) {
+      await updateNote({
+        id: selectedNoteId,
+        title: title,
+        content: input,
+      });
+      setIsSynced(true);
+      toast.success("Synced Successfully", {
+        position: "bottom-right",
+      });
+    }
+  };
+
   useEffect(() => {
     if (!notes) return;
 
@@ -68,17 +82,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       const newId = await createNote();
       if (!newId) return;
 
-      if (!isSynced && selectedNoteId) {
-        await updateNote({
-          id: selectedNoteId,
-          title: title,
-          content: input,
-        });
-        setIsSynced(true);
-        toast.success("Synced Successfully", {
-          position: "bottom-right",
-        });
-      }
+      instaSync();
 
       setSelectedNoteId(newId);
     };
@@ -100,19 +104,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     setIsSynced(false);
 
     // DEBOUNCE THE UPDATE FUNCTION
-    const interval = setTimeout(() => {
-      updateNote({
-        id: selectedNoteId,
-        title: title === "" ? "Untitled" : title,
-        content: input,
-      });
-
-      toast.success("Synced Successfully", {
-        position: "bottom-right",
-      });
-
-      setIsSynced(true);
-    }, 2000);
+    const interval = setTimeout(instaSync, 2000);
 
     return () => clearInterval(interval);
   }, [title, input]);
@@ -149,6 +141,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         <EditorButtons shiftRight={shiftRight} />
 
         <div
+          tabIndex={0}
+          onBlur={instaSync}
+          onMouseLeave={instaSync}
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
           }`}
