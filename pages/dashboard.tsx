@@ -1,27 +1,20 @@
-import {
-  channelConverter,
-  messagesConverter,
-} from "@/utils/firestoreDataConverter";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { collection, orderBy, query } from "firebase/firestore";
-import ChatScreen from "@/components/dashboard/ChatScreen";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { createUser } from "@/utils/firebaseOperations";
-import ChatList from "@/components/dashboard/ChatList";
+import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
-import React, { useEffect, useState } from "react";
+import useUser from "@/components/hooks/useUser";
 import { useRouter } from "next/router";
-import { db } from "@/lib/firebase";
+import React, { useState } from "react";
 import { auth } from "./_app";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
+  const { createUser } = useUser();
 
-  const [showChatScreen, setShowChatScreen] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // AUTH STATE HOOK
-  const [user] = useAuthState(auth, {
+  useAuthState(auth, {
     onUserChanged: async (user) => {
       if (!user) {
         router.push("/login");
@@ -31,33 +24,12 @@ const Dashboard = () => {
     },
   });
 
-  const [channels] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "channels"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(channelConverter)
-  );
-
-  const [messages] = useCollectionData(
-    user &&
-      query(
-        collection(db, "messages"),
-        orderBy("createdAt", "desc")
-      ).withConverter(messagesConverter)
-  );
-
-  useEffect(() => {
-    if (user) {
-      setShowChatScreen(true);
-    }
-  }, [user]);
-
   return (
-    <div className="flex h-screen w-screen flex-row">
-      {showChatScreen && (
-        <ChatScreen channels={channels} messages={messages} user={user} />
-      )}
+    <div>
+      <div className="max-w-screen relative flex h-screen flex-row bg-slate-200 text-gray-900">
+        <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+        <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
+      </div>
     </div>
   );
 };

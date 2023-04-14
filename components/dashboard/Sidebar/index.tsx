@@ -1,177 +1,160 @@
-import {
-  AiFillPlusCircle,
-  AiOutlineLogout,
-  AiOutlineSetting,
-} from "react-icons/ai";
-import { channelBackgroundColors } from "@/constants/channel-background-colors";
-import { IChannelData, IMessageData } from "@/types/utils/firebaseOperations";
-import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
-import { createChannel } from "@/utils/firebaseOperations";
-import EmojiSelector from "@/components/ui/EmojiSelector";
 import { useAuthState } from "react-firebase-hooks/auth";
-import React, { useEffect, useState } from "react";
+import PlusCircle from "@/components/icons/PlusCircle";
+import IconButton from "@/components/ui/IconButton";
+import useNotes from "@/components/hooks/useNotes";
+import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
-import Input from "@/components/ui/Input";
-import { toast } from "react-hot-toast";
-import { uuidv4 } from "@firebase/util";
-import ChannelCard from "./ChannelCard";
+import React, { useMemo } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
-import { nanoid } from "nanoid";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
+import PostRow from "./PostRow";
 
 interface SidebarProps {
-  id: string;
   showSidebar: boolean;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  channels?: IChannelData[];
-  messages?: IMessageData[];
 }
 
 const Sidebar = ({
-  user,
-  channels,
-  messages,
+  showSidebar,
+  setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
-  const [channelName, setChannelName] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
-  const [selectEmoji, setSelectEmoji] = useState({
-    native: "🙂",
-  });
-  const [emojiBackgroundIndex, setEmojiBackgroundIndex] = useState(0);
+  const [user] = useAuthState(auth);
+  const { createNote } = useNotes({ userId: user?.uid });
+  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
 
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
+  const [firestoreNotes] = useCollectionData(
+    user &&
+      query(
+        collection(db, "users", user.uid, "notes"),
+        orderBy("updatedAt", "desc")
+      ).withConverter(notesConverter),
+    {
+      snapshotListenOptions: {
+        includeMetadataChanges: true,
+      },
+    }
   );
 
-  useEffect(() => {
-    if (channels && channels.length > 0) {
-      setSelectedChannelId(channels[0].id);
-    }
-    console.log(messages);
-  }, [channels, messages]);
+  const notes = useMemo(() => {
+    return firestoreNotes;
+  }, [firestoreNotes]);
 
-  const resetAddChannelForm = () => {
-    setChannelName("");
-    setSelectEmoji({
-      native: "🙂",
-    });
-    setEmojiBackgroundIndex(0);
-  };
-
-  const saveChannelHandler = async () => {
-    if (channelName.length === 0) {
-      toast.error("Please enter a channel name");
-      return;
-    }
-
-    if (!user) return;
-
-    createChannel(user.uid, {
-      name: channelName,
-      emoji: selectEmoji.native,
-      emojiBackground: channelBackgroundColors[emojiBackgroundIndex],
-      id: uuidv4(),
-      messages: [],
-      userId: user.uid,
-      slug: nanoid(),
-      type: "private",
-    });
-    resetAddChannelForm();
+  const newPostClickHandler = async () => {
+    const newId = await createNote();
+    if (!newId) return;
+    setSelectedNoteId(newId);
   };
 
   return (
-    <div className="flex h-full select-none flex-col justify-between overflow-hidden bg-gray-100 py-4">
-      <Modal
-        title="Add New Channel"
-        saveButtonLabel="Add"
-        id="add-new-channel"
-        saveHandler={saveChannelHandler}
+    <aside
+      className={`absolute top-0 left-0 right-0 bottom-0 z-50 flex h-full flex-col space-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:right-auto md:top-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+        showSidebar ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
+      <IconButton
+        id="new"
+        onClick={() => setShowSidebar(!showSidebar)}
+        extraClasses="ml-auto md:hidden"
       >
-        <div className="flex flex-col gap-5">
-          <EmojiSelector
-            showPicker={showPicker}
-            setShowPicker={setShowPicker}
-            selectEmoji={selectEmoji}
-            setSelectEmoji={setSelectEmoji}
-            emojiBackgroundIndex={emojiBackgroundIndex}
-            setEmojiBackgroundIndex={setEmojiBackgroundIndex}
-          />
-          <Input
-            id="channel-name"
-            label="Channel Name"
-            type="text"
-            value={channelName}
-            placeholder="Enter Channel Name"
-            onChange={(e) => {
-              setChannelName(e.target.value);
+        <ChevronDoubleLeft
+          className={`duration-400 h-5 w-5 transition-transform ${
+            showSidebar ? "" : "rotate-180"
+          }`}
+        />
+      </IconButton>
+
+      {/* SIDEBAR TOGGLE BUTTON */}
+      <IconButton
+        data-testid="sidebarToggle"
+        onClick={() => setShowSidebar(!showSidebar)}
+        extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
+      >
+        <ChevronDoubleLeft
+          className={`duration-400 h-5 w-5 transition-transform ${
+            showSidebar ? "" : "rotate-180"
+          }`}
+        />
+      </IconButton>
+
+      {/* USER  GREETING SECTION */}
+      {user ? (
+        <div className="flex items-center gap-2">
+          <button
+            data-testid="logout"
+            onClick={() => {
+              auth.signOut();
             }}
-          />
+          >
+            <img
+              src={
+                user.photoURL ||
+                `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+              }
+              alt="User Photo"
+              className="h-8 w-8 rounded-full object-cover"
+            />
+          </button>
+          <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
+            Hi there,{" "}
+            <span className="text-slate-900">{user?.displayName}</span>
+          </h4>
         </div>
-      </Modal>
-      {/* TOP BAR */}
-      <div className="flex w-full flex-row items-center justify-center px-2 lg:justify-between">
-        {/* LOGO */}
-        <h4 className="flex cursor-pointer flex-row items-center gap-2 pb-4 text-xl font-semibold lg:border-none lg:pb-0">
-          <img src="/logo.svg" alt="Logo" className="w-12 lg:w-8" />
-          <span className={`hidden lg:block`}>WriteDown</span>
-        </h4>
-      </div>
+      ) : (
+        <Skeleton className="h-6 w-2/3" />
+      )}
 
-      {/* CHANNELS SECTION */}
-      <div className="flex h-2 basis-full flex-col gap-3 p-2">
-        {/* CHANNELS HEADING */}
-        <h4
-          className={`mt-4 hidden text-sm font-medium text-gray-600 lg:block`}
+      {/* CREATE NEW POST BUTTON */}
+      {notes ? (
+        <Button
+          data-testid="new-note"
+          onLoad={newPostClickHandler}
+          onClick={newPostClickHandler}
         >
-          CHANNELS
-        </h4>
-        {/* NEW CHANNEL BUTTON */}
-        <button
-          className="flex flex-row items-center justify-center rounded-full bg-gray-200 p-5 md:w-full md:gap-2 lg:h-16 lg:p-2"
-          data-hs-overlay="#add-new-channel"
-        >
-          <AiFillPlusCircle className="text-3xl lg:text-xl" />
-          <span className={`hidden lg:block`}>New Channel</span>
-        </button>
+          <span className="flex items-center justify-center gap-1">
+            <PlusCircle className="h-5 w-5" />
+            Create New Post
+          </span>
+        </Button>
+      ) : (
+        <Skeleton className="h-9 w-full" borderRadius={50} />
+      )}
 
-        {/* CHANNEL LIST */}
-        <div className="flex h-full flex-col gap-5 overflow-auto">
-          {selectedChannelId &&
-            channels?.map((item) => {
-              return (
-                <ChannelCard
-                  key={item.id}
-                  highlight={selectedChannelId === item.id}
-                  channel={item as IChannelData}
-                  onClick={() => {
-                    setSelectedChannelId(item.id);
-                  }}
-                />
-              );
-            })}
-          {selectedChannelId && channels && channels.length === 0 && (
-            <p className="text-center text-gray-500">
-              No Channels to show. Start by creating one 🤓
-            </p>
+      {/* POSTS SECTION */}
+      <div className="flex h-full flex-col gap-3 overflow-y-auto">
+        {/* POSTS HEADING */}
+        <h6 className="font-semibold">Posts</h6>
+        {/* POSTS LIST */}
+        <div className="flex flex-col gap-2 p-1">
+          {notes ? (
+            notes.map((note) => (
+              <PostRow
+                key={note.id}
+                userId={user?.uid}
+                title={note.title}
+                content={note.content}
+                noteId={note.id}
+              />
+            ))
+          ) : (
+            <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
         </div>
       </div>
 
-      {/* BOTTOM BAR */}
-      <div className="flex flex-row items-center justify-center gap-2">
-        <Button variant="outline-gray" onClick={() => auth.signOut()}>
-          <AiOutlineLogout className="text-xl" />
-          <span className={`hidden lg:inline`}> Logout</span>
-        </Button>
-        {/* <AiOutlineSetting className="text-2xl" />
-        <AiOutlineLogout className="text-2xl" /> */}
+      <div className="mt-auto">
+        <p className="text-center text-xs text-slate-400">
+          Copyright © {new Date().getFullYear()}{" "}
+          <span className="font-bold">WriteDown</span>
+        </p>
       </div>
-    </div>
+    </aside>
   );
 };
 

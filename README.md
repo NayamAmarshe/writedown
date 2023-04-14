@@ -1,33 +1,12 @@
-# ✍ Writedown https://writedown.app
-##### PRE-ALPHA RELEASE
-**Free and Open Source Writing Platform**   
-![image](https://user-images.githubusercontent.com/25067102/222045664-f8b099b0-63a0-4fc3-9f32-3e11c0e65946.png)
+<div align="center">
 
-## Write
+# 📔 [writedown](https://writedown.app)
+#### Free and Open Source Markdown App
 
-With Writedown, you can write down your notes, articles, and blogs in an easy to use chat-like interface.
+**writedown** is the new way of writing markdown notes fast and easily.   
+With a beautiful interface and polished user experience, writedown is simple but powerful.
 
-- Writedown supports Markdown so you can easily take notes in a standard format.
-- Supports images inside markdown
-- Easy chat like interface
+![806shots_so (1)](https://user-images.githubusercontent.com/25067102/232125868-062e2438-c387-4c30-86e2-2766ff300cd0.png)
 
-## Share
+</div>
 
-With Writedown, you can create public and private channels.
-
-- Take notes and save them privately for yourself.
-- Make public channels to have an outlet for your voice.
-- Join public channels to see what others are up to.
-
-## Inspire
-
-Write, write, write! Inspire and be inspired.
-
-# WRITEDOWN IS CURRENTLY OUT AS A MVP. THIS IS A WORK IN PROGRESS.
-
-# Roadmap
-
-- Revamped UI
-- Public channels
-- More editor features
-- Discovery Feed
