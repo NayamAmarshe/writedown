@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   // AUTH STATE HOOK
-  const [user] = useAuthState(auth, {
+  useAuthState(auth, {
     onUserChanged: async (user) => {
       if (!user) {
         router.push("/login");
@@ -25,21 +25,12 @@ const Dashboard = () => {
   });
 
   return (
-    <>
+    <div>
       <div className="max-w-screen relative flex h-screen flex-row bg-slate-200 text-gray-900">
-        <Sidebar
-          user={user}
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-        />
-
-        <TextArea
-          shiftRight={showSidebar}
-          setShiftRight={setShowSidebar}
-          user={user}
-        />
+        <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+        <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
       </div>
-    </>
+    </div>
   );
 };
 

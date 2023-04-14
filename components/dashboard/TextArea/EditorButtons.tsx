@@ -17,12 +17,12 @@ import MaterialFormatBold from "../../icons/MaterialFormatBold";
 import MingcuteQuoteRight from "../../icons/MingcuteQuoteRight";
 import MaterialHeadingOne from "../../icons/MaterialHeadingOne";
 import BootstrapImage from "../../icons/BootstrapImage";
+import React, { useCallback, useState } from "react";
 import MaterialLink from "../../icons/MaterialLink";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
 import "@milkdown/theme-nord/style.css";
-import React, { useState } from "react";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
 type EditorButtonsProps = {
@@ -36,15 +36,18 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
 
   const editor = useEditor(() => Editor.make());
 
-  function call<T>(command: CmdKey<T>, payload?: T) {
+  const call = <T,>(command: CmdKey<T>, payload?: T) => {
     return editor.get()?.action(callCommand(command, payload));
-  }
-  // Object for inserting images
-  const imageHandler = () => {
-    const link = { title: title, url: url };
-    const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
-    call(insertImageCommand.key, image);
   };
+
+  // Object for inserting images
+  const imageHandler = useCallback(() => {
+    const link = { title, url };
+    const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
+
+    call(insertImageCommand.key, image);
+  }, [title, url]);
+
   return (
     <div
       className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 sm:justify-start ${

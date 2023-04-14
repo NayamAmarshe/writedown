@@ -17,6 +17,7 @@
     "@milkdown/plugin-cursor": "^7.1.1",
     "@milkdown/plugin-history": "^7.1.1",
     "@milkdown/plugin-listener": "^7.1.1",
+    "@milkdown/plugin-math": "^7.2.0",
     "@milkdown/plugin-prism": "^7.1.1",
     "@milkdown/plugin-tooltip": "^7.1.1",
     "@milkdown/preset-commonmark": "^7.1.1",
@@ -26,6 +27,7 @@
     "@milkdown/theme-nord": "^7.1.1",
     "@milkdown/transformer": "^7.1.1",
     "@milkdown/utils": "^7.1.1",
+    "@testing-library/cypress": "^9.0.0",
     "cypress": "^12.9.0",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.17.1",
@@ -39,6 +41,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-loading-skeleton": "^3.1.1",
     "react-markdown": "^8.0.5",
+    "refractor": "^4.8.1",
     "remove-markdown": "^0.5.0"
   },
   "devDependencies": {
@@ -52,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "autoprefixer": "^10.4.12",
+    "cypress": "^12.9.0",
     "eslint": "^8.34.0",
     "eslint-config-next": "^13.1.6",
     "eslint-config-prettier": "^8.6.0",

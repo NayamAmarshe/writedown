@@ -63,6 +63,7 @@ const LoginPage = () => {
   if (authUser) {
     router.push("/dashboard");
   }
+
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="flex flex-col gap-10 rounded-xl border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:shadow-slate-700/[.7] md:p-5">
@@ -75,10 +76,10 @@ const LoginPage = () => {
           <p className="text-center text-sm">
             Login with one of the following:
           </p>
-          <Button onClick={() => login("google")}>
+          <Button data-testid="google-login" onClick={() => login("google")}>
             <FcGoogle /> Sign in with Google
           </Button>
-          <Button onClick={() => login("github")}>
+          <Button data-testid="github-login" onClick={() => login("github")}>
             <AiFillGithub /> Sign in with GitHub
           </Button>
         </div>

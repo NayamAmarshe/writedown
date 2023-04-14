@@ -4,6 +4,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
@@ -12,8 +13,8 @@ import Button from "@/components/ui/Button";
 import React, { useMemo } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
+import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
-import { useAtom } from "jotai";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -21,10 +22,13 @@ interface SidebarProps {
 }
 
 const Sidebar = ({
-  user,
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
+  const [user] = useAuthState(auth);
+  const { createNote } = useNotes({ userId: user?.uid });
+  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+
   const [firestoreNotes] = useCollectionData(
     user &&
       query(
@@ -38,19 +42,13 @@ const Sidebar = ({
     }
   );
 
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-
   const notes = useMemo(() => {
     return firestoreNotes;
   }, [firestoreNotes]);
 
-  const { createNote } = useNotes({ userId: user?.uid });
-
   const newPostClickHandler = async () => {
     const newId = await createNote();
-
     if (!newId) return;
-
     setSelectedNoteId(newId);
   };
 
@@ -61,6 +59,7 @@ const Sidebar = ({
       }`}
     >
       <IconButton
+        id="new"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="ml-auto md:hidden"
       >
@@ -73,7 +72,7 @@ const Sidebar = ({
 
       {/* SIDEBAR TOGGLE BUTTON */}
       <IconButton
-        id="sidebarToggle"
+        data-testid="sidebarToggle"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
@@ -88,6 +87,7 @@ const Sidebar = ({
       {user ? (
         <div className="flex items-center gap-2">
           <button
+            data-testid="logout"
             onClick={() => {
               auth.signOut();
             }}
@@ -112,7 +112,11 @@ const Sidebar = ({
 
       {/* CREATE NEW POST BUTTON */}
       {notes ? (
-        <Button onLoad={newPostClickHandler} onClick={newPostClickHandler}>
+        <Button
+          data-testid="new-note"
+          onLoad={newPostClickHandler}
+          onClick={newPostClickHandler}
+        >
           <span className="flex items-center justify-center gap-1">
             <PlusCircle className="h-5 w-5" />
             Create New Post
