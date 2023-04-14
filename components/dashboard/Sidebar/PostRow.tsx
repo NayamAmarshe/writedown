@@ -1,10 +1,6 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
-import useNotes from "@/components/hooks/useNotes";
-import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
 import RemoveMarkdown from "remove-markdown";
-import toast from "react-hot-toast";
 import { useAtom } from "jotai";
 import React from "react";
 
@@ -15,12 +11,8 @@ type PostRowProps = {
   userId: string | undefined;
 };
 
-const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
+const PostRow = ({ title, content, noteId }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
-  const [editorTitle, setEditorTitle] = useAtom(titleAtom);
-  const [input, setInput] = useAtom(inputAtom);
-  const { updateNote, deleteNote } = useNotes({ userId: userId });
 
   return (
     <div
@@ -30,17 +22,6 @@ const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
           : "bg-slate-50 hover:bg-slate-100"
       }`}
       onClick={() => {
-        if (!isSynced && selectedNoteId) {
-          updateNote({
-            id: selectedNoteId,
-            title: editorTitle,
-            content: input,
-          });
-          toast.success("Autosaved!", {
-            position: "bottom-right",
-          });
-          setIsSynced(true);
-        }
         setSelectedNoteId(noteId);
       }}
     >

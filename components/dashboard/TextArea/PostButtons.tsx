@@ -8,7 +8,7 @@ import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -16,9 +16,7 @@ type PostButtonsProps = {
   selectedNoteId: string | null;
   setSelectedNoteId: React.Dispatch<React.SetStateAction<string | null>>;
   title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
   input: string;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
   notes: TNotesData[] | undefined;
   updateNote: (note: {
     id: string;
@@ -45,48 +43,54 @@ const PostButtons = ({
   selectedNoteId,
   setSelectedNoteId,
   title,
-  setTitle,
   input,
-  setInput,
   notes,
   updateNote,
   deleteNote,
   shiftRight,
 }: PostButtonsProps) => {
-  const [isSyncing, setIsSyncing] = useAtom(isSyncingAtom);
+  const isSyncing = useAtomValue(isSyncingAtom);
 
   const currentNote = useMemo(() => {
     if (!notes || !selectedNoteId) return;
-    return notes.find((note) => note.id === selectedNoteId);
+    // Format the date for the last updated time of the note
+    return formatter.format(
+      (
+        notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
+      )?.toDate()
+    );
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {
+    // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
     if (isSyncing || isSynced) return;
 
+    // If there is no note selected or no note available with the selectedNoteId, don't save
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
+
     updateNote({
       id: selectedNoteId,
       title: title === "" ? "Untitled" : title,
       content: input,
     });
+
+    // Set the note as synced
     setIsSynced(true);
-    toast.success("Saved!");
   };
 
   const deleteNoteHandler = () => {
+    // If there is no note selected or no notes, don't delete
     if (!notes || !selectedNoteId) return;
+
     deleteNote(selectedNoteId);
+
     toast.success("Deleted!");
 
+    // Set the selected note to the next note in the array
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNoteId(notes[newIndex]?.id || null);
-    if (notes.length < 2) {
-      setTitle("");
-      setInput("");
-      return;
-    }
   };
 
   return (
@@ -98,8 +102,7 @@ const PostButtons = ({
       {/* LAST UPDATED */}
       {currentNote ? (
         <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
-          Last Updated{" "}
-          {formatter.format((currentNote.updatedAt as Timestamp)?.toDate())}
+          Last Updated {currentNote}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
@@ -108,7 +111,7 @@ const PostButtons = ({
       {/* DELETE BUTTON */}
       <div className="flex items-center justify-center gap-4 md:items-start">
         <button
-          id="del"
+          data-testid="del"
           type="button"
           className="rounded-full bg-red-200 py-1 px-3 text-sm font-medium text-red-800 shadow-md shadow-red-900/20 transition-colors duration-300 hover:bg-red-300"
           onClick={deleteNoteHandler}
@@ -121,7 +124,7 @@ const PostButtons = ({
 
         {/* SAVE BUTTON */}
         <button
-          id="save"
+          data-testid="save"
           type="button"
           className="rounded-full bg-emerald-200 py-1 px-3 text-sm font-medium text-emerald-800 shadow-md shadow-emerald-900/20 transition-colors duration-300 hover:bg-emerald-300"
           onClick={saveNoteHandler}
