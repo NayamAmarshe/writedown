@@ -41,21 +41,17 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const saveNoteChanges = useCallback(
-    async (noteId: string) => {
-      console.log("saveNoteChanges", noteId);
-      if (!isSynced && selectedNoteId) {
-        await updateNote({
-          id: noteId,
-          title: title,
-          content: input,
-        });
+  const saveNoteChanges = async (noteId: string) => {
+    if (!isSynced && selectedNoteId) {
+      await updateNote({
+        id: noteId,
+        title: title,
+        content: input,
+      });
 
-        setIsSynced(true);
-      }
-    },
-    [input, title, isSynced, selectedNoteId]
-  );
+      setIsSynced(true);
+    }
+  };
 
   // SHOW SYNCED SUCCESSFULLY TOAST WHENEVER isSynced BECOMES TRUE
   useEffect(() => {
@@ -113,7 +109,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
     // DEBOUNCE THE UPDATE FUNCTION
     setIsSynced(false);
-    const interval = setTimeout(saveNoteChanges, 2000);
+    const interval = setTimeout(() => saveNoteChanges(selectedNoteId), 2000);
     return () => clearInterval(interval);
   }, [title, input]);
 
