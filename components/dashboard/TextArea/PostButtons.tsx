@@ -62,14 +62,13 @@ const PostButtons = ({
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {
-    // If the note is syncing or synced, don't save
+    // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
     if (isSyncing || isSynced) return;
 
     // If there is no note selected or no note available with the selectedNoteId, don't save
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
 
-    // Update the note in the database
     updateNote({
       id: selectedNoteId,
       title: title === "" ? "Untitled" : title,
@@ -78,8 +77,6 @@ const PostButtons = ({
 
     // Set the note as synced
     setIsSynced(true);
-
-    toast.success("Saved!");
   };
 
   const deleteNoteHandler = () => {

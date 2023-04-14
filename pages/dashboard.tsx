@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   // AUTH STATE HOOK
-  const [user] = useAuthState(auth, {
+  useAuthState(auth, {
     onUserChanged: async (user) => {
       if (!user) {
         router.push("/login");
