@@ -18,7 +18,6 @@ import { math } from "@milkdown/plugin-math";
 import { replaceAll } from "@milkdown/utils";
 import python from "refractor/lang/python";
 import { gfm } from "@milkdown/preset-gfm";
-import useNotes from "../hooks/useNotes";
 import React, { useEffect } from "react";
 import shell from "refractor/lang/bash";
 import java from "refractor/lang/java";

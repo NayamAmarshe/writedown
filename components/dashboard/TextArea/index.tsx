@@ -6,12 +6,12 @@ import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useCallback, useEffect } from "react";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
-import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
 import { db } from "@/lib/firebase";
@@ -41,24 +41,34 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const instaSync = async () => {
-    if (!isSynced && selectedNoteId) {
-      await updateNote({
-        id: selectedNoteId,
-        title: title,
-        content: input,
-      });
-      setIsSynced(true);
-      toast.success("Synced Successfully", {
-        position: "bottom-right",
-      });
-    }
-  };
+  const saveNoteChanges = useCallback(
+    async (noteId: string) => {
+      if (!isSynced && selectedNoteId) {
+        await updateNote({
+          id: noteId,
+          title: title,
+          content: input,
+        });
 
+        setIsSynced(true);
+      }
+    },
+    [input, title, isSynced, selectedNoteId]
+  );
+
+  // SHOW SYNCED SUCCESSFULLY TOAST WHENEVER isSynced BECOMES TRUE
+  useEffect(() => {
+    if (!isSynced) return;
+
+    toast.success("Synced Successfully", {
+      position: "bottom-right",
+    });
+  }, [isSynced]);
+
+  // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
   useEffect(() => {
     if (!notes) return;
 
-    // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
@@ -68,30 +78,32 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
     if (!selectedNoteId) return;
 
-    // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND SET THE INPUT AND TITLE
+    // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND POPULATE THE EDITOR
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     if (!selectedNote) return;
     setInput(selectedNote.content);
     setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
+  // IF THERE ARE NO NOTES, CREATE A NEW NOTE
   useEffect(() => {
     if (!notes) return;
 
-    const createNewNote = async () => {
+    const createNoteIfEmpty = async () => {
       const newId = await createNote();
       if (!newId) return;
 
-      instaSync();
-
+      // IF THE NOTE CONTENT ALREADY EXISTS, SYNC IT
+      saveNoteChanges(newId);
       setSelectedNoteId(newId);
     };
 
     if (notes.length === 0) {
-      createNewNote();
+      createNoteIfEmpty();
     }
   }, [notes]);
 
+  // DEBOUNCE THE SAVE FUNCTION
   useEffect(() => {
     // FIND THE CURRENT NOTE AND CHECK IF IT IS UNCHANGED
     const currentNote = notes?.find(
@@ -104,7 +116,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     setIsSynced(false);
 
     // DEBOUNCE THE UPDATE FUNCTION
-    const interval = setTimeout(instaSync, 2000);
+    const interval = setTimeout(saveNoteChanges, 2000);
 
     return () => clearInterval(interval);
   }, [title, input]);
@@ -121,8 +133,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       >
         <ChevronDoubleLeft className="h-5 w-5" />
       </IconButton>
-
-      {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
+      {/*BUTTONS AND OTHER STATUS ELEMENTS*/}``
       <PostButtons
         deleteNote={deleteNote}
         selectedNoteId={selectedNoteId}
@@ -135,15 +146,18 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         updateNote={updateNote}
         shiftRight={shiftRight}
       />
-
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <MilkdownProvider>
         <EditorButtons shiftRight={shiftRight} />
 
         <div
           tabIndex={0}
-          onBlur={instaSync}
-          onMouseLeave={instaSync}
+          onBlur={() => {
+            if (!selectedNoteId) return;
+
+            saveNoteChanges(selectedNoteId);
+          }}
+          // onMouseLeave={instaSync}
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
           }`}

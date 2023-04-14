@@ -78,6 +78,7 @@ const PostButtons = ({
 
     // Set the note as synced
     setIsSynced(true);
+
     toast.success("Saved!");
   };
 
