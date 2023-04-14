@@ -5,77 +5,125 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
-import { selectedChannelIdAtom } from "@/stores/selectedChannelIdAtom";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
-import { IChannelData } from "@/types/utils/firebaseOperations";
+import { history, historyKeymap } from "@milkdown/plugin-history";
+import { TNotesData } from "@/types/utils/firebaseOperations";
+import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
-import { clipboard } from "@milkdown/plugin-clipboard";
 import { Milkdown, useEditor } from "@milkdown/react";
-import { history } from "@milkdown/plugin-history";
+import javascript from "refractor/lang/javascript";
+import typescript from "refractor/lang/typescript";
+import { math } from "@milkdown/plugin-math";
 import { replaceAll } from "@milkdown/utils";
-import { nord } from "@milkdown/theme-nord";
+import python from "refractor/lang/python";
+import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
-import "@milkdown/theme-nord/style.css";
-import { useAtom } from "jotai";
+import shell from "refractor/lang/bash";
+import java from "refractor/lang/java";
+import rust from "refractor/lang/rust";
+import yaml from "refractor/lang/yaml";
+import json from "refractor/lang/json";
+import css from "refractor/lang/css";
+import jsx from "refractor/lang/jsx";
+import tsx from "refractor/lang/tsx";
+import cpp from "refractor/lang/cpp";
+import { useAtomValue } from "jotai";
+import toast from "react-hot-toast";
+import "katex/dist/katex.min.css";
+import c from "refractor/lang/c";
+
 interface editorProps {
-  channelData?: IChannelData;
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  clearSwitch: boolean;
-  setClearSwitch: React.Dispatch<React.SetStateAction<boolean>>;
   className?: React.HTMLAttributes<HTMLDivElement>["className"];
+  notes?: TNotesData[] | undefined;
 }
 
-const MilkdownEditor = ({
-  setInput,
-  input,
-  clearSwitch,
-  setClearSwitch,
-  className,
-}: editorProps) => {
-  const [selectedChannelId, setSelectedChannelId] = useAtom(
-    selectedChannelIdAtom
-  );
+const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
+  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
-  const editor = useEditor((root) =>
-    Editor.make()
-      .config((ctx) => {
-        ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, input);
-        ctx.update(editorViewOptionsCtx, (prev) => ({
-          ...prev,
-          attributes: {
-            class: className ? className : "",
-          },
-        }));
-        ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
-          if (markdown !== prevMarkdown) {
-            setInput(markdown);
-          }
-        });
-      })
-      .config(nord)
-      .use(listener)
-      .use(commonmark)
-      .use(history)
-      .use(clipboard)
+  const editor = useEditor(
+    (root) =>
+      Editor.make()
+        .config((ctx) => {
+          ctx.set(rootCtx, root);
+
+          // Default value
+          ctx.set(defaultValueCtx, input);
+
+          // Editor View config
+          ctx.update(editorViewOptionsCtx, (prev) => ({
+            ...prev,
+            attributes: {
+              class: className ? className : "",
+            },
+          }));
+
+          // Prism plugin config
+          ctx.set(prismConfig.key, {
+            // Register languages
+            configureRefractor: (refractor) => {
+              refractor.register(css);
+              refractor.register(javascript);
+              refractor.register(typescript);
+              refractor.register(jsx);
+              refractor.register(tsx);
+              refractor.register(c);
+              refractor.register(cpp);
+              refractor.register(java);
+              refractor.register(python);
+              refractor.register(rust);
+              refractor.register(yaml);
+              refractor.register(shell);
+              refractor.register(json);
+            },
+          });
+
+          ctx.set(historyKeymap.key, {
+            // Remap to one shortcut.
+            Undo: "Mod-z",
+            // Remap to multiple shortcuts.
+            Redo: ["Mod-y", "Shift-Mod-z"],
+          });
+
+          ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
+            // If the user pastes an image, we don't want to save it to the database
+            if (markdown.includes("data:image") && prevMarkdown) {
+              editor.get()?.action(replaceAll(prevMarkdown));
+              toast.error(
+                "Please paste a link to an image, pasting images from clipboard is not supported yet"
+              );
+            }
+
+            // If the current markdown is different from the previous markdown, update the input
+            if (markdown !== prevMarkdown) {
+              setInput(markdown);
+            }
+          });
+        })
+        .use(listener) // Listener for listening to events
+        .use(commonmark) // Commonmark is the default preset
+        .use(gfm) // GFM for GitHub Flavored Markdown
+        .use(prism) // Prism for code highlighting
+        .use(history) // History for undo/redo
+        .use(math) // Math for math typesetting
   );
 
   useEffect(() => {
-    if (clearSwitch === false) {
+    // If there are no notes or no selected note, clear the editor
+    if (!notes || !selectedNoteId) {
+      editor.get()?.action(replaceAll(""));
+
       return;
     }
 
-    editor.get()?.action(replaceAll(""));
+    // Replace the editor content with the current note content
+    const currentNote = notes.find((note) => note.id === selectedNoteId);
+    if (!currentNote) return;
+    editor.get()?.action(replaceAll(currentNote.content));
+  }, [selectedNoteId, notes]);
 
-    setClearSwitch(false);
-  }, [clearSwitch]);
-
-  /* NOT SURE IF WE WANT THE TEXT FIELD TO RESET IF THE ACTIVE CHANNEL IS CHANGED
-useEffect(() => {
-    editor.get()?.action(replaceAll(""));
-  }, [selectedChannelId]);
-*/
   return <Milkdown />;
 };
 
