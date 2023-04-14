@@ -1,14 +1,14 @@
+@import url("https://api.fonts.coollabs.io/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 * {
   font-family: "Poppins", sans-serif;
 }
 
-.milkdown {
+/* .milkdown {
   width: 100%;
   height: 100%;
 }
@@ -17,3 +17,11 @@
   width: 100%;
   height: 100%;
 }
+
+.ProseMirror {
+  @apply max-h-none max-w-none;
+}
+
+.milkdown .editor {
+  height: 100% !important;
+} */
