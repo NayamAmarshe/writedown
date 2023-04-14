@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider>
       {/* EXTRA DIV IS BECAUSE OF TOAST */}
-      <Toaster />
+      <Toaster position="top-center" />
       <SkeletonTheme
         baseColor="#e2e8f0"
         highlightColor="#f8fafc"

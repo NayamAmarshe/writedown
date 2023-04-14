@@ -26,6 +26,8 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
+  const { createNote } = useNotes({ userId: user?.uid });
+  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -40,19 +42,13 @@ const Sidebar = ({
     }
   );
 
-  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-
   const notes = useMemo(() => {
     return firestoreNotes;
   }, [firestoreNotes]);
 
-  const { createNote } = useNotes({ userId: user?.uid });
-
   const newPostClickHandler = async () => {
     const newId = await createNote();
-
     if (!newId) return;
-
     setSelectedNoteId(newId);
   };
 

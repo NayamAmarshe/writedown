@@ -50,10 +50,12 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   const updateNote = useCallback(
     async (note: { id: string; title: string; content: string }) => {
       if (!userId || !note) return;
+
       setIsSyncing(true);
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
       const serverTime = serverTimestamp();
+
       try {
         // Create a document inside channelsRef array
         await updateDoc(notesRef, { ...note, updatedAt: serverTime });

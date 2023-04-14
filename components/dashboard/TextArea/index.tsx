@@ -43,6 +43,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   const saveNoteChanges = useCallback(
     async (noteId: string) => {
+      console.log("saveNoteChanges", noteId);
       if (!isSynced && selectedNoteId) {
         await updateNote({
           id: noteId,
@@ -76,9 +77,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       return;
     }
 
-    if (!selectedNoteId) return;
-
     // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND POPULATE THE EDITOR
+    if (!selectedNoteId) return;
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     if (!selectedNote) return;
     setInput(selectedNote.content);
@@ -92,7 +92,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     const createNoteIfEmpty = async () => {
       const newId = await createNote();
       if (!newId) return;
-
       // IF THE NOTE CONTENT ALREADY EXISTS, SYNC IT
       saveNoteChanges(newId);
       setSelectedNoteId(newId);
@@ -103,21 +102,18 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     }
   }, [notes]);
 
-  // DEBOUNCE THE SAVE FUNCTION
+  // DEB
   useEffect(() => {
     // FIND THE CURRENT NOTE AND CHECK IF IT IS UNCHANGED
     const currentNote = notes?.find(
       (note) => input === note.content && title === note.title
     );
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
-
     if (isNoteUnchanged || !selectedNoteId || !user) return;
 
-    setIsSynced(false);
-
     // DEBOUNCE THE UPDATE FUNCTION
+    setIsSynced(false);
     const interval = setTimeout(saveNoteChanges, 2000);
-
     return () => clearInterval(interval);
   }, [title, input]);
 
