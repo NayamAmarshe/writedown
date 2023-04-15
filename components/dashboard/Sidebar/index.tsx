@@ -16,6 +16,7 @@ import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
+import Link from "next/link";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -87,24 +88,37 @@ const Sidebar = ({
       {/* USER  GREETING SECTION */}
       {user ? (
         <div className="relative flex items-center gap-2">
-          <Popover
-            data-testid="logout"
-            buttonStyle="outline-none"
-            button={
-              user && (
-                <img
-                  src={
-                    user.photoURL ||
-                    `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
-                  }
-                  alt="User Photo"
-                  className="h-8 w-8 rounded-full object-cover"
-                />
-              )
-            }
-          >
-            p
-          </Popover>
+          <div>
+            <Popover
+              data-testid="logout"
+              buttonStyle="outline-none"
+              button={
+                user && (
+                  <img
+                    src={
+                      user.photoURL ||
+                      `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+                    }
+                    alt="User Photo"
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                )
+              }
+            >
+              <Link
+                href="/"
+                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+              >
+                Home
+              </Link>
+              <button
+                onClick={() => auth.signOut()}
+                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+              >
+                Logout
+              </button>
+            </Popover>
+          </div>
 
           <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
             Hi there,{" "}
