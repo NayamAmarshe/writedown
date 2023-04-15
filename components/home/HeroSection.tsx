@@ -5,10 +5,10 @@ import React from "react";
 
 const HeroSection = () => {
   return (
-    <div className="my-36 h-full w-full">
-      <div className="flex h-full w-full flex-col items-center justify-center gap-20">
-        <div className="flex flex-col items-center justify-center gap-5">
-          <h1 className="flex flex-col gap-5 text-center text-6xl font-semibold text-slate-900">
+    <div className="my-32 h-full w-full">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-4">
+        <div className="bg-balck flex flex-col items-center justify-center gap-5">
+          <h1 className="flex flex-col gap-5 text-center text-5xl font-semibold text-slate-900">
             <span>Upgrade Your</span>
             <span>Note-Taking Game</span>
           </h1>
