@@ -150,8 +150,7 @@ const Sidebar = ({
 
       <div className="mt-auto">
         <p className="text-center text-xs text-slate-400">
-          Copyright © {new Date().getFullYear()}{" "}
-          <span className="font-bold">WriteDown</span>
+          © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
         </p>
       </div>
     </aside>
