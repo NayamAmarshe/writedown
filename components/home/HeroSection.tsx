@@ -1,3 +1,4 @@
+import { Parallax } from "react-scroll-parallax";
 import Button from "../ui/Button";
 import Link from "next/link";
 import React from "react";
@@ -11,16 +12,21 @@ const HeroSection = () => {
             <span>Upgrade Your</span>
             <span>Note-Taking Game</span>
           </h1>
+
           <p className="max-w-2xl text-center font-medium text-slate-800">
             All your notes, synced on all your devices. Free, easy and fast.
           </p>
+
           <div>
             <Link href="/login">
               <Button>Try Now</Button>
             </Link>
           </div>
         </div>
-        <img src="/screenshot.png" alt="Writedown Screenshot" />
+
+        <Parallax speed={10}>
+          <img src="/screenshot.png" alt="Writedown Screenshot" />
+        </Parallax>
       </div>
     </div>
   );

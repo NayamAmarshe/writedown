@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import React, { useMemo } from "react";
@@ -85,22 +86,26 @@ const Sidebar = ({
 
       {/* USER  GREETING SECTION */}
       {user ? (
-        <div className="flex items-center gap-2">
-          <button
+        <div className="relative flex items-center gap-2">
+          <Popover
             data-testid="logout"
-            onClick={() => {
-              auth.signOut();
-            }}
+            buttonStyle="outline-none"
+            button={
+              user && (
+                <img
+                  src={
+                    user.photoURL ||
+                    `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+                  }
+                  alt="User Photo"
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              )
+            }
           >
-            <img
-              src={
-                user.photoURL ||
-                `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
-              }
-              alt="User Photo"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-          </button>
+            p
+          </Popover>
+
           <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
             Hi there,{" "}
             <span className="text-slate-900">{user?.displayName}</span>
