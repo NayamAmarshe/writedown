@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
 import Features from "@/components/home/Features";
 import Navbar from "@/components/home/Navbar";
+import Footer from "@/components/home/Footer";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {
@@ -9,6 +10,7 @@ const Home: NextPage = () => {
       <Navbar />
       <HeroSection />
       <Features />
+      <Footer />
     </div>
   );
 };
