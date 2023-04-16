@@ -6,7 +6,7 @@ import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
-    <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-50">
+    <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-50 text-slate-900">
       <Navbar />
       <HeroSection />
       <Features />
