@@ -125,7 +125,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       >
         <ChevronDoubleLeft className="h-5 w-5" />
       </IconButton>
-      {/*BUTTONS AND OTHER STATUS ELEMENTS*/}``
+      {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons
         deleteNote={deleteNote}
         selectedNoteId={selectedNoteId}
