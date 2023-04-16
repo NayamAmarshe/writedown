@@ -3,25 +3,29 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col items-center  justify-between bg-slate-200 sm:flex-row sm:px-36">
-      <div className="flex w-full items-center justify-between gap-20 px-4 sm:w-auto">
-        <div className="py-5">
-          <h1 className="text-xl font-semibold">writedown</h1>
-        </div>
-        <div className="text-sm">
-          <ul className="flex flex-row gap-5">
-            <li>
-              <Link href="/login">Login</Link>
-            </li>
-            <li>
-              <a href="https://github.com/NayamAmarshe/writedown">GitHub</a>
-            </li>
-          </ul>
-        </div>
+    <footer className="flex flex-col items-center justify-between gap-2 bg-slate-200 px-4 text-slate-900 sm:flex-row md:px-10 lg:px-36">
+      <div className="pt-4">
+        <Link href="/" className="text-xl font-semibold">
+          writedown
+        </Link>
       </div>
-      <div className="pb-5 sm:pb-0">
+      <div className="text-sm">
+        <ul className="flex flex-row gap-5">
+          <li>
+            <Link href="/login">Login</Link>
+          </li>
+          <li>
+            <a href="https://github.com/NayamAmarshe/writedown">GitHub</a>
+          </li>
+        </ul>
+      </div>
+      <div className="pb-5 text-slate-500 sm:pb-0">
         <p className="text-sm">
-          © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
+          © {new Date().getFullYear()}{" "}
+          <Link href="/" className="font-semibold">
+            writedown
+          </Link>
+          . All rights reserved.
         </p>
       </div>
     </footer>
