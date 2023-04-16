@@ -8,6 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import React, { useMemo } from "react";
@@ -15,6 +16,7 @@ import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
+import Link from "next/link";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -85,22 +87,39 @@ const Sidebar = ({
 
       {/* USER  GREETING SECTION */}
       {user ? (
-        <div className="flex items-center gap-2">
-          <button
-            data-testid="logout"
-            onClick={() => {
-              auth.signOut();
-            }}
-          >
-            <img
-              src={
-                user.photoURL ||
-                `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+        <div className="relative flex items-center gap-2">
+          <div>
+            <Popover
+              data-testid="logout"
+              buttonStyle="outline-none"
+              button={
+                user && (
+                  <img
+                    src={
+                      user.photoURL ||
+                      `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+                    }
+                    alt="User Photo"
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                )
               }
-              alt="User Photo"
-              className="h-8 w-8 rounded-full object-cover"
-            />
-          </button>
+            >
+              <Link
+                href="/"
+                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+              >
+                Home
+              </Link>
+              <button
+                onClick={() => auth.signOut()}
+                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+              >
+                Logout
+              </button>
+            </Popover>
+          </div>
+
           <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
             Hi there,{" "}
             <span className="text-slate-900">{user?.displayName}</span>
@@ -150,8 +169,7 @@ const Sidebar = ({
 
       <div className="mt-auto">
         <p className="text-center text-xs text-slate-400">
-          Copyright © {new Date().getFullYear()}{" "}
-          <span className="font-bold">WriteDown</span>
+          © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
         </p>
       </div>
     </aside>

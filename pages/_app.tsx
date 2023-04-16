@@ -1,4 +1,5 @@
 import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { ParallaxProvider } from "react-scroll-parallax";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
@@ -24,7 +25,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         highlightColor="#f8fafc"
         borderRadius={10}
       >
-        <Component {...pageProps} />
+        <ParallaxProvider>
+          <Component {...pageProps} />
+        </ParallaxProvider>
       </SkeletonTheme>
     </Provider>
   );
