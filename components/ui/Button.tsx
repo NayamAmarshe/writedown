@@ -17,7 +17,7 @@ const Button = ({
       case "red":
         return "inline-flex items-center justify-center px-5 py-2.5 bg-white border rounded-full border-red-900 text-sm font-medium text-red-900 hover:bg-red-200 transition-all duration-300";
       default:
-        return "inline-flex items-center justify-center px-5 py-2.5 bg-white border rounded-full border-gray-900 text-sm font-medium text-gray-900 hover:bg-gray-200 transition-all duration-300";
+        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-50 border rounded-full border-2 border-slate-900 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-all duration-300";
     }
   };
 
