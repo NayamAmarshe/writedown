@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📔 [writedown](https://writedown.app)
+# ✏ [writedown](https://writedown.app)
 #### Free and Open Source Markdown App
 
 **writedown** is the new way of writing markdown notes fast and easily.   
