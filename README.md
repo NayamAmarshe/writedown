@@ -19,11 +19,11 @@ writedown's focus is on providing a polished experience. A simple markdown edito
 
 **Here's what writedown provides that most other editors don't:**
 
-- 🕸 Offline support 
-- ♻ Cloud Sync 
-- 🆓 Free and Open Source 
-- 👁 Real-time Markdown Preview
-- 🗺 Publishing and Sharing 
+📴 **Offline support**   
+☁️ **Cloud Sync**   
+🤝 **Free and Open Source**    
+🪟 **Real-time Markdown Preview**   
+📨 **Publishing and Sharing** 
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
 
