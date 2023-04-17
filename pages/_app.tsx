@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
+import Head from "next/head";
 
 export const auth = getAuth(firebaseApp);
 
@@ -18,6 +19,45 @@ if (env === "development") {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider>
+      <Head>
+        <title>writedown - markdown notes app</title>
+        <meta name="application-name" content="writedown" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta
+          name="apple-mobile-web-app-title"
+          content="writedown - Markdown Notes"
+        />
+        <meta
+          name="description"
+          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://writedown.app" />
+        <meta name="twitter:title" content="writedown - Markdown Notes" />
+        <meta
+          name="twitter:description"
+          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+        />
+        <meta
+          name="twitter:image"
+          content="https://writedown.app/og-image.png"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="writedown - Markdown Notes" />
+        <meta
+          property="og:description"
+          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+        />
+        <meta property="og:site_name" content="writedown" />
+        <meta property="og:url" content="https://writedown.app" />
+        <meta
+          property="og:image"
+          content="https://writedown.app/og-image.png"
+        />
+      </Head>
       {/* EXTRA DIV IS BECAUSE OF TOAST */}
       <Toaster position="top-center" />
       <SkeletonTheme
