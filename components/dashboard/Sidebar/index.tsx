@@ -124,12 +124,14 @@ const Sidebar = ({
           <Skeleton className="h-10 w-10" circle={true} />
         )}
 
-        <h4 className="truncate text-xl font-semibold text-slate-500">
-          Hi there,{" "}
-          <span className="text-slate-900">
-            {user?.displayName || <Skeleton className="w-32" />}
-          </span>
-        </h4>
+        {user ? (
+          <h4 className="truncate text-xl font-semibold text-slate-500">
+            Hi there,{" "}
+            <span className="text-slate-900">{user?.displayName}</span>
+          </h4>
+        ) : (
+          <Skeleton className="w-32" />
+        )}
       </div>
 
       {/* CREATE NEW POST BUTTON */}
