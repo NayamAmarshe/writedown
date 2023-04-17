@@ -123,7 +123,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         }`}
         onClick={() => setShiftRight(true)}
       >
-        <ChevronDoubleLeft className="h-5 w-5" />
+        <ChevronDoubleLeft className="h-4 w-4" />
       </IconButton>
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons

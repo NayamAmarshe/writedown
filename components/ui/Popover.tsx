@@ -16,11 +16,11 @@ export default function Popover({
   ...rest
 }: PopoverProps) {
   return (
-    <HeadlessPopover className="relative h-full" {...rest}>
+    <HeadlessPopover {...rest}>
       {({ open }) => (
         <>
           <HeadlessPopover.Button
-            className={`
+            className={`block
                 ${open ? "" : openStyle} ${buttonStyle}`}
           >
             {button}
