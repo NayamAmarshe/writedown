@@ -23,6 +23,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>writedown - markdown notes app</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/logo.png" />
+        <meta name="theme-color" content="#317EFB" />
+        <link
+          href="/icons/favicon-16x16.png"
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+        />
+        <link
+          href="/icons/favicon-32x32.png"
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+        />
         <meta name="application-name" content="writedown" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
