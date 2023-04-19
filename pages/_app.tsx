@@ -57,6 +57,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           property="og:image"
           content="https://writedown.app/og-image.png"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
       </Head>
       {/* EXTRA DIV IS BECAUSE OF TOAST */}
       <Toaster position="top-center" />
