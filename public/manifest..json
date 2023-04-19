@@ -1,0 +1,10 @@
+{
+  "theme_color": "#d3d3d3",
+  "background_color": "#f69435",
+  "display": "browser",
+  "scope": "/",
+  "start_url": "/",
+  "name": "writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface.",
+  "short_name": "writedown",
+  "description": "writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+}
