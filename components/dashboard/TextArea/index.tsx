@@ -4,9 +4,9 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
-import React, { useCallback, useEffect } from "react";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
@@ -32,6 +32,13 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const { updateNote, deleteNote, createNote } = useNotes({
     userId: user?.uid,
   });
+  const [dataFetched, setDataFetched] = useState(false);
+
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  useEffect(() => {
+    setIsInitialRender(false);
+  }, []);
 
   const [notes] = useCollectionData(
     user &&
@@ -55,12 +62,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   // SHOW SYNCED SUCCESSFULLY TOAST WHENEVER isSynced BECOMES TRUE
   useEffect(() => {
-    if (!isSynced) return;
+    if (!isSynced || isInitialRender) return;
 
     toast.success("Synced Successfully", {
       position: "bottom-right",
     });
-  }, [isSynced]);
+  }, [isSynced, isInitialRender]);
 
   // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
   useEffect(() => {
@@ -106,9 +113,13 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     );
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
     if (isNoteUnchanged || !selectedNoteId || !user) return;
-
-    // DEBOUNCE THE UPDATE FUNCTION
+    // IF THIS IS THE FIRST FETCHING, DO NOT SET isSynced TO FALSE AS THIS CHANGE IS SUPPOSED TO HAPPEN
+    if (!dataFetched) {
+      setDataFetched(true);
+      return;
+    }
     setIsSynced(false);
+    // DEBOUNCE THE UPDATE FUNCTION
     const interval = setTimeout(() => saveNoteChanges(selectedNoteId), 2000);
     return () => clearInterval(interval);
   }, [title, input]);
