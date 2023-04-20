@@ -1,9 +1,10 @@
+import loadingAnimation from "@/animations/pencil-write.json";
 import InfoSidebar from "@/components/login/InfoSidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SignInArea from "@/components/login/SignInArea";
 import useUser from "@/components/hooks/useUser";
-import { Puff } from "react-loader-spinner";
 import { useRouter } from "next/router";
+import Lottie from "lottie-react";
 import { auth } from "./_app";
 import React from "react";
 
@@ -32,15 +33,10 @@ const LoginPage = () => {
     return (
       <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-50 text-slate-900">
         <div className="flex h-screen w-full items-center justify-center">
-          <Puff
-            height="80"
-            width="80"
-            radius={1}
-            color="#1f9aca"
-            ariaLabel="puff-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
+          <Lottie
+            className="h-1/2 w-1/2"
+            animationData={loadingAnimation}
+            loop={true}
           />
         </div>
       </div>
