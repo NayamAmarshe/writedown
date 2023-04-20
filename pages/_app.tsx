@@ -22,8 +22,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>writedown - markdown notes app</title>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/logo.png" />
-        <meta name="theme-color" content="#317EFB" />
+        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
+        <meta name="theme-color" content="#e2e8f0" />
         <link
           href="/icons/favicon-16x16.png"
           rel="icon"
@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta
           name="apple-mobile-web-app-title"
-          content="writedown - Markdown Notes"
+          content="writedown - Notes made simple"
         />
         <meta
           name="description"
@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
 
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="writedown - Markdown Notes" />
+        <meta property="og:title" content="writedown - Notes made simple" />
         <meta
           property="og:description"
           content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
