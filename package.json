@@ -41,6 +41,7 @@
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-loader-spinner": "^5.3.4",
     "react-loading-skeleton": "^3.1.1",
     "react-markdown": "^8.0.5",
     "react-scroll-parallax": "^3.4.2",
