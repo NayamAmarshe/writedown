@@ -24,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
         <meta name="theme-color" content="#e2e8f0" />
+        <link rel="icon" type="image/png" href="/icons/favicon-32x32.png" />
         <link
           href="/icons/favicon-16x16.png"
           rel="icon"
