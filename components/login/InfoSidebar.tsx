@@ -19,4 +19,3 @@ const InfoSidebar = () => {
 };
 
 export default InfoSidebar;
-//  <div className="hidden h-full w-1/2 flex-col gap-2 bg-slate-200 md:flex"></div>

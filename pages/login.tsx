@@ -1,9 +1,10 @@
+import loadingAnimation from "@/animations/pencil-write.json";
 import InfoSidebar from "@/components/login/InfoSidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SignInArea from "@/components/login/SignInArea";
 import useUser from "@/components/hooks/useUser";
-import Navbar from "@/components/home/Navbar";
 import { useRouter } from "next/router";
+import Lottie from "lottie-react";
 import { auth } from "./_app";
 import React from "react";
 
@@ -27,11 +28,19 @@ const LoginPage = () => {
       </div>
     );
   }
-  if (authLoading) {
-    return <p>Loading...</p>;
-  }
-  if (authUser) {
-    router.push("/dashboard");
+  if (authLoading || authUser) {
+    authUser && router.push("/dashboard");
+    return (
+      <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-50 text-slate-900">
+        <div className="flex h-screen w-full items-center justify-center">
+          <Lottie
+            className="h-1/2 w-1/2"
+            animationData={loadingAnimation}
+            loop={true}
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
