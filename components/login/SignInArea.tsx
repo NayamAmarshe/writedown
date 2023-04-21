@@ -26,20 +26,13 @@ const SignInArea = () => {
   };
 
   return (
-    <div className="flex h-full flex-col items-center justify-end gap-4 bg-slate-300 sm:w-1/2 sm:justify-center sm:bg-gray-50 ">
-      <div className="top-0 left-5 px-4 pb-4 text-2xl font-semibold sm:absolute">
-        <Link href="/" className="absolute top-4">
+    <div className="flex h-1/2 w-full flex-col items-center justify-end gap-4 bg-slate-300 md:h-full md:w-1/2">
+      <div className="absolute top-0 left-5 px-4 pb-4 text-2xl font-semibold">
+        <Link href="/" className="fixed top-4 z-10">
           writedown
         </Link>
-        <p className="text-xl font-semibold sm:hidden">
-          Simplicity starts here
-        </p>
-        <p className="pr-10 pt-4 text-sm  font-normal sm:hidden">
-          A fast, easy and free way to write notes with offline support, cloud
-          sync and real-time markdown preview.
-        </p>
       </div>
-      <div className="bottom-0 flex w-full flex-col items-center gap-4 rounded-t-3xl bg-gray-50 px-10 py-16 pb-20">
+      <div className="bottom-0 flex h-full w-full flex-col items-center gap-4 bg-gray-50 px-10 py-16 pb-20 md:justify-center md:rounded-r-xl">
         <p className="mb-5 text-center text-sm font-medium">
           Login with your familiar services:
         </p>
