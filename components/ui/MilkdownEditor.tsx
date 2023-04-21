@@ -96,6 +96,21 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
               );
             }
 
+            if (
+              markdown.includes("```") &&
+              prevMarkdown &&
+              markdown.indexOf("```") === 0
+            ) {
+              editor
+                .get()
+                ?.action(
+                  replaceAll("First line cannot be a code block" + markdown)
+                );
+              toast.error(
+                "MilkDown does not support the first line being a code block... Please preface your code block with some other element."
+              );
+            }
+
             // If the current markdown is different from the previous markdown, update the input
             if (markdown !== prevMarkdown) {
               setInput(markdown);
