@@ -6,6 +6,7 @@ import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
 import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
+import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
@@ -110,24 +111,26 @@ const PostButtons = ({
 
       {/* DELETE BUTTON */}
       <div className="flex items-center justify-center gap-4 md:items-start">
-        <button
+        <Button
           data-testid="del"
           type="button"
-          className="rounded-full bg-red-200 py-1 px-3 text-sm font-medium text-red-800 shadow-md shadow-red-900/20 transition-colors duration-300 hover:bg-red-300"
           onClick={deleteNoteHandler}
+          variant="red"
+          size="sm"
         >
           <span className="flex items-center justify-center gap-1">
             <Trash className="h-5 w-5" />
             <p>Delete Post</p>
           </span>
-        </button>
+        </Button>
 
         {/* SAVE BUTTON */}
-        <button
+        <Button
           data-testid="save"
           type="button"
-          className="rounded-full bg-emerald-200 py-1 px-3 text-sm font-medium text-emerald-800 shadow-md shadow-emerald-900/20 transition-colors duration-300 hover:bg-emerald-300"
           onClick={saveNoteHandler}
+          size="sm"
+          variant="green"
         >
           {isSyncing && (
             <span className="flex items-center justify-center gap-1">
@@ -147,7 +150,7 @@ const PostButtons = ({
               <p>Save Note</p>
             </span>
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );
