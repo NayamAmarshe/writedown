@@ -1,7 +1,7 @@
 import React from "react";
 const InfoSidebar = () => {
   return (
-    <div className="relative h-1/2 w-full flex-col gap-2 overflow-hidden bg-slate-300 md:h-full md:w-1/2">
+    <div className="relative h-1/2 w-full flex-col gap-2 overflow-hidden bg-slate-300 md:h-full md:w-2/3">
       <h1 className="mt-20 ml-10 text-lg font-semibold md:ml-20 md:mt-52 md:text-2xl">
         Simplicity starts here
       </h1>
