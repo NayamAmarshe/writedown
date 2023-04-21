@@ -45,7 +45,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-200 text-slate-900 sm:bg-slate-50">
-      <div className="flex h-screen w-full items-center justify-center">
+      <div className="flex h-screen w-full flex-col-reverse items-center justify-center md:flex-row">
         <SignInArea />
         <InfoSidebar />
       </div>
