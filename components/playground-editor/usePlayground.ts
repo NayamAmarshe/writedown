@@ -169,6 +169,7 @@ export const usePlayground = (
               .get(listenerCtx)
               .markdownUpdated((_, markdown) => {
                 debounce(onChange, 100)(markdown);
+                // onChange(markdown);
               })
               .updated((_, doc) => {
                 const state = doc.toJSON();
@@ -191,7 +192,6 @@ export const usePlayground = (
           })
           .config(nord)
           .use(commonmark)
-          // .use(linkPlugin(widgetViewFactory))
           .use(listener)
           .use(clipboard)
           .use(history)
@@ -200,8 +200,9 @@ export const usePlayground = (
           .use(indent)
           .use(upload)
           .use(trailing)
-          .use(imageTooltip)
-          .use(slash)
+          .use(linkPlugin(widgetViewFactory))
+          // .use(imageTooltip)
+          // .use(slash)
           .use(
             $view(listItemSchema.node, () =>
               nodeViewFactory({ component: ListItem })
