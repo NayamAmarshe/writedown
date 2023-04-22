@@ -18,11 +18,11 @@ const Button = ({
     if (size === "sm") {
       switch (variant) {
         case "red":
-          return "rounded-full py-1 px-3 text-sm font-medium text-red-500 ring-2 ring-red-500 transition-colors duration-300 hover:bg-red-100";
+          return "rounded-full py-1 px-3 text-sm font-medium text-red-500 ring-2 ring-red-500 transition-colors duration-300 hover:bg-red-100 bg-red-50";
         case "green":
-          return "rounded-full py-1 px-3 text-sm font-medium text-green-500 ring-2 ring-green-500 transition-colors duration-300 hover:bg-green-100";
+          return "rounded-full py-1 px-3 text-sm font-medium text-green-500 ring-2 ring-green-500 transition-colors duration-300 hover:bg-green-100 bg-green-50";
         case "slate":
-          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100";
+          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 bg-slate-50";
         default:
           return "rounded-full py-1 px-3 text-sm font-medium text-slate-900 ring-2 ring-slate-900 transition-colors duration-300 hover:bg-slate-300";
       }
