@@ -80,7 +80,7 @@ const Sidebar = ({
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
         <ChevronDoubleLeft
-          className={`duration-400 h-5 w-5 transition-transform ${
+          className={`duration-400 h-5 w-5 translate-x-1 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
