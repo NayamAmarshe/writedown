@@ -6,19 +6,19 @@ import {
   editorViewOptionsCtx,
 } from "@milkdown/core";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import type { MilkdownRef } from "@/components/playground-editor";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { TNotesData } from "@/types/utils/firebaseOperations";
+import React, { useCallback, useEffect, useRef } from "react";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
-import { Milkdown, useEditor } from "@milkdown/react";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
 import { math } from "@milkdown/plugin-math";
 import { replaceAll } from "@milkdown/utils";
 import python from "refractor/lang/python";
 import { gfm } from "@milkdown/preset-gfm";
-import React, { useEffect } from "react";
 import shell from "refractor/lang/bash";
 import java from "refractor/lang/java";
 import rust from "refractor/lang/rust";
@@ -30,8 +30,21 @@ import tsx from "refractor/lang/tsx";
 import cpp from "refractor/lang/cpp";
 import { useAtomValue } from "jotai";
 import toast from "react-hot-toast";
+import dynamic from "next/dynamic";
 import "katex/dist/katex.min.css";
 import c from "refractor/lang/c";
+import Loading from "./Loading";
+
+const PlaygroundMilkdown = dynamic(
+  () =>
+    import("@/components/playground-editor").then((module) => ({
+      default: module.PlaygroundMilkdown,
+    })),
+  {
+    ssr: false,
+    loading: () => <Loading />,
+  }
+);
 
 interface editorProps {
   input: string;
@@ -43,88 +56,17 @@ interface editorProps {
 const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
-  const editor = useEditor(
-    (root) =>
-      Editor.make()
-        .config((ctx) => {
-          ctx.set(rootCtx, root);
+  const milkdownRef = useRef<MilkdownRef>(null);
 
-          // Default value
-          ctx.set(defaultValueCtx, input);
+  const onMilkdownChange = useCallback((markdown: string) => {}, []);
 
-          // Editor View config
-          ctx.update(editorViewOptionsCtx, (prev) => ({
-            ...prev,
-            attributes: {
-              class: className ? className : "",
-            },
-          }));
-
-          // Prism plugin config
-          ctx.set(prismConfig.key, {
-            // Register languages
-            configureRefractor: (refractor) => {
-              refractor.register(css);
-              refractor.register(javascript);
-              refractor.register(typescript);
-              refractor.register(jsx);
-              refractor.register(tsx);
-              refractor.register(c);
-              refractor.register(cpp);
-              refractor.register(java);
-              refractor.register(python);
-              refractor.register(rust);
-              refractor.register(yaml);
-              refractor.register(shell);
-              refractor.register(json);
-            },
-          });
-
-          ctx.set(historyKeymap.key, {
-            // Remap to one shortcut.
-            Undo: "Mod-z",
-            // Remap to multiple shortcuts.
-            Redo: ["Mod-y", "Shift-Mod-z"],
-          });
-
-          ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
-            // If the user pastes an image, we don't want to save it to the database
-            if (markdown.includes("data:image") && prevMarkdown) {
-              editor.get()?.action(replaceAll(prevMarkdown));
-              toast.error(
-                "Please paste a link to an image, pasting images from clipboard is not supported yet"
-              );
-            }
-
-            // If the current markdown is different from the previous markdown, update the input
-            if (markdown !== prevMarkdown) {
-              setInput(markdown);
-            }
-          });
-        })
-        .use(listener) // Listener for listening to events
-        .use(commonmark) // Commonmark is the default preset
-        .use(gfm) // GFM for GitHub Flavored Markdown
-        .use(prism) // Prism for code highlighting
-        .use(history) // History for undo/redo
-        .use(math) // Math for math typesetting
+  return (
+    <PlaygroundMilkdown
+      milkdownRef={milkdownRef}
+      content={input}
+      onChange={onMilkdownChange}
+    />
   );
-
-  useEffect(() => {
-    // If there are no notes or no selected note, clear the editor
-    if (!notes || !selectedNoteId) {
-      editor.get()?.action(replaceAll(""));
-
-      return;
-    }
-
-    // Replace the editor content with the current note content
-    const currentNote = notes.find((note) => note.id === selectedNoteId);
-    if (!currentNote) return;
-    editor.get()?.action(replaceAll(currentNote.content));
-  }, [selectedNoteId, notes]);
-
-  return <Milkdown />;
 };
 
 export default MilkdownEditor;
