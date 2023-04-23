@@ -97,9 +97,9 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         >
           <MaterialCodeRounded />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200">
+        {/* <button className="rounded-xl p-2 hover:bg-slate-200">
           <MaterialLink />
-        </button>
+        </button> */}
         <button
           onClick={() => setIsOpen(isOpen ? false : true)}
           className="rounded-xl p-2 hover:bg-slate-200"
