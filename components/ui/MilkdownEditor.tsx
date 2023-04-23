@@ -46,16 +46,18 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
 
   const codeBlockDeleteHandler = (
     state: EditorState,
-    dispatch?: ((tr: Transaction) => void) | undefined
+    dispatch?: (tr: Transaction) => void
   ): boolean => {
     const { selection } = state;
     const { $from } = selection;
+    console.log("🚀 => file: MilkdownEditor.tsx:53 => $from:", $from);
 
     if (
-      !$from.doc.content.firstChild ||
-      $from.doc.content.firstChild?.type.name !== "code_block" ||
+      !dispatch ||
       $from.pos !== 1 ||
-      $from.doc.content.firstChild?.content.size > 1
+      !$from.doc.content.firstChild ||
+      $from.doc.content.firstChild?.content.size > 1 ||
+      $from.doc.content.firstChild?.type.name !== "code_block"
     ) {
       return false;
     }
@@ -64,7 +66,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     const end = $from.end($from.depth);
 
     const tr = state.tr.delete(start - 1, end);
-    dispatch && dispatch(tr);
+    dispatch(tr);
     return true;
   };
 
