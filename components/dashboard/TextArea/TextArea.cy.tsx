@@ -43,5 +43,7 @@ describe("<TextArea />", () => {
     cy.get(".ProseMirror").type("```{enter}Code Text{ctrl}{enter}");
     cy.get(".ProseMirror > pre > code").contains("Code Text");
     cy.get(".ProseMirror").type("{ctrl}{enter}{selectall}{del}");
+    cy.get(".ProseMirror").type("{backspace}{backspace}");
+    cy.get(".ProseMirror > p").should("have.value", "");
   });
 });
