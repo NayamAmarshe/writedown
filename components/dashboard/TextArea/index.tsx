@@ -49,11 +49,13 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   );
 
   const saveNoteChanges = async (noteId: string) => {
-    if (!isSynced && selectedNoteId) {
+    const lsInput = localStorage.getItem("editorContent");
+    const lsTitle = localStorage.getItem("editorTitle");
+    if (!isSynced && selectedNoteId && lsInput && lsTitle) {
       await updateNote({
         id: noteId,
-        title: title,
-        content: input,
+        title: lsTitle,
+        content: lsInput,
       });
 
       setIsSynced(true);
@@ -120,8 +122,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     }
     setIsSynced(false);
     // DEBOUNCE THE UPDATE FUNCTION
-    const interval = setTimeout(() => saveNoteChanges(selectedNoteId), 2000);
-    return () => clearInterval(interval);
+    localStorage.setItem("editorTitle", title);
+    localStorage.setItem("editorContent", input);
   }, [title, input]);
 
   return (
