@@ -1,11 +1,8 @@
+import { Check, RotateCcw, Trash, UploadCloud } from "lucide-react";
 import { TNotesData } from "@/types/utils/firebaseOperations";
-import CloudArrowUp from "@/components/icons/CloudArrowUp";
-import ArrowPath from "@/components/icons/ArrowPath";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
-import Check from "@/components/icons/Check";
-import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
@@ -134,7 +131,7 @@ const PostButtons = ({
         >
           {isSyncing && (
             <span className="flex items-center justify-center gap-1">
-              <ArrowPath className="h-5 w-5" />
+              <RotateCcw className="h-5 w-5" />
               <p>Saving</p>
             </span>
           )}
@@ -146,7 +143,7 @@ const PostButtons = ({
           )}
           {!isSyncing && !isSynced && (
             <span className="flex items-center justify-center gap-1">
-              <CloudArrowUp className="h-5 w-5" />
+              <UploadCloud className="h-5 w-5" />
               <p>Save Note</p>
             </span>
           )}

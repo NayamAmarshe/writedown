@@ -1,11 +1,10 @@
-import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import PlusCircle from "@/components/icons/PlusCircle";
+import { ChevronsLeft, PlusCircle } from "lucide-react";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import Popover from "@/components/ui/Popover";
@@ -66,7 +65,7 @@ const Sidebar = ({
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="ml-auto md:hidden absolute right-3 z-10"
       >
-        <ChevronDoubleLeft
+        <ChevronsLeft
           className={`duration-400 h-4 w-4 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
@@ -79,7 +78,7 @@ const Sidebar = ({
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
-        <ChevronDoubleLeft
+        <ChevronsLeft
           className={`duration-400 h-5 w-5 translate-x-1 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}

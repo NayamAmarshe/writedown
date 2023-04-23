@@ -1,4 +1,3 @@
-import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
@@ -12,6 +11,7 @@ import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
+import { ChevronsLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
 import { db } from "@/lib/firebase";
@@ -134,7 +134,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         }`}
         onClick={() => setShiftRight(true)}
       >
-        <ChevronDoubleLeft className="h-4 w-4" />
+        <ChevronsLeft className="h-4 w-4" />
       </IconButton>
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons

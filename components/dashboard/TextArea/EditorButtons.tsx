@@ -8,17 +8,19 @@ import {
   insertImageCommand,
   UpdateImageCommandPayload,
 } from "@milkdown/preset-commonmark";
-import MaterialUnorderedList from "../../icons/MaterialUnorderedList";
-import OutlineStrikethrough from "../../icons/OutlineStrikethrough";
-import MaterialFormatItalic from "../../icons/MaterialFormatItalic";
-import MaterialCodeRounded from "../../icons/MaterialCodeRounded";
+import {
+  Bold,
+  Code,
+  Heading,
+  Heading1,
+  Image,
+  Italic,
+  List,
+  Quote,
+  Strikethrough,
+} from "lucide-react";
 import { toggleStrikethroughCommand } from "@milkdown/preset-gfm";
-import MaterialFormatBold from "../../icons/MaterialFormatBold";
-import MingcuteQuoteRight from "../../icons/MingcuteQuoteRight";
-import MaterialHeadingOne from "../../icons/MaterialHeadingOne";
-import BootstrapImage from "../../icons/BootstrapImage";
 import React, { useCallback, useState } from "react";
-import MaterialLink from "../../icons/MaterialLink";
 import { Editor, CmdKey } from "@milkdown/core";
 import { callCommand } from "@milkdown/utils";
 import { useEditor } from "@milkdown/react";
@@ -59,52 +61,49 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key)}
         >
-          <MaterialHeadingOne />
+          <Heading className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleStrongCommand.key)}
         >
-          <MaterialFormatBold />
+          <Bold className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleEmphasisCommand.key)}
         >
-          <MaterialFormatItalic />
+          <Italic className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInBlockquoteCommand.key)}
         >
-          <MingcuteQuoteRight />
+          <Quote className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleStrikethroughCommand.key)}
         >
-          <OutlineStrikethrough />
+          <Strikethrough className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInOrderedListCommand.key)}
         >
-          <MaterialUnorderedList />
+          <List className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleInlineCodeCommand.key)}
         >
-          <MaterialCodeRounded />
-        </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200">
-          <MaterialLink />
+          <Code className="h-5 w-5" />
         </button>
         <button
           onClick={() => setIsOpen(isOpen ? false : true)}
           className="rounded-xl p-2 hover:bg-slate-200"
         >
-          <BootstrapImage />
+          <Image className="h-5 w-5" />
         </button>
         <Modal
           isOpen={isOpen}
