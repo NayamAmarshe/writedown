@@ -4,6 +4,8 @@ import {
   Editor,
   rootCtx,
   editorViewOptionsCtx,
+  editorViewCtx,
+  editorState,
 } from "@milkdown/core";
 import { $shortcut, Keymap, getMarkdown, replaceAll } from "@milkdown/utils";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
@@ -12,12 +14,12 @@ import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
+import { ResolvedPos, Slice } from "@milkdown/prose/model";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { Milkdown, useEditor } from "@milkdown/react";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
 import { EditorView } from "@milkdown/prose/view";
-import { Slice } from "@milkdown/prose/model";
 import { math } from "@milkdown/plugin-math";
 import { keymap } from "prosemirror-keymap";
 import { Command } from "prosemirror-state";
@@ -48,42 +50,51 @@ interface editorProps {
 const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
-  const codeblockDeleteHandler = (
-    state: EditorState,
-    dispatch?: ((tr: Transaction) => void) | undefined,
-    view?: EditorView
-  ): Command | undefined => {
-    /// IF WE ARE NOT IN A CODE BLOCK OR THE DOCUMENT IS EMPTY, RETURN
+  const codeBlockDeleteHandler = (state: EditorState): boolean => {
+    const { selection } = state;
+    const { $from } = selection;
+
     if (
-      !state.selection.$from["path"][3] ||
-      state.selection.$from["path"][3].type.name !== "code_block" ||
-      state.selection.$from.pos !== 1
-    )
-      return undefined;
-    /// IF THE CODE BLOCK IS EMPTY, DELETE THE CODEBLOCK BY DELETING THE LAST 6 CHARACTERS OF THE MARKDOWN
+      !($from as any)["path"][3] ||
+      ($from as any)["path"][3].type.name !== "code_block" ||
+      $from.pos !== 1
+    ) {
+      return false;
+    }
+
     if (
-      state.selection.$from["path"][3].content.size === 0 ||
-      state.selection.$from["path"][3].content.content.text === 0
+      ($from as any)["path"][3].content.size === 0 ||
+      ($from as any)["path"][3].content.content.text === 0
     ) {
       const currentMarkdown = editor.get()?.action(getMarkdown());
-      if (currentMarkdown) {
-        const toReplace = currentMarkdown?.replace(
-          currentMarkdown?.slice(
-            state.selection.$from.pos - 1,
-            state.selection.$from.pos + 6
-          ),
-          ""
-        );
-        editor.get()?.action(replaceAll(toReplace as string));
+
+      if (!currentMarkdown) {
+        return false;
       }
+
+      const toReplace = currentMarkdown?.replace(
+        currentMarkdown?.slice(
+          state.selection.$from.pos - 1,
+          state.selection.$from.pos + 6
+        ),
+        ""
+      );
+      editor.get()?.action(replaceAll(toReplace as string));
+      return true;
     }
+
+    return false;
   };
 
-  const codeBlockKeymap = $shortcut((ctx) => {
+  const codeBlockKeymap = $shortcut((ctx): Keymap => {
     return {
-      Backspace: codeblockDeleteHandler,
-      Delete: codeblockDeleteHandler,
-    } as unknown as Keymap;
+      Backspace: (state) => {
+        return codeBlockDeleteHandler(state);
+      },
+      Delete: (state) => {
+        return codeBlockDeleteHandler(state);
+      },
+    };
   });
 
   const editor = useEditor((root) =>
