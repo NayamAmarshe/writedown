@@ -48,71 +48,109 @@ interface editorProps {
 const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
-  const editor = useEditor(
-    (root) =>
-      Editor.make()
-        .config((ctx) => {
-          ctx.set(rootCtx, root);
+  const codeblockDeleteHandler = (
+    state: EditorState,
+    dispatch?: ((tr: Transaction) => void) | undefined,
+    view?: EditorView
+  ): Command | undefined => {
+    /// IF WE ARE NOT IN A CODE BLOCK OR THE DOCUMENT IS EMPTY, RETURN
+    if (
+      !state.selection.$from["path"][3] ||
+      state.selection.$from["path"][3].type.name !== "code_block" ||
+      state.selection.$from.pos !== 1
+    )
+      return undefined;
+    /// IF THE CODE BLOCK IS EMPTY, DELETE THE CODEBLOCK BY DELETING THE LAST 6 CHARACTERS OF THE MARKDOWN
+    if (
+      state.selection.$from["path"][3].content.size === 0 ||
+      state.selection.$from["path"][3].content.content.text === 0
+    ) {
+      const currentMarkdown = editor.get()?.action(getMarkdown());
+      if (currentMarkdown) {
+        const toReplace = currentMarkdown?.replace(
+          currentMarkdown?.slice(
+            state.selection.$from.pos - 1,
+            state.selection.$from.pos + 6
+          ),
+          ""
+        );
+        editor.get()?.action(replaceAll(toReplace as string));
+      }
+    }
+  };
 
-          // Default value
-          ctx.set(defaultValueCtx, input);
+  const codeBlockKeymap = $shortcut((ctx) => {
+    return {
+      Backspace: codeblockDeleteHandler,
+      Delete: codeblockDeleteHandler,
+    } as unknown as Keymap;
+  });
 
-          // Editor View config
-          ctx.update(editorViewOptionsCtx, (prev) => ({
-            ...prev,
-            attributes: {
-              class: className ? className : "",
-            },
-          }));
+  const editor = useEditor((root) =>
+    Editor.make()
+      .config((ctx) => {
+        ctx.set(rootCtx, root);
 
-          // Prism plugin config
-          ctx.set(prismConfig.key, {
-            // Register languages
-            configureRefractor: (refractor) => {
-              refractor.register(css);
-              refractor.register(javascript);
-              refractor.register(typescript);
-              refractor.register(jsx);
-              refractor.register(tsx);
-              refractor.register(c);
-              refractor.register(cpp);
-              refractor.register(java);
-              refractor.register(python);
-              refractor.register(rust);
-              refractor.register(yaml);
-              refractor.register(shell);
-              refractor.register(json);
-            },
-          });
+        // Default value
+        ctx.set(defaultValueCtx, input);
 
-          ctx.set(historyKeymap.key, {
-            // Remap to one shortcut.
-            Undo: "Mod-z",
-            // Remap to multiple shortcuts.
-            Redo: ["Mod-y", "Shift-Mod-z"],
-          });
+        // Editor View config
+        ctx.update(editorViewOptionsCtx, (prev) => ({
+          ...prev,
+          attributes: {
+            class: className ? className : "",
+          },
+        }));
 
-          ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
-            // If the user pastes an image, we don't want to save it to the database
-            if (markdown.includes("data:image") && prevMarkdown) {
-              editor.get()?.action(replaceAll(prevMarkdown));
-              toast.error(
-                "Please paste a link to an image, pasting images from clipboard is not supported yet"
-              );
-            }
+        // Prism plugin config
+        ctx.set(prismConfig.key, {
+          // Register languages
+          configureRefractor: (refractor) => {
+            refractor.register(css);
+            refractor.register(javascript);
+            refractor.register(typescript);
+            refractor.register(jsx);
+            refractor.register(tsx);
+            refractor.register(c);
+            refractor.register(cpp);
+            refractor.register(java);
+            refractor.register(python);
+            refractor.register(rust);
+            refractor.register(yaml);
+            refractor.register(shell);
+            refractor.register(json);
+          },
+        });
 
-            // If the current markdown is different from the previous markdown, update the input
-            if (markdown !== prevMarkdown) {
-              setInput(markdown);
-            }
-          });
-        })
-        .use(listener) // Listener for listening to events
-        .use(commonmark) // Commonmark is the default preset
-        .use(gfm) // GFM for GitHub Flavored Markdown
-        .use(prism) // Prism for code highlighting
-        .use(history) // History for undo/redo
-        .use(math) // Math for math typesetting
+        ctx.set(historyKeymap.key, {
+          // Remap to one shortcut.
+          Undo: "Mod-z",
+          // Remap to multiple shortcuts.
+          Redo: ["Mod-y", "Shift-Mod-z"],
+        });
+
+        ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
+          // If the user pastes an image, we don't want to save it to the database
+          if (markdown.includes("data:image") && prevMarkdown) {
+            editor.get()?.action(replaceAll(prevMarkdown));
+            toast.error(
+              "Please paste a link to an image, pasting images from clipboard is not supported yet"
+            );
+          }
+
+          // If the current markdown is different from the previous markdown, update the input
+          if (markdown !== prevMarkdown) {
+            setInput(markdown);
+          }
+        });
+      })
+      .use(listener) // Listener for listening to events
+      .use(commonmark) // Commonmark is the default preset
+      .use(gfm) // GFM for GitHub Flavored Markdown
+      .use(prism) // Prism for code highlighting
+      .use(history) // History for undo/redo
+      .use(math) // Math for math typesetting
+      .use(codeBlockKeymap)
   );
 
   useEffect(() => {
