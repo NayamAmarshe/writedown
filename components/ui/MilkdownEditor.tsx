@@ -50,49 +50,37 @@ interface editorProps {
 const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
-  const codeBlockDeleteHandler = (state: EditorState): boolean => {
+  const codeBlockDeleteHandler = (
+    state: EditorState,
+    dispatch?: ((tr: Transaction) => void) | undefined
+  ): boolean => {
     const { selection } = state;
     const { $from } = selection;
 
     if (
-      !($from as any)["path"][3] ||
-      ($from as any)["path"][3].type.name !== "code_block" ||
-      $from.pos !== 1
+      !$from.doc.content.firstChild ||
+      $from.doc.content.firstChild?.type.name !== "code_block" ||
+      $from.pos !== 1 ||
+      $from.doc.content.firstChild?.content.size > 1
     ) {
       return false;
     }
 
-    if (
-      ($from as any)["path"][3].content.size === 0 ||
-      ($from as any)["path"][3].content.content.text === 0
-    ) {
-      const currentMarkdown = editor.get()?.action(getMarkdown());
+    const start = $from.start($from.depth);
+    const end = $from.end($from.depth);
 
-      if (!currentMarkdown) {
-        return false;
-      }
-
-      const toReplace = currentMarkdown?.replace(
-        currentMarkdown?.slice(
-          state.selection.$from.pos - 1,
-          state.selection.$from.pos + 6
-        ),
-        ""
-      );
-      editor.get()?.action(replaceAll(toReplace as string));
-      return true;
-    }
-
-    return false;
+    const tr = state.tr.delete(start - 1, end);
+    dispatch && dispatch(tr);
+    return true;
   };
 
   const codeBlockKeymap = $shortcut((ctx): Keymap => {
     return {
-      Backspace: (state) => {
-        return codeBlockDeleteHandler(state);
+      Backspace: (state, dispatch) => {
+        return codeBlockDeleteHandler(state, dispatch);
       },
-      Delete: (state) => {
-        return codeBlockDeleteHandler(state);
+      Delete: (state, dispatch) => {
+        return codeBlockDeleteHandler(state, dispatch);
       },
     };
   });
