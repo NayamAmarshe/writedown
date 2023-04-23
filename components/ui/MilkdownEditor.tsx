@@ -4,8 +4,6 @@ import {
   Editor,
   rootCtx,
   editorViewOptionsCtx,
-  editorViewCtx,
-  editorState,
 } from "@milkdown/core";
 import { $shortcut, Keymap, getMarkdown, replaceAll } from "@milkdown/utils";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
@@ -14,15 +12,11 @@ import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
-import { ResolvedPos, Slice } from "@milkdown/prose/model";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { Milkdown, useEditor } from "@milkdown/react";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
-import { EditorView } from "@milkdown/prose/view";
 import { math } from "@milkdown/plugin-math";
-import { keymap } from "prosemirror-keymap";
-import { Command } from "prosemirror-state";
 import python from "refractor/lang/python";
 import { gfm } from "@milkdown/preset-gfm";
 import React, { useEffect } from "react";
@@ -74,7 +68,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     return true;
   };
 
-  const codeBlockKeymap = $shortcut((ctx): Keymap => {
+  const codeBlockKeymap = $shortcut((): Keymap => {
     return {
       Backspace: (state, dispatch) => {
         return codeBlockDeleteHandler(state, dispatch);
