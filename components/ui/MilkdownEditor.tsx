@@ -14,6 +14,7 @@ import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { Milkdown, useEditor } from "@milkdown/react";
+import { trailing } from "@milkdown/plugin-trailing";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
 import { math } from "@milkdown/plugin-math";
@@ -33,7 +34,6 @@ import { useAtomValue } from "jotai";
 import toast from "react-hot-toast";
 import "katex/dist/katex.min.css";
 import c from "refractor/lang/c";
-
 interface editorProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
@@ -146,6 +146,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       .use(history) // History for undo/redo
       .use(math) // Math for math typesetting
       .use(codeBlockKeymap)
+      .use(trailing)
   );
 
   useEffect(() => {
