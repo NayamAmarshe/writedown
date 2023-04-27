@@ -28,8 +28,6 @@ const LoginPage = () => {
     );
   }
 
-  return <Loading />;
-
   if (authLoading || authUser) {
     authUser && router.push("/dashboard");
     return <Loading />;
