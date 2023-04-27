@@ -5,14 +5,16 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
-import { $shortcut, Keymap, getMarkdown, replaceAll } from "@milkdown/utils";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { usePluginViewFactory } from "@prosemirror-adapter/react";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
+import { $shortcut, Keymap, replaceAll } from "@milkdown/utils";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
+import { TooltipView, tooltip } from "./plugins/Tooltip";
 import { Milkdown, useEditor } from "@milkdown/react";
 import { trailing } from "@milkdown/plugin-trailing";
 import javascript from "refractor/lang/javascript";
@@ -44,13 +46,14 @@ interface editorProps {
 const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
+  const pluginViewFactory = usePluginViewFactory();
+
   const codeBlockDeleteHandler = (
     state: EditorState,
     dispatch?: (tr: Transaction) => void
   ): boolean => {
     const { selection } = state;
     const { $from } = selection;
-    console.log("🚀 => file: MilkdownEditor.tsx:53 => $from:", $from);
 
     if (
       !dispatch ||
@@ -96,6 +99,12 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
             class: className ? className : "",
           },
         }));
+
+        ctx.set(tooltip.key, {
+          view: pluginViewFactory({
+            component: TooltipView,
+          }),
+        });
 
         // Prism plugin config
         ctx.set(prismConfig.key, {
@@ -147,6 +156,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       .use(math) // Math for math typesetting
       .use(codeBlockKeymap)
       .use(trailing)
+      .use(tooltip)
   );
 
   useEffect(() => {
@@ -160,6 +170,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     // Replace the editor content with the current note content
     const currentNote = notes.find((note) => note.id === selectedNoteId);
     if (!currentNote) return;
+
     editor.get()?.action(replaceAll(currentNote.content));
   }, [selectedNoteId, notes]);
 
