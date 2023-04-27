@@ -1,4 +1,5 @@
 import loadingAnimation from "@/animations/pencil-write.json";
+import BetaBadge from "./BetaBadge";
 import Lottie from "lottie-react";
 import React from "react";
 
@@ -11,8 +12,8 @@ const Loading = () => {
           animationData={loadingAnimation}
           loop={true}
         />
-        <p className="text-2xl font-semibold text-slate-900 sm:text-4xl">
-          writedown
+        <p className="flex items-center text-2xl font-semibold text-slate-900 sm:text-4xl">
+          writedown <BetaBadge />
         </p>
       </div>
     </div>
