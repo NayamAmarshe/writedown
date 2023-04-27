@@ -64,7 +64,7 @@ const Sidebar = ({
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses="ml-auto md:hidden absolute right-3 z-10"
+        extraClasses="ml-auto md:hidden absolute right-3 z-10 !bg-slate-100"
       >
         <ChevronDoubleLeft
           className={`duration-400 h-4 w-4 transition-transform ${
@@ -127,7 +127,7 @@ const Sidebar = ({
         {user ? (
           <h4 className="truncate text-xl font-semibold text-slate-500">
             Hi there,{" "}
-            <span className="text-slate-900">{user?.displayName}</span>
+            <span className="text-slate-900">{user?.displayName} </span>
           </h4>
         ) : (
           <Skeleton className="w-32" />
@@ -175,6 +175,9 @@ const Sidebar = ({
       <div className="mt-auto">
         <p className="text-center text-xs text-slate-400">
           © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
+          <span className="ml-2 animate-pulse rounded-full bg-violet-500 px-3 text-violet-100">
+            BETA
+          </span>
         </p>
       </div>
     </aside>

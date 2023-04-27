@@ -2,6 +2,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
 import useUser from "@/components/hooks/useUser";
+import Badge from "@/components/ui/Badge";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { auth } from "./_app";
