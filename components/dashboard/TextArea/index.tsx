@@ -1,3 +1,4 @@
+import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -115,12 +116,15 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     );
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
     if (isNoteUnchanged || !selectedNoteId || !user) return;
+
     // IF THIS IS THE FIRST FETCHING, DO NOT SET isSynced TO FALSE AS THIS CHANGE IS SUPPOSED TO HAPPEN
     if (!dataFetched) {
       setDataFetched(true);
       return;
     }
+
     setIsSynced(false);
+
     // DEBOUNCE THE UPDATE FUNCTION
     localStorage.setItem("editorTitle", title);
     localStorage.setItem("editorContent", input);
@@ -157,11 +161,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
         <div
           tabIndex={0}
-          onBlur={() => {
-            if (!selectedNoteId) return;
-
-            saveNoteChanges(selectedNoteId);
-          }}
           // onMouseLeave={instaSync}
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
@@ -184,12 +183,14 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           {/* SEPARATOR */}
           <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200" />
 
-          <MilkdownEditor
-            input={input}
-            setInput={setInput}
-            className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
-            notes={notes}
-          />
+          <ProsemirrorAdapterProvider>
+            <MilkdownEditor
+              input={input}
+              setInput={setInput}
+              className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
+              notes={notes}
+            />
+          </ProsemirrorAdapterProvider>
         </div>
       </MilkdownProvider>
     </div>
