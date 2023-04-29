@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
+import { get } from "idb-keyval";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -62,7 +63,12 @@ const PostButtons = ({
     );
   }, [notes, selectedNoteId]);
 
-  const saveNoteHandler = () => {
+  const getFromStore1 = async (selectedNoteId: string) => {
+    if (!selectedNoteId) return;
+    return get(selectedNoteId);
+  };
+
+  const saveNoteHandler = async () => {
     // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
     if (isSyncing || isSynced) return;
 
@@ -70,10 +76,12 @@ const PostButtons = ({
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
 
+    const { editorContent, editorTitle } = await getFromStore1(selectedNoteId);
+
     updateNote({
       id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
-      content: input,
+      title: editorTitle === "" ? "Untitled" : editorTitle,
+      content: editorContent,
     });
 
     // Set the note as synced

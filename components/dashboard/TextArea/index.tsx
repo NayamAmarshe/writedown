@@ -15,6 +15,7 @@ import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
+import { get, set } from "idb-keyval";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
@@ -49,14 +50,29 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
+  const addToStore1 = async (
+    key: string,
+    value: { editorTitle: string; editorContent: string }
+  ) => {
+    set(key, value);
+  };
+
+  const getFromStore1 = async (selectedNoteId: string) => {
+    if (!selectedNoteId) return;
+    return get(selectedNoteId);
+  };
+
   const saveNoteChanges = async (noteId: string) => {
-    const lsInput = localStorage.getItem("editorContent");
-    const lsTitle = localStorage.getItem("editorTitle");
-    if (!isSynced && selectedNoteId && lsInput && lsTitle) {
+    if (!selectedNoteId) return;
+
+    const { editorContent, editorTitle } = await getFromStore1(selectedNoteId);
+    console.log("editorContent: ", editorContent);
+
+    if (!isSynced && selectedNoteId && editorContent && editorTitle) {
       await updateNote({
         id: noteId,
-        title: lsTitle,
-        content: lsInput,
+        title: editorTitle,
+        content: editorContent,
       });
 
       setIsSynced(true);
@@ -126,8 +142,10 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     setIsSynced(false);
 
     // DEBOUNCE THE UPDATE FUNCTION
-    localStorage.setItem("editorTitle", title);
-    localStorage.setItem("editorContent", input);
+    addToStore1(selectedNoteId, {
+      editorTitle: title,
+      editorContent: input,
+    });
   }, [title, input]);
 
   return (
