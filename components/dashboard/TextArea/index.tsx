@@ -66,7 +66,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     if (!selectedNoteId) return;
 
     const { editorContent, editorTitle } = await getFromStore1(selectedNoteId);
-    console.log("editorContent: ", editorContent);
 
     if (!isSynced && selectedNoteId && editorContent && editorTitle) {
       await updateNote({
