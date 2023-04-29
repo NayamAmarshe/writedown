@@ -50,27 +50,33 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const addToStore1 = async (
+  const addToStore = async (
     key: string,
     value: { editorTitle: string; editorContent: string }
   ) => {
     set(key, value);
   };
 
-  const getFromStore1 = async (selectedNoteId: string) => {
-    if (!selectedNoteId) return;
+  const getFromStore = async (
+    selectedNoteId: string
+  ): Promise<{ editorTitle: string; editorContent: string } | null> => {
+    if (!selectedNoteId) return null;
     return (
-      get(selectedNoteId) || {
+      (await get(selectedNoteId)) || {
         editorTitle: "Untitled",
         editorContent: "",
       }
     );
   };
 
-  const saveNoteChanges = async (noteId: string) => {
+  const saveNoteChanges = async (noteId: string): Promise<void> => {
     if (!selectedNoteId) return;
 
-    const { editorContent, editorTitle } = await getFromStore1(selectedNoteId);
+    const idbObject = await getFromStore(selectedNoteId);
+
+    if (!idbObject) return;
+
+    const { editorContent, editorTitle } = idbObject;
 
     if (!isSynced && selectedNoteId && editorContent && editorTitle) {
       await updateNote({
@@ -146,7 +152,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     setIsSynced(false);
 
     // DEBOUNCE THE UPDATE FUNCTION
-    addToStore1(selectedNoteId, {
+    addToStore(selectedNoteId, {
       editorTitle: title,
       editorContent: input,
     });

@@ -63,12 +63,19 @@ const PostButtons = ({
     );
   }, [notes, selectedNoteId]);
 
-  const getFromStore1 = async (selectedNoteId: string) => {
-    if (!selectedNoteId) return;
-    return get(selectedNoteId);
+  const getFromStore = async (
+    selectedNoteId: string
+  ): Promise<{ editorTitle: string; editorContent: string } | null> => {
+    if (!selectedNoteId) return null;
+    return (
+      (await get(selectedNoteId)) || {
+        editorTitle: "Untitled",
+        editorContent: "",
+      }
+    );
   };
 
-  const saveNoteHandler = async () => {
+  const saveNoteHandler = async (): Promise<void> => {
     // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
     if (isSyncing || isSynced) return;
 
@@ -76,7 +83,11 @@ const PostButtons = ({
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
 
-    const { editorContent, editorTitle } = await getFromStore1(selectedNoteId);
+    const idbObject = await getFromStore(selectedNoteId);
+
+    if (!idbObject) return;
+
+    const { editorContent, editorTitle } = idbObject;
 
     updateNote({
       id: selectedNoteId,
