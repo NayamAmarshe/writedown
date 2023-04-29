@@ -59,7 +59,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   const getFromStore1 = async (selectedNoteId: string) => {
     if (!selectedNoteId) return;
-    return get(selectedNoteId);
+    return (
+      get(selectedNoteId) || {
+        editorTitle: "Untitled",
+        editorContent: "",
+      }
+    );
   };
 
   const saveNoteChanges = async (noteId: string) => {

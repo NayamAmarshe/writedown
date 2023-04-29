@@ -9,8 +9,8 @@ import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
+import { del, get } from "idb-keyval";
 import { useAtomValue } from "jotai";
-import { get } from "idb-keyval";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -91,6 +91,8 @@ const PostButtons = ({
   const deleteNoteHandler = () => {
     // If there is no note selected or no notes, don't delete
     if (!notes || !selectedNoteId) return;
+
+    del(selectedNoteId);
 
     deleteNote(selectedNoteId);
 
