@@ -65,7 +65,7 @@ export const TooltipView = () => {
     <div>
       <div
         ref={ref}
-        className="rounded-lg border bg-slate-100 px-2 py-1 text-gray-600 shadow-lg shadow-slate-900/20"
+        className="scrollbar flex flex-row overflow-auto rounded-lg border bg-slate-100 px-2 py-1 text-gray-600 shadow-lg shadow-slate-900/20"
       >
         <button
           className="rounded-xl p-2 hover:bg-slate-300"
