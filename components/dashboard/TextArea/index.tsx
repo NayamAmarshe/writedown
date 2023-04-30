@@ -10,6 +10,7 @@ import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import { useIDB } from "@/components/hooks/useIDB";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import { IDBObject } from "@/types/idbTypes";
@@ -51,24 +52,11 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const addToStore = async (key: string, value: IDBObject) => {
-    await set(key, value);
-  };
-
-  const getFromStore = async (
-    selectedNoteId: string
-  ): Promise<IDBObject | null> => {
-    if (!selectedNoteId) return null;
-
-    const idbObject = await get(selectedNoteId);
-
-    return (
-      idbObject || {
-        editorTitle: "Untitled",
-        editorContent: "",
-      }
-    );
-  };
+  const { addToStore, deleteFromStore } = useIDB({
+    selectedNoteId,
+    title,
+    input,
+  });
 
   const saveNoteChanges = async (noteId: string) => {
     if (!selectedNoteId) return;
@@ -149,15 +137,14 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   useEffect(() => {
     if (!selectedNoteId) return;
-    if (
-      notes?.find(
-        (note) =>
-          note.id === selectedNoteId &&
-          note.content === input &&
-          note.title === title
-      )
-    ) {
-      del(selectedNoteId);
+    const noteExists = notes?.find(
+      (note) =>
+        note.id === selectedNoteId &&
+        note.content === input &&
+        note.title === title
+    );
+    if (noteExists) {
+      deleteFromStore(selectedNoteId);
       return;
     }
     addToStore(selectedNoteId, {

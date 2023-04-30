@@ -1,6 +1,7 @@
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import ArrowPath from "@/components/icons/ArrowPath";
+import { useIDB } from "@/components/hooks/useIDB";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
@@ -64,26 +65,11 @@ const PostButtons = ({
     );
   }, [notes, selectedNoteId]);
 
-  const getFromStore = async (
-    selectedNoteId: string
-  ): Promise<IDBObject | null> => {
-    if (!selectedNoteId) return null;
-
-    const idbObject = await get(selectedNoteId);
-
-    return (
-      idbObject || {
-        editorTitle: "Untitled",
-        editorContent: "",
-      }
-    );
-  };
-
-  const deleteFromStore = async (selectedNoteId: string) => {
-    if (!selectedNoteId) return;
-
-    await del(selectedNoteId);
-  };
+  const { getFromStore, deleteFromStore } = useIDB({
+    selectedNoteId,
+    title,
+    input,
+  });
 
   const saveNoteHandler = async () => {
     // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
