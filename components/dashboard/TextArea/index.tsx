@@ -54,7 +54,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     key: string,
     value: { editorTitle: string; editorContent: string }
   ) => {
-    set(key, value);
+    await set(key, value);
   };
 
   const getFromStore = async (
