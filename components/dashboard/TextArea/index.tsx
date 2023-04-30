@@ -12,10 +12,11 @@ import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
+import { IDBObject } from "@/types/idbTypes";
 import EditorButtons from "./EditorButtons";
+import { del, get, set } from "idb-keyval";
 import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
-import { get, set } from "idb-keyval";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
@@ -50,39 +51,33 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const addToStore = async (
-    key: string,
-    value: { editorTitle: string; editorContent: string }
-  ) => {
+  const addToStore = async (key: string, value: IDBObject) => {
     await set(key, value);
   };
 
   const getFromStore = async (
     selectedNoteId: string
-  ): Promise<{ editorTitle: string; editorContent: string } | null> => {
+  ): Promise<IDBObject | null> => {
     if (!selectedNoteId) return null;
+
+    const idbObject = await get(selectedNoteId);
+
     return (
-      (await get(selectedNoteId)) || {
+      idbObject || {
         editorTitle: "Untitled",
         editorContent: "",
       }
     );
   };
 
-  const saveNoteChanges = async (noteId: string): Promise<void> => {
+  const saveNoteChanges = async (noteId: string) => {
     if (!selectedNoteId) return;
 
-    const idbObject = await getFromStore(selectedNoteId);
-
-    if (!idbObject) return;
-
-    const { editorContent, editorTitle } = idbObject;
-
-    if (!isSynced && selectedNoteId && editorContent && editorTitle) {
+    if (!isSynced && selectedNoteId) {
       await updateNote({
         id: noteId,
-        title: editorTitle,
-        content: editorContent,
+        title: "Untitled",
+        content: "",
       });
 
       setIsSynced(true);
@@ -150,8 +145,21 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     }
 
     setIsSynced(false);
+  }, [title, input]);
 
-    // DEBOUNCE THE UPDATE FUNCTION
+  useEffect(() => {
+    if (!selectedNoteId) return;
+    if (
+      notes?.find(
+        (note) =>
+          note.id === selectedNoteId &&
+          note.content === input &&
+          note.title === title
+      )
+    ) {
+      del(selectedNoteId);
+      return;
+    }
     addToStore(selectedNoteId, {
       editorTitle: title,
       editorContent: input,

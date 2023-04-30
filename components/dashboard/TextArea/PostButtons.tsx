@@ -6,6 +6,7 @@ import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
 import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
+import { IDBObject } from "@/types/idbTypes";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import React, { useMemo } from "react";
@@ -65,17 +66,26 @@ const PostButtons = ({
 
   const getFromStore = async (
     selectedNoteId: string
-  ): Promise<{ editorTitle: string; editorContent: string } | null> => {
+  ): Promise<IDBObject | null> => {
     if (!selectedNoteId) return null;
+
+    const idbObject = await get(selectedNoteId);
+
     return (
-      (await get(selectedNoteId)) || {
+      idbObject || {
         editorTitle: "Untitled",
         editorContent: "",
       }
     );
   };
 
-  const saveNoteHandler = async (): Promise<void> => {
+  const deleteFromStore = async (selectedNoteId: string) => {
+    if (!selectedNoteId) return;
+
+    await del(selectedNoteId);
+  };
+
+  const saveNoteHandler = async () => {
     // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
     if (isSyncing || isSynced) return;
 
@@ -91,19 +101,20 @@ const PostButtons = ({
 
     updateNote({
       id: selectedNoteId,
-      title: editorTitle === "" ? "Untitled" : editorTitle,
+      title: editorTitle || "Untitled",
       content: editorContent,
     });
 
     // Set the note as synced
     setIsSynced(true);
+    await deleteFromStore(selectedNoteId);
   };
 
-  const deleteNoteHandler = () => {
+  const deleteNoteHandler = async () => {
     // If there is no note selected or no notes, don't delete
     if (!notes || !selectedNoteId) return;
 
-    del(selectedNoteId);
+    await deleteFromStore(selectedNoteId);
 
     deleteNote(selectedNoteId);
 
