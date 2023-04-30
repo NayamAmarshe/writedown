@@ -4,6 +4,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { collection, orderBy, query } from "firebase/firestore";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
@@ -11,7 +12,7 @@ import useNotes from "@/components/hooks/useNotes";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import React, { useMemo } from "react";
+import ThemeChanger from "./ThemeChanger";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useSetAtom } from "jotai";
@@ -30,6 +31,7 @@ const Sidebar = ({
   const [user] = useAuthState(auth);
   const { createNote } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const [mounted, setMounted] = useState(false);
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -53,6 +55,10 @@ const Sidebar = ({
     if (!newId) return;
     setSelectedNoteId(newId);
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <aside
@@ -131,6 +137,12 @@ const Sidebar = ({
           </h4>
         ) : (
           <Skeleton className="w-32" />
+        )}
+
+        {mounted ? (
+          <ThemeChanger />
+        ) : (
+          <Skeleton className="h-9 w-9" circle={true} />
         )}
       </div>
 
