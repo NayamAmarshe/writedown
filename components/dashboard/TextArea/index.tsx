@@ -52,11 +52,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       ).withConverter(notesConverter)
   );
 
-  const { addToStore, deleteFromStore } = useIDB({
-    selectedNoteId,
-    title,
-    input,
-  });
+  const { addToStore, deleteFromStore } = useIDB();
 
   const saveNoteChanges = async (noteId: string) => {
     if (!selectedNoteId) return;
@@ -136,22 +132,21 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   }, [title, input]);
 
   useEffect(() => {
-    if (!selectedNoteId) return;
-    const noteExists = notes?.find(
+    if (!selectedNoteId || !notes || notes.length < 1) return;
+    const noteExists = notes?.some(
       (note) =>
         note.id === selectedNoteId &&
         note.content === input &&
         note.title === title
     );
     if (noteExists) {
-      deleteFromStore(selectedNoteId);
       return;
     }
     addToStore(selectedNoteId, {
       editorTitle: title,
       editorContent: input,
     });
-  }, [title, input]);
+  }, [title, input, notes]);
 
   return (
     <div

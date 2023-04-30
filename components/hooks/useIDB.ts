@@ -2,43 +2,30 @@ import { IDBObject } from "@/types/idbTypes";
 import { get, set, del } from "idb-keyval";
 import { useCallback } from "react";
 
-type useIDBProps = {
-  selectedNoteId: string | null;
-  title: string;
-  input: string;
-};
+export const useIDB = () => {
+  const addToStore = async (key: string, value: IDBObject) => {
+    await set(key, value);
+  };
 
-export const useIDB = ({ selectedNoteId, title, input }: useIDBProps) => {
-  const addToStore = useCallback(
-    async (key: string, value: IDBObject) => {
-      await set(key, value);
-    },
-    [title, input]
-  );
+  const getFromStore = async (
+    selectedNoteId: string
+  ): Promise<IDBObject | null> => {
+    if (!selectedNoteId) return null;
 
-  const getFromStore = useCallback(
-    async (selectedNoteId: string): Promise<IDBObject | null> => {
-      if (!selectedNoteId) return null;
+    const idbObject = await get(selectedNoteId);
 
-      const idbObject = await get(selectedNoteId);
+    return (
+      idbObject || {
+        editorTitle: "Untitled",
+        editorContent: "",
+      }
+    );
+  };
+  const deleteFromStore = async (selectedNoteId: string) => {
+    if (!selectedNoteId) return;
 
-      return (
-        idbObject || {
-          editorTitle: "Untitled",
-          editorContent: "",
-        }
-      );
-    },
-    [selectedNoteId]
-  );
-  const deleteFromStore = useCallback(
-    async (selectedNoteId: string) => {
-      if (!selectedNoteId) return;
-
-      await del(selectedNoteId);
-    },
-    [selectedNoteId]
-  );
+    await del(selectedNoteId);
+  };
 
   return { addToStore, getFromStore, deleteFromStore };
 };
