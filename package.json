@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
-    "@heroicons/react": "^2.0.17",
     "@milkdown/core": "^7.1.1",
     "@milkdown/ctx": "^7.1.1",
     "@milkdown/plugin-clipboard": "^7.1.1",
