@@ -119,6 +119,18 @@ const PostButtons = ({
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
+            <p>Download</p>
+          </span>
+        </Button>
+
+        <Button
+          data-testid="del"
+          type="button"
+          onClick={deleteNoteHandler}
+          variant="red"
+          size="sm"
+        >
+          <span className="flex items-center justify-center gap-1">
             <Trash className="h-5 w-5" />
             <p>Delete Post</p>
           </span>

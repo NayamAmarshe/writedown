@@ -2,8 +2,7 @@ import {
   useSignInWithGithub,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
-import { AiFillGithub } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
+import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import BetaBadge from "../ui/BetaBadge";
 import { auth } from "@/pages/_app";
 import Button from "../ui/Button";
@@ -42,14 +41,14 @@ const SignInArea = () => {
           data-testid="google-login"
           onClick={() => login("google")}
         >
-          <FcGoogle className="h-6 w-6" /> Sign in with Google
+          <GoogleLogo className="h-6 w-6" /> Sign in with Google
         </Button>
         <Button
           extraClasses="flex gap-2 border-2 hover:!border-slate-600 !bg-slate-900 !text-slate-50 !px-10 hover:!bg-slate-600 hover:!text-slate-50"
           data-testid="github-login"
           onClick={() => login("github")}
         >
-          <AiFillGithub className="h-6 w-6" /> Sign in with GitHub
+          <GithubLogo className="h-6 w-6" /> Sign in with GitHub
         </Button>
       </div>
     </div>
