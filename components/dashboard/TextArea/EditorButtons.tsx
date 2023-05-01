@@ -10,6 +10,21 @@ import {
   insertHrCommand,
   wrapInBulletListCommand,
 } from "@milkdown/preset-commonmark";
+import {
+  Code,
+  DotsThree,
+  Image,
+  List,
+  ListNumbers,
+  Quotes,
+  TextB,
+  TextH,
+  TextHFour,
+  TextHThree,
+  TextHTwo,
+  TextItalic,
+  TextStrikethrough,
+} from "@phosphor-icons/react";
 import MaterialHorizontalRule from "@/components/icons/MaterialHorizontalRule";
 import MaterialHeadingThree from "@/components/icons/MaterialHeadingThree";
 import MaterialHeadingFour from "@/components/icons/MaterialHeadingFour";
@@ -66,67 +81,67 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key)}
         >
-          <MaterialHeadingOne />
+          <TextH weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key, 2)}
         >
-          <MaterialHeadingTwo />
+          <TextHTwo weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key, 3)}
         >
-          <MaterialHeadingThree />
+          <TextHThree weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInHeadingCommand.key, 4)}
         >
-          <MaterialHeadingFour />
+          <TextHFour weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleStrongCommand.key)}
         >
-          <MaterialFormatBold />
+          <TextB weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleEmphasisCommand.key)}
         >
-          <MaterialFormatItalic />
+          <TextItalic weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInBlockquoteCommand.key)}
         >
-          <MingcuteQuoteRight />
+          <Quotes weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleStrikethroughCommand.key)}
         >
-          <OutlineStrikethrough />
+          <TextStrikethrough weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInOrderedListCommand.key)}
         >
-          <MaterialOrderedList />
+          <ListNumbers weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInBulletListCommand.key)}
         >
-          <MaterialUnorderedList />
+          <List weight="bold" className="h-5 w-5" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleInlineCodeCommand.key)}
         >
-          <MaterialCodeRounded />
+          <Code weight="bold" className="h-5 w-5" />
         </button>
         {/* <button className="rounded-xl p-2 hover:bg-slate-200">
           <MaterialLink />
@@ -135,13 +150,13 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
           onClick={() => setIsOpen(isOpen ? false : true)}
           className="rounded-xl p-2 hover:bg-slate-200"
         >
-          <BootstrapImage />
+          <Image weight="bold" className="h-5 w-5" />
         </button>
         <button
           onClick={() => call(insertHrCommand.key)}
           className="rounded-xl p-2 hover:bg-slate-200"
         >
-          <MaterialHorizontalRule />
+          <DotsThree weight="bold" className="h-5 w-5" />
         </button>
         <Modal
           isOpen={isOpen}
