@@ -2,6 +2,7 @@ import { TNotesData } from "@/types/utils/firebaseOperations";
 import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import ArrowPath from "@/components/icons/ArrowPath";
 import { isSyncingAtom } from "@/stores/isSyncing";
+import { Download } from "@phosphor-icons/react";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
 import Check from "@/components/icons/Check";
@@ -94,6 +95,22 @@ const PostButtons = ({
     setSelectedNoteId(notes[newIndex]?.id || null);
   };
 
+  const downloadMarkdownFile = () => {
+    const element = document.createElement("a");
+    const milkdown = document.getElementsByClassName("ProseMirror");
+
+    if (!milkdown) return;
+
+    const file = new Blob([milkdown[0].innerHTML], {
+      type: "text/plain",
+    });
+
+    element.href = URL.createObjectURL(file);
+    element.download = title + ".md";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
+
   return (
     <div
       className={`mt-4 flex w-full max-w-3xl select-none flex-col gap-4 transition-transform duration-300 md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
@@ -110,19 +127,7 @@ const PostButtons = ({
       )}
 
       {/* DELETE BUTTON */}
-      <div className="flex items-center justify-center gap-4 md:items-start">
-        <Button
-          data-testid="del"
-          type="button"
-          onClick={deleteNoteHandler}
-          variant="red"
-          size="sm"
-        >
-          <span className="flex items-center justify-center gap-1">
-            <p>Download</p>
-          </span>
-        </Button>
-
+      <div className="flex flex-row items-center gap-4 overflow-x-auto p-1 xs:justify-center md:items-start">
         <Button
           data-testid="del"
           type="button"
@@ -133,6 +138,20 @@ const PostButtons = ({
           <span className="flex items-center justify-center gap-1">
             <Trash className="h-5 w-5" />
             <p>Delete Post</p>
+          </span>
+        </Button>
+
+        {/* DOWNLOAD BUTTON */}
+        <Button
+          data-testid="del"
+          type="button"
+          onClick={downloadMarkdownFile}
+          variant="blue"
+          size="sm"
+        >
+          <span className="flex items-center justify-center gap-1">
+            <Download weight="fill" className="h-5 w-5" />
+            <p>Download</p>
           </span>
         </Button>
 
