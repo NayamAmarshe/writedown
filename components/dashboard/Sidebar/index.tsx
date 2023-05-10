@@ -8,13 +8,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import { useIDB } from "@/components/hooks/useIDB";
+import { isSyncedAtom } from "@/stores/isSynced";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useMemo } from "react";
 import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
-import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
 import Link from "next/link";
 
@@ -28,8 +30,10 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { createNote } = useNotes({ userId: user?.uid });
-  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const { createNote, updateNote } = useNotes({ userId: user?.uid });
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const { getFromStore, deleteFromStore } = useIDB();
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
 
   const [firestoreNotes] = useCollectionData(
     user &&
@@ -49,6 +53,21 @@ const Sidebar = ({
   }, [firestoreNotes]);
 
   const newPostClickHandler = async () => {
+    if (!selectedNoteId) return;
+    if (!isSynced) {
+      const idbObject = await getFromStore(selectedNoteId);
+
+      if (!idbObject) return;
+
+      const { editorContent, editorTitle } = idbObject;
+      updateNote({
+        id: selectedNoteId,
+        title: editorTitle || "Untitled",
+        content: editorContent,
+      });
+      setIsSynced(true);
+      await deleteFromStore(selectedNoteId);
+    }
     const newId = await createNote();
     if (!newId) return;
     setSelectedNoteId(newId);

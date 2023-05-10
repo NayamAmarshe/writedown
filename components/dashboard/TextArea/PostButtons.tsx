@@ -65,11 +65,7 @@ const PostButtons = ({
     );
   }, [notes, selectedNoteId]);
 
-  const { getFromStore, deleteFromStore } = useIDB({
-    selectedNoteId,
-    title,
-    input,
-  });
+  const { getFromStore, deleteFromStore } = useIDB();
 
   const saveNoteHandler = async () => {
     // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE

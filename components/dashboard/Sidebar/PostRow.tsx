@@ -1,4 +1,7 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import useNotes from "@/components/hooks/useNotes";
+import { useIDB } from "@/components/hooks/useIDB";
+import { isSyncedAtom } from "@/stores/isSynced";
 import Skeleton from "react-loading-skeleton";
 import RemoveMarkdown from "remove-markdown";
 import { useAtom } from "jotai";
@@ -11,8 +14,11 @@ type PostRowProps = {
   userId: string | undefined;
 };
 
-const PostRow = ({ title, content, noteId }: PostRowProps) => {
+const PostRow = ({ title, content, noteId, userId }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const { updateNote } = useNotes({ userId: userId });
+  const { getFromStore, deleteFromStore } = useIDB();
+  const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
 
   return (
     <div
@@ -21,7 +27,22 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
           ? "bg-slate-200"
           : "bg-slate-50 hover:bg-slate-100"
       }`}
-      onClick={() => {
+      onClick={async () => {
+        if (!selectedNoteId) return;
+        if (!isSynced) {
+          const idbObject = await getFromStore(selectedNoteId);
+
+          if (!idbObject) return;
+
+          const { editorContent, editorTitle } = idbObject;
+          updateNote({
+            id: selectedNoteId,
+            title: editorTitle || "Untitled",
+            content: editorContent,
+          });
+          setIsSynced(true);
+          await deleteFromStore(selectedNoteId);
+        }
         setSelectedNoteId(noteId);
       }}
     >
