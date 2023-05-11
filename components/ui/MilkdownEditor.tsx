@@ -5,8 +5,12 @@ import {
   rootCtx,
   editorViewOptionsCtx,
 } from "@milkdown/core";
+import {
+  usePluginViewFactory,
+  useWidgetViewFactory,
+} from "@prosemirror-adapter/react";
+import { linkPlugin } from "@/components/dashboard/TextArea/LinkWidget";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { usePluginViewFactory } from "@prosemirror-adapter/react";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
@@ -36,6 +40,7 @@ import { useAtomValue } from "jotai";
 import toast from "react-hot-toast";
 import "katex/dist/katex.min.css";
 import c from "refractor/lang/c";
+
 interface editorProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
@@ -47,6 +52,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
   const pluginViewFactory = usePluginViewFactory();
+  const widgetViewFactory = useWidgetViewFactory();
 
   const codeBlockDeleteHandler = (
     state: EditorState,
@@ -150,6 +156,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
       })
       .use(listener) // Listener for listening to events
       .use(commonmark) // Commonmark is the default preset
+      .use(linkPlugin(widgetViewFactory))
       .use(gfm) // GFM for GitHub Flavored Markdown
       .use(prism) // Prism for code highlighting
       .use(history) // History for undo/redo
