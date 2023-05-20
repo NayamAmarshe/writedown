@@ -9,11 +9,11 @@ import {
   usePluginViewFactory,
   useWidgetViewFactory,
 } from "@prosemirror-adapter/react";
-import { linkPlugin } from "@/components/dashboard/TextArea/LinkWidget";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
+import { linkPlugin } from "@/components/ui/plugins/LinkWidget";
 import { $shortcut, Keymap, replaceAll } from "@milkdown/utils";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
