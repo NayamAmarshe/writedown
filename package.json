@@ -33,6 +33,7 @@
     "cypress": "^12.9.0",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.17.1",
+    "idb": "^7.1.1",
     "jotai": "^2.0.1",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.161.0",
