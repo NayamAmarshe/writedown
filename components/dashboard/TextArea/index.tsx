@@ -1,11 +1,7 @@
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
-import { notesConverter } from "@/utils/firestoreDataConverter";
-import { collection, orderBy, query } from "firebase/firestore";
-import React, { useCallback, useEffect, useState } from "react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
@@ -13,9 +9,8 @@ import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
-import { toast } from "react-hot-toast";
+import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
-import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
 
@@ -30,105 +25,135 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
   const [input, setInput] = useAtom(inputAtom);
-  const { updateNote, deleteNote, createNote } = useNotes({
+  const { notes, updateNote, deleteNote } = useNotes({
     userId: user?.uid,
   });
-  const [dataFetched, setDataFetched] = useState(false);
+  // const [dataFetched, setDataFetched] = useState(false);
 
-  const [isInitialRender, setIsInitialRender] = useState(true);
+  // const [isInitialRender, setIsInitialRender] = useState(true);
 
-  useEffect(() => {
-    setIsInitialRender(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsInitialRender(false);
+  // }, []);
 
-  const [notes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "notes"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(notesConverter)
-  );
-
-  const saveNoteChanges = async (noteId: string) => {
-    const lsInput = localStorage.getItem("editorContent");
-    const lsTitle = localStorage.getItem("editorTitle");
-    if (!isSynced && selectedNoteId && lsInput && lsTitle) {
-      await updateNote({
-        id: noteId,
-        title: lsTitle,
-        content: lsInput,
-      });
-
-      setIsSynced(true);
-    }
-  };
-
-  // SHOW SYNCED SUCCESSFULLY TOAST WHENEVER isSynced BECOMES TRUE
-  useEffect(() => {
-    if (!isSynced || isInitialRender) return;
-
-    toast.success("Synced Successfully", {
-      position: "bottom-right",
-    });
-  }, [isSynced, isInitialRender]);
-
-  // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
+  /**
+   * Set the title and input of the editor
+   * to the selected note's title and content
+   */
   useEffect(() => {
     if (!notes) return;
-
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
       setTitle(notes[0].title);
       return;
+    } else if (notes.length > 0 && selectedNoteId) {
+      const selectedNote = notes.find((note) => {
+        return note.id === selectedNoteId;
+      });
+      if (!selectedNote) return;
+      setTitle(selectedNote.title);
+      setInput(selectedNote.content);
     }
-
-    // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND POPULATE THE EDITOR
-    if (!selectedNoteId) return;
-    const selectedNote = notes.find((note) => note.id === selectedNoteId);
-    if (!selectedNote) return;
-    setInput(selectedNote.content);
-    setTitle(selectedNote.title);
   }, [notes, selectedNoteId]);
 
-  // IF THERE ARE NO NOTES, CREATE A NEW NOTE
-  useEffect(() => {
-    if (!notes) return;
+  // const saveNoteChanges = async (noteId: string) => {
+  //   const localStorageInput = localStorage.getItem("editorContent");
+  //   const localStorageTitle = localStorage.getItem("editorTitle");
+  //   if (!isSynced && selectedNoteId && localStorageInput && localStorageTitle) {
+  //     await updateNote({
+  //       id: noteId,
+  //       title: localStorageTitle,
+  //       content: localStorageInput,
+  //     });
+  //     setIsSynced(true);
+  //   }
+  // };
 
-    const createNoteIfEmpty = async () => {
-      const newId = await createNote();
-      if (!newId) return;
-      // IF THE NOTE CONTENT ALREADY EXISTS, SYNC IT
-      saveNoteChanges(newId);
-      setSelectedNoteId(newId);
-    };
+  // // SHOW SYNCED SUCCESSFULLY TOAST WHENEVER isSynced BECOMES TRUE
+  // useEffect(() => {
+  //   if (!isSynced || isInitialRender) return;
+  //   toast.success("Synced Successfully", {
+  //     position: "bottom-right",
+  //   });
+  // }, [isSynced, isInitialRender]);
 
-    if (notes.length === 0) {
-      createNoteIfEmpty();
-    }
-  }, [notes]);
+  // // IF THERE ARE NOTES AND NO NOTE IS SELECTED, SELECT THE FIRST NOTE
+  // useEffect(() => {
+  //   if (!notes) return;
+  //   if (notes.length > 0 && !selectedNoteId) {
+  //     setSelectedNoteId(notes[0].id);
+  //     setInput(notes[0].content);
+  //     setTitle(notes[0].title);
+  //     return;
+  //   }
+  //   // IF THERE ARE NOTES AND A NOTE IS SELECTED, FIND THE NOTE AND POPULATE THE EDITOR
+  //   if (!selectedNoteId) return;
+  //   const selectedNote = notes.find((note) => {
+  //     return note.id === selectedNoteId;
+  //   });
+  //   if (!selectedNote) return;
+  //   setInput(selectedNote.content);
+  //   setTitle(selectedNote.title);
+  // }, [notes, selectedNoteId]);
 
-  // DEB
-  useEffect(() => {
-    // FIND THE CURRENT NOTE AND CHECK IF IT IS UNCHANGED
-    const currentNote = notes?.find(
-      (note) => input === note.content && title === note.title
-    );
-    const isNoteUnchanged = currentNote?.id === selectedNoteId;
-    if (isNoteUnchanged || !selectedNoteId || !user) return;
+  // // IF THERE ARE NO NOTES, CREATE A NEW NOTE
+  // useEffect(() => {
+  //   if (!notes) return;
+  // const createNoteIfEmpty = async () => {
+  //   const newId = await createNote();
+  //   if (!newId) return;
+  //   // IF THE NOTE CONTENT ALREADY EXISTS, SYNC IT
+  //   saveNoteChanges(newId);
+  //   setSelectedNoteId(newId);
+  // };
+  //   if (notes.length === 0) {
+  //     createNoteIfEmpty();
+  //   }
+  //   localForage.setItem("notes", notes);
+  // }, [notes]);
 
-    // IF THIS IS THE FIRST FETCHING, DO NOT SET isSynced TO FALSE AS THIS CHANGE IS SUPPOSED TO HAPPEN
-    if (!dataFetched) {
-      setDataFetched(true);
-      return;
-    }
+  // // DEB
+  // useEffect(() => {
+  //   const getLocalForageNotes = async () => {
+  // const localForageNotes = await localForage.getItem<TNotesData[]>("notes");
+  //     if (!localForageNotes) return;
 
-    setIsSynced(false);
+  //     // FIND THE CURRENT NOTE AND CHECK IF IT IS UNCHANGED
+  //     const currentNote = localForageNotes.find(
+  //       (note) => input === note.content && title === note.title
+  //     );
 
-    // DEBOUNCE THE UPDATE FUNCTION
-    localStorage.setItem("editorTitle", title);
-    localStorage.setItem("editorContent", input);
-  }, [title, input]);
+  //     const isNoteUnchanged = currentNote?.id === selectedNoteId;
+  //     if (isNoteUnchanged || !selectedNoteId || !user) return;
+
+  //     // IF THIS IS THE FIRST FETCHING, DO NOT SET isSynced TO FALSE AS THIS CHANGE IS SUPPOSED TO HAPPEN
+  //     if (!dataFetched) {
+  //       setDataFetched(true);
+  //       return;
+  //     }
+
+  //     setIsSynced(false);
+
+  //     const localForageNote = localForageNotes.find(
+  //       (note) => note.id === selectedNoteId
+  //     );
+
+  //     if (!localForageNote) return;
+
+  //     if (
+  //       localForageNote.content === input &&
+  //       localForageNote.title === title
+  //     ) {
+  //       return;
+  //     }
+
+  //     setInput(localForageNote.content);
+  //     setTitle(localForageNote.title);
+  //   };
+
+  //   getLocalForageNotes();
+  // }, [title, input]);
 
   return (
     <div
@@ -170,11 +195,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           <input
             data-testid="noteTitle"
             type="text"
+            placeholder={title === "" ? "Untitled" : title}
             className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0"
             onChange={(e) => {
-              if (title === "") {
-                setTitle("Untitled");
-              }
               setTitle(e.target.value);
             }}
             value={title}

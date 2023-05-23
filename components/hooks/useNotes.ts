@@ -1,23 +1,73 @@
 import {
+  collection,
   deleteDoc,
   doc,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
+import { useCallback, useEffect, useState } from "react";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { toast } from "react-hot-toast";
+import localforage from "localforage";
 import { db } from "@/lib/firebase";
-import { useCallback } from "react";
 import { useSetAtom } from "jotai";
 
 type UseNotesProps = {
-  userId: string | undefined;
+  userId?: string;
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
   const setIsSyncing = useSetAtom(isSyncingAtom);
+
+  const [notes, setNotes] = useState<TNotesData[]>([]);
+  const [localNotes, setLocalNotes] = useState<TNotesData[]>([]);
+
+  /**
+   * Fetch cloud notes from firestore
+   * and set it to cloudNotes state
+   */
+  const [cloudNotes] = useCollectionData(
+    userId
+      ? query(
+          collection(db, "users", userId, "notes"),
+          orderBy("updatedAt", "desc")
+        ).withConverter(notesConverter)
+      : null
+  );
+
+  /**
+   * Fetch local notes from localForage
+   */
+  useEffect(() => {
+    const fetchLocalNotes = async () => {
+      const localForageNotes = await localforage.getItem<TNotesData[]>("notes");
+      if (!localForageNotes) return;
+      setLocalNotes(localForageNotes);
+    };
+    fetchLocalNotes();
+  }, []);
+
+  /**
+   * Merge local notes with cloud notes
+   * and set it to notes state
+   */
+  useEffect(() => {
+    if (!cloudNotes || !localNotes) return;
+    const mergedNotes = [
+      ...cloudNotes.filter(
+        (localNote) =>
+          !cloudNotes.find((cloudNote) => cloudNote.id === localNote.id)
+      ),
+      ...localNotes,
+    ];
+    setNotes(mergedNotes);
+  }, [cloudNotes, localNotes]);
 
   const createNote = useCallback(async () => {
     if (!userId) return;
@@ -83,7 +133,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     [userId]
   );
 
-  return { createNote, updateNote, deleteNote };
+  return { notes, createNote, updateNote, deleteNote };
 };
 
 export default useNotes;
