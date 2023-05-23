@@ -58,7 +58,14 @@ export const useNotes = ({ userId }: UseNotesProps) => {
    * and set it to notes state
    */
   useEffect(() => {
+    const createNoteIfEmpty = async () => {
+      await createNote();
+    };
+
     if (!cloudNotes || !localNotes) return;
+    if (cloudNotes.length === 0 && localNotes.length === 0) {
+      createNoteIfEmpty();
+    }
     const mergedNotes = [
       ...cloudNotes.filter(
         (localNote) =>

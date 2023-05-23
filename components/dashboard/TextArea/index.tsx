@@ -2,6 +2,7 @@ import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
+import { TNotesData } from "@/types/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
@@ -11,6 +12,7 @@ import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
 import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
+import localForage from "localforage";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
 
@@ -56,6 +58,33 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       setInput(selectedNote.content);
     }
   }, [notes, selectedNoteId]);
+
+  useEffect(() => {
+    const setLocalForageNotes = async () => {
+      const localNotes = await localForage.getItem<TNotesData[]>("notes");
+      if (!localNotes) {
+        localForage.setItem("notes", []);
+        return;
+      }
+      const localNote = localNotes.find((note) => note.id === selectedNoteId);
+      if (!localNote) {
+        return;
+      }
+      if (localNote.content === input && localNote.title === title) {
+        return;
+      }
+      localNote.content = input;
+      localNote.title = title;
+      const selectedNoteIndex = localNotes.findIndex(
+        (note) => note.id === selectedNoteId
+      );
+      localNotes[selectedNoteIndex] = localNote;
+      await localForage.setItem("notes", localNotes);
+    };
+
+    if (!selectedNoteId) return;
+    setLocalForageNotes();
+  }, [title, input, selectedNoteId]);
 
   // const saveNoteChanges = async (noteId: string) => {
   //   const localStorageInput = localStorage.getItem("editorContent");
