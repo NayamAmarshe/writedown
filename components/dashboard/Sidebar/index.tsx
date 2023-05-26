@@ -28,25 +28,8 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-
-  const [firestoreNotes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "notes"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(notesConverter),
-    {
-      snapshotListenOptions: {
-        includeMetadataChanges: true,
-      },
-    }
-  );
-
-  const notes = useMemo(() => {
-    return firestoreNotes;
-  }, [firestoreNotes]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();

@@ -38,7 +38,12 @@ export const useNotes = ({ userId }: UseNotesProps) => {
           collection(db, "users", userId, "notes"),
           orderBy("updatedAt", "desc")
         ).withConverter(notesConverter)
-      : null
+      : null,
+    {
+      snapshotListenOptions: {
+        includeMetadataChanges: true,
+      },
+    }
   );
 
   /**
@@ -59,13 +64,14 @@ export const useNotes = ({ userId }: UseNotesProps) => {
    */
   useEffect(() => {
     const createNoteIfEmpty = async () => {
-      await createNote();
+      return await createNote();
     };
 
     if (!cloudNotes || !localNotes) return;
 
     if (cloudNotes.length === 0 && localNotes.length === 0) {
-      createNoteIfEmpty();
+      const newNoteId = createNoteIfEmpty();
+      if (!newNoteId) return;
     }
 
     const mergedNotes = cloudNotes.map((cloudNote) => {
