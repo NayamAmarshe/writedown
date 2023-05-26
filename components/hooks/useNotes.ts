@@ -68,12 +68,15 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       createNoteIfEmpty();
     }
 
-    const mergedNotes = [
-      ...cloudNotes.filter((cloudNote) => {
-        return !localNotes.find((localNote) => cloudNote.id === localNote.id);
-      }),
-      ...localNotes,
-    ];
+    const mergedNotes = cloudNotes.map((cloudNote) => {
+      const localNote = localNotes.find(
+        (localNote) => localNote.id === cloudNote.id
+      );
+      console.log("🚀 => file: useNotes.ts:75 => localNote:", localNote);
+
+      if (!localNote) return cloudNote;
+      return localNote;
+    });
 
     setNotes(mergedNotes);
   }, [cloudNotes, localNotes]);

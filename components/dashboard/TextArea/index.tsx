@@ -30,6 +30,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const { notes, updateNote, deleteNote } = useNotes({
     userId: user?.uid,
   });
+  console.log("🚀 => file: index.tsx:33 => notes:", notes);
+
   // const [dataFetched, setDataFetched] = useState(false);
 
   // const [isInitialRender, setIsInitialRender] = useState(true);
