@@ -151,7 +151,18 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     [userId]
   );
 
-  return { notes, createNote, updateNote, deleteNote };
+  return {
+    /**
+     * Notes from firestore and localforage combined
+     */
+    notes,
+    /**
+     * Create a new note
+     */
+    createNote,
+    updateNote,
+    deleteNote,
+  };
 };
 
 export default useNotes;
