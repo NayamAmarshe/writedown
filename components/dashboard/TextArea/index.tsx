@@ -44,6 +44,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
    */
   useEffect(() => {
     if (!notes) return;
+    console.log("🚀 => file: index.tsx:48 => notes.length:", notes.length);
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
@@ -62,22 +63,50 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   useEffect(() => {
     const setLocalForageNotes = async () => {
       const localNotes = await localForage.getItem<TNotesData[]>("notes");
+      const cloudNote = notes.find((note) => note.id === selectedNoteId);
+
       if (!localNotes) {
         localForage.setItem("notes", []);
         return;
       }
-      const localNote = localNotes.find((note) => note.id === selectedNoteId);
+
+      let localNote = localNotes.find(
+        (localNoteElement) => localNoteElement.id === selectedNoteId
+      );
+
       if (!localNote) {
+        if (!cloudNote) {
+          console.log("No local note or cloud note found");
+          return;
+        }
+
+        console.log("No local note found, creating one from cloudNote");
+        localNote = {
+          ...cloudNote,
+          title,
+          content: input,
+        };
+        localNotes.push(localNote);
+        await localForage.setItem("notes", localNotes);
         return;
       }
+
       if (localNote.content === input && localNote.title === title) {
+        console.log("Local note and cloud note are the same");
         return;
       }
+
       localNote.content = input;
       localNote.title = title;
+
       const selectedNoteIndex = localNotes.findIndex(
         (note) => note.id === selectedNoteId
       );
+      if (selectedNoteIndex === -1) {
+        console.log("No local note found with the selectedNoteId");
+        return;
+      }
+
       localNotes[selectedNoteIndex] = localNote;
       await localForage.setItem("notes", localNotes);
     };

@@ -63,16 +63,18 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     };
 
     if (!cloudNotes || !localNotes) return;
+
     if (cloudNotes.length === 0 && localNotes.length === 0) {
       createNoteIfEmpty();
     }
+
     const mergedNotes = [
-      ...cloudNotes.filter(
-        (localNote) =>
-          !cloudNotes.find((cloudNote) => cloudNote.id === localNote.id)
-      ),
+      ...cloudNotes.filter((cloudNote) => {
+        return !localNotes.find((localNote) => cloudNote.id === localNote.id);
+      }),
       ...localNotes,
     ];
+
     setNotes(mergedNotes);
   }, [cloudNotes, localNotes]);
 

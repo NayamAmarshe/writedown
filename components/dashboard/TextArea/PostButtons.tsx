@@ -55,11 +55,12 @@ const PostButtons = ({
   const currentNote = useMemo(() => {
     if (!notes || !selectedNoteId) return;
     // Format the date for the last updated time of the note
-    return formatter.format(
-      (
-        notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
-      )?.toDate()
-    );
+    const note = notes.find((note) => {
+      return note.id === selectedNoteId;
+    });
+    if (!note) return;
+    // TODO: FIX THE TIMESTAMP BELOW
+    return formatter.format((note.updatedAt as Timestamp).nanoseconds);
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {
