@@ -63,22 +63,12 @@ export const useNotes = ({ userId }: UseNotesProps) => {
    * and set it to notes state
    */
   useEffect(() => {
-    const createNoteIfEmpty = async () => {
-      return await createNote();
-    };
-
     if (!cloudNotes || !localNotes) return;
-
-    if (cloudNotes.length === 0 && localNotes.length === 0) {
-      const newNoteId = createNoteIfEmpty();
-      if (!newNoteId) return;
-    }
 
     const mergedNotes = cloudNotes.map((cloudNote) => {
       const localNote = localNotes.find(
         (localNote) => localNote.id === cloudNote.id
       );
-      console.log("🚀 => file: useNotes.ts:75 => localNote:", localNote);
 
       if (!localNote) return cloudNote;
       return localNote;
@@ -91,7 +81,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     if (!userId) return;
 
     const id = crypto.randomUUID();
-    const serverTime = serverTimestamp();
 
     const noteData: TNotesData = {
       id,
@@ -100,8 +89,8 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       slug: id,
       title: "Untitled",
       userId,
-      createdAt: serverTime,
-      updatedAt: serverTime,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     };
 
     const notesRef = doc(db, "users", userId, "notes", id);

@@ -1,6 +1,9 @@
 import { TNotesData } from "@/types/utils/firebaseOperations";
+import React, { useEffect, useMemo, useState } from "react";
 import CloudArrowUp from "@/components/icons/CloudArrowUp";
+import { useAuthState } from "react-firebase-hooks/auth";
 import ArrowPath from "@/components/icons/ArrowPath";
+import useNotes from "@/components/hooks/useNotes";
 import { isSyncingAtom } from "@/stores/isSyncing";
 import { Timestamp } from "firebase/firestore";
 import Skeleton from "react-loading-skeleton";
@@ -8,8 +11,8 @@ import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
+import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -45,22 +48,42 @@ const PostButtons = ({
   setSelectedNoteId,
   title,
   input,
-  notes,
-  updateNote,
-  deleteNote,
   shiftRight,
 }: PostButtonsProps) => {
   const isSyncing = useAtomValue(isSyncingAtom);
+  const [user] = useAuthState(auth);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
+  const { notes, updateNote, deleteNote } = useNotes({
+    userId: user?.uid,
+  });
 
   const currentNote = useMemo(() => {
-    if (!notes || !selectedNoteId) return;
+    if (!notes || !selectedNoteId) return null;
     // Format the date for the last updated time of the note
     const note = notes.find((note) => {
       return note.id === selectedNoteId;
     });
-    if (!note) return;
-    // TODO: FIX THE TIMESTAMP BELOW
-    return formatter.format((note.updatedAt as Timestamp).nanoseconds);
+
+    if (!note || !note.updatedAt) return null;
+    const updatedAt = note.updatedAt as Timestamp;
+
+    const formattedDate = formatter.format(updatedAt.seconds);
+    return formattedDate;
+  }, [notes, selectedNoteId]);
+
+  useEffect(() => {
+    if (!notes || !selectedNoteId) return;
+
+    const note = notes.find((note) => {
+      return note.id === selectedNoteId;
+    });
+
+    if (!note || !note.updatedAt) return;
+
+    const updatedAt = note.updatedAt as Timestamp;
+    const formattedDate = formatter.format(updatedAt.toDate());
+    setLastUpdated(formattedDate);
   }, [notes, selectedNoteId]);
 
   const saveNoteHandler = () => {

@@ -5,12 +5,12 @@ import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useCallback, useEffect } from "react";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
-import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
 import localForage from "localforage";
 import { auth } from "@/pages/_app";
@@ -27,7 +27,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
   const [input, setInput] = useAtom(inputAtom);
-  const { notes, updateNote, deleteNote } = useNotes({
+  const { notes, createNote, updateNote, deleteNote } = useNotes({
     userId: user?.uid,
   });
   console.log("🚀 => file: index.tsx:33 => notes:", notes);
@@ -40,13 +40,22 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   //   setIsInitialRender(false);
   // }, []);
 
+  const createNewNote = useCallback(async () => {
+    const newId = await createNote();
+    if (!newId) return;
+    setSelectedNoteId(newId);
+  }, [createNote, setSelectedNoteId, notes, selectedNoteId]);
+
   /**
-   * Set the title and input of the editor
-   * to the selected note's title and content
+   * Set the title and input value to the selected note's title and content
+   * when the selected note changes.
+   * 1. If there are no notes, create a new note.
+   * 2. If there are notes, but no selected note, set the selected note to the first note.
+   * 3. If there are notes and a selected note id, set the title and input to the selected note's title and content.
    */
   useEffect(() => {
     if (!notes) return;
-    console.log("🚀 => file: index.tsx:48 => notes.length:", notes.length);
+
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
@@ -59,6 +68,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       if (!selectedNote) return;
       setTitle(selectedNote.title);
       setInput(selectedNote.content);
+    } else if (notes.length === 0) {
+      createNewNote();
     }
   }, [notes, selectedNoteId]);
 
@@ -229,15 +240,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       </IconButton>
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons
-        deleteNote={deleteNote}
         selectedNoteId={selectedNoteId}
         setSelectedNoteId={setSelectedNoteId}
         isSynced={isSynced}
         setIsSynced={setIsSynced}
         input={input}
         title={title}
-        notes={notes}
-        updateNote={updateNote}
         shiftRight={shiftRight}
       />
       {/*EDITOR BUTTONS AND THE EDITOR*/}
