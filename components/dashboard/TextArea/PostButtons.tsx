@@ -58,19 +58,19 @@ const PostButtons = ({
     userId: user?.uid,
   });
 
-  const currentNote = useMemo(() => {
-    if (!notes || !selectedNoteId) return null;
-    // Format the date for the last updated time of the note
-    const note = notes.find((note) => {
-      return note.id === selectedNoteId;
-    });
+  // const currentNote = useMemo(() => {
+  //   if (!notes || !selectedNoteId) return null;
+  //   // Format the date for the last updated time of the note
+  //   const note = notes.find((note) => {
+  //     return note.id === selectedNoteId;
+  //   });
 
-    if (!note || !note.updatedAt) return null;
-    const updatedAt = note.updatedAt as Timestamp;
+  //   if (!note || !note.updatedAt) return null;
+  //   const updatedAt = note.updatedAt as Timestamp;
 
-    const formattedDate = formatter.format(updatedAt.seconds);
-    return formattedDate;
-  }, [notes, selectedNoteId]);
+  //   const formattedDate = formatter.format(updatedAt.seconds);
+  //   return formattedDate;
+  // }, [notes, selectedNoteId]);
 
   useEffect(() => {
     if (!notes || !selectedNoteId) return;
@@ -125,9 +125,9 @@ const PostButtons = ({
       }`}
     >
       {/* LAST UPDATED */}
-      {currentNote ? (
+      {lastUpdated ? (
         <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
-          Last Updated {currentNote}
+          Last Updated {lastUpdated}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
