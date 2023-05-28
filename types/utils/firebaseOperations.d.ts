@@ -2,8 +2,8 @@ import { FieldValue, Timestamp } from "firebase/firestore";
 
 export type TNotesData = {
   id: string;
-  createdAt?: Timestamp | FieldValue;
-  updatedAt?: Timestamp | FieldValue;
+  createdAt?: number;
+  updatedAt?: number;
   title: string;
   content: string;
   userId: string;

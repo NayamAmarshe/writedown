@@ -21,13 +21,6 @@ type PostButtonsProps = {
   setSelectedNoteId: React.Dispatch<React.SetStateAction<string | null>>;
   title: string;
   input: string;
-  notes: TNotesData[] | undefined;
-  updateNote: (note: {
-    id: string;
-    title: string;
-    content: string;
-  }) => Promise<void>;
-  deleteNote: (id: string) => Promise<void>;
   shiftRight?: boolean;
 };
 
@@ -58,20 +51,6 @@ const PostButtons = ({
     userId: user?.uid,
   });
 
-  // const currentNote = useMemo(() => {
-  //   if (!notes || !selectedNoteId) return null;
-  //   // Format the date for the last updated time of the note
-  //   const note = notes.find((note) => {
-  //     return note.id === selectedNoteId;
-  //   });
-
-  //   if (!note || !note.updatedAt) return null;
-  //   const updatedAt = note.updatedAt as Timestamp;
-
-  //   const formattedDate = formatter.format(updatedAt.seconds);
-  //   return formattedDate;
-  // }, [notes, selectedNoteId]);
-
   useEffect(() => {
     if (!notes || !selectedNoteId) return;
 
@@ -81,8 +60,8 @@ const PostButtons = ({
 
     if (!note || !note.updatedAt) return;
 
-    const updatedAt = note.updatedAt as Timestamp;
-    const formattedDate = formatter.format(updatedAt.toDate());
+    const updatedAt = note.updatedAt;
+    const formattedDate = new Date(updatedAt).toLocaleString();
     setLastUpdated(formattedDate);
   }, [notes, selectedNoteId]);
 
