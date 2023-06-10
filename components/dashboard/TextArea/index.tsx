@@ -4,12 +4,12 @@ import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { inputAtom, titleAtom } from "@/stores/editTextAreaAtom";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
-import React, { useCallback, useEffect } from "react";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { MilkdownProvider } from "@milkdown/react";
 import { isSyncedAtom } from "@/stores/isSynced";
 import EditorButtons from "./EditorButtons";
+import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
 import { useAtom } from "jotai";
@@ -25,7 +25,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [isSynced, setIsSynced] = useAtom(isSyncedAtom);
   const [title, setTitle] = useAtom(titleAtom);
   const [input, setInput] = useAtom(inputAtom);
-  const { notes, createNote } = useNotes({
+  const { notes, updateLocalNote } = useNotes({
     userId: user?.uid,
   });
 
@@ -35,23 +35,34 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
    * 1. If there is no selected note, set the selected note to the first note.
    * 2. If there is a selected note id, set the title and input to the selected note's title and content.
    */
-  useEffect(() => {
-    if (!notes) return;
+  // useEffect(() => {
+  //   if (!notes) return;
+  //   if (notes.length > 0 && selectedNoteId) {
+  //     const selectedNote = notes.find((note) => {
+  //       return note.id === selectedNoteId;
+  //     });
+  //     if (!selectedNote) return;
+  //     setTitle(selectedNote.title);
+  //     setInput(selectedNote.content);
+  //   }
+  // }, [selectedNoteId]);
 
+  useEffect(() => {
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
       setInput(notes[0].content);
       setTitle(notes[0].title);
-      return;
-    } else if (notes.length > 0 && selectedNoteId) {
-      const selectedNote = notes.find((note) => {
-        return note.id === selectedNoteId;
-      });
-      if (!selectedNote) return;
-      setTitle(selectedNote.title);
-      setInput(selectedNote.content);
     }
-  }, [notes, selectedNoteId]);
+  }, [notes]);
+
+  useEffect(() => {
+    if (!selectedNoteId) return;
+    updateLocalNote({
+      id: selectedNoteId,
+      title,
+      content: input,
+    });
+  }, [input, title]);
 
   return (
     <div

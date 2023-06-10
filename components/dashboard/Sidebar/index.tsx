@@ -8,6 +8,7 @@ import useNotes from "@/components/hooks/useNotes";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
+import { toast } from "react-hot-toast";
 import { auth } from "@/pages/_app";
 import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
@@ -29,7 +30,10 @@ const Sidebar = ({
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
-    if (!newId) return;
+    if (!newId) {
+      toast.error("Failed to create new post");
+      return;
+    }
     setSelectedNoteId(newId);
   };
 

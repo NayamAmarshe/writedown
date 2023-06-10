@@ -26,11 +26,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
   const [notes, setNotes] = useState<TNotesData[]>([]);
   const [localNotes, setLocalNotes] = useState<TNotesData[]>([]);
-
-  /**
-   * Fetch cloud notes from firestore
-   * and set it to cloudNotes state
-   */
   const [cloudNotes] = useCollectionData(
     userId
       ? query(
@@ -46,82 +41,57 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     }
   );
 
-  const updateLocalNotes = useCallback(
-    async (cloudNoteId: string) => {
-      const updatedLocalNotes = localNotes.filter(
-        (localNote) => localNote.id !== cloudNoteId
-      );
-      localForage.setItem("notes", updatedLocalNotes);
-    },
-    [localNotes]
-  );
-
-  const createNewNote = async () => {
-    const newNoteId = await createNote();
-    if (!newNoteId) return;
-  };
-
   /**
-   * Fetch local notes from localForage
+   * Fetch local notes from localForage on first render
    */
   useEffect(() => {
-    const setLocalForageNotes = async () => {
-      await localForage.setItem("notes", []);
-    };
-
-    const fetchLocalNotes = async () => {
-      const localForageNotes = await localForage.getItem<TNotesData[]>("notes");
-
-      if (!localForageNotes) {
-        setLocalForageNotes();
+    localForage.getItem<TNotesData[]>("notes").then((notes) => {
+      if (!notes) {
+        localForage.setItem("notes", []).then(() => {
+          setLocalNotes([]);
+        });
         return;
       }
-
-      setLocalNotes(localForageNotes);
-    };
-
-    fetchLocalNotes();
+      setLocalNotes(notes || []);
+    });
   }, []);
 
   /**
-   * Merge local notes with cloud notes
+   * Merge local notes with cloud notes everytime they change
    */
   useEffect(() => {
-    console.log("🚀 => file: useNotes.ts:122 => localNotes:", localNotes);
-
-    const mergedNotes = (localNotes || []).map((localNote) => {
+    const mergedNotes = localNotes.map((localNote) => {
       const cloudNote = cloudNotes?.find(
         (cloudNote) => localNote.id === cloudNote.id
       );
-
       if (!cloudNote) {
         return localNote;
       }
-
-      /**
-       * If cloud note and local note are the same
-       * then delete local note from localforage
-       */
-      if (
-        localNote.title === cloudNote.title &&
-        localNote.content === cloudNote.content
-      ) {
-        updateLocalNotes(localNote.id);
-      }
-
       return cloudNote;
+      // /**
+      //  * If cloud note and local note are the same
+      //  * then delete local note from localforage
+      //  */
+      // if (
+      //   localNote.title === cloudNote.title &&
+      //   localNote.content === cloudNote.content
+      // ) {
+      //   updateLocalNotes(localNote.id);
+      // }
     });
-
-    console.log("mergedNotes", mergedNotes);
     setNotes(mergedNotes);
   }, [cloudNotes, localNotes]);
 
+  useEffect(() => {
+    if (localNotes.length === 0) {
+      createNote();
+    }
+  }, [localNotes]);
+
   const createNote = useCallback(async () => {
     if (!userId) return;
-
     const id = crypto.randomUUID();
     const currentTime = new Date().getTime();
-
     const noteData: TNotesData = {
       id,
       content: "",
@@ -132,14 +102,9 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       createdAt: currentTime,
       updatedAt: currentTime,
     };
-
-    // const notesRef = doc(db, "users", userId, "notes", id);
-
     try {
-      // Create a document inside channelsRef array
       await localForage.setItem("notes", [...localNotes, noteData]);
       setLocalNotes([...localNotes, noteData]);
-      // await setDoc(notesRef, noteData, { merge: true });
       return id;
     } catch (error) {
       toast.error("Failed to create post, please try again later.");
@@ -149,16 +114,39 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   const updateNote = useCallback(
     async (note: { id: string; title: string; content: string }) => {
       if (!userId || !note) return;
-
       setIsSyncing(true);
-
       const notesRef = doc(db, "users", userId, "notes", note.id);
-      const serverTime = serverTimestamp();
-
+      const serverTime = new Date().getTime();
       try {
-        // Create a document inside channelsRef array
-        await updateDoc(notesRef, { ...note, updatedAt: serverTime });
+        if (cloudNotes?.find((cloudNote) => cloudNote.id === note.id)) {
+          await updateDoc(notesRef, { ...note, updatedAt: serverTime });
+        }
         setIsSyncing(false);
+      } catch (error) {
+        toast.error("Failed to update post, please try again later.");
+      }
+    },
+    [userId]
+  );
+
+  const updateLocalNote = useCallback(
+    async (note: { id: string; title: string; content: string }) => {
+      if (!userId || !note) return;
+      const currentTime = new Date().getTime();
+      try {
+        const updatedLocalNotes = localNotes.map((localNote) => {
+          if (localNote.id === note.id) {
+            return {
+              ...note,
+              updatedAt: currentTime,
+              title: note.title,
+              content: note.content,
+            } as TNotesData;
+          }
+          return localNote;
+        });
+        await localForage.setItem("notes", updatedLocalNotes);
+        setLocalNotes(updatedLocalNotes);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
       }
@@ -169,17 +157,16 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   const deleteNote = useCallback(
     async (noteId: string) => {
       if (!userId || !noteId) return;
-
       const notesRef = doc(db, "users", userId, "notes", noteId);
-
       try {
-        // Create a document inside channelsRef array
-        await deleteDoc(notesRef);
+        if (cloudNotes?.find((note) => note.id === noteId)) {
+          await deleteDoc(notesRef);
+        }
         const updatedLocalNotes = localNotes.filter(
           (localNote) => localNote.id !== noteId
         );
-        await localForage.setItem("notes", updatedLocalNotes);
         setLocalNotes(updatedLocalNotes);
+        await localForage.setItem("notes", updatedLocalNotes);
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
       }
@@ -199,6 +186,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
      */
     createNote,
     updateNote,
+    updateLocalNote,
     deleteNote,
   };
 };

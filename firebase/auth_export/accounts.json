@@ -4,7 +4,7 @@
     {
       "localId": "ELhDyfkwFbNsEjPkIAfFlzvJ9Ev2",
       "createdAt": "1685194590151",
-      "lastLoginAt": "1685194590152",
+      "lastLoginAt": "1685255571748",
       "displayName": "Orange Peach",
       "photoUrl": "https://picsum.photos/300/300",
       "providerUserInfo": [
@@ -18,11 +18,10 @@
           "screenName": "peach_orange"
         }
       ],
-      "validSince": "1685254939",
+      "validSince": "1686380279",
       "email": "orange.peach.228@example.com",
       "emailVerified": true,
-      "disabled": false,
-      "lastRefreshAt": "2023-05-28T06:22:32.988Z"
+      "disabled": false
     }
   ]
 }
