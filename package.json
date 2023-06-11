@@ -5,7 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "firebase": "firebase emulators:start",
+    "firebase": "firebase emulators:start --import=exported-dev-data --export-on-exit=exported-dev-data",
     "prepare": "husky install",
     "cypress": "cypress open"
   },
