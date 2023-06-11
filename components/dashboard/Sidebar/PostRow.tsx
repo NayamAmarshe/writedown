@@ -25,11 +25,13 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
         setSelectedNoteId(noteId);
       }}
     >
-      <h6 className="font-medium">{title || <Skeleton className="w-1/2" />}</h6>
+      <h6 className="font-medium">
+        {title === "" ? "Untitled" : title || <Skeleton className="w-1/2" />}
+      </h6>
       <button className="flex flex-col gap-2">
         <p className="w-full truncate text-left text-sm text-slate-600">
           {content === (undefined || null) && <Skeleton />}
-          {RemoveMarkdown(content.slice(0, 50)) || "..."}
+          {RemoveMarkdown(content.slice(0, 50)) || "Empty Post"}
         </p>
 
         {/* TODO: Add tags  */}

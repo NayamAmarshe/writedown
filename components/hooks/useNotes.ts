@@ -1,12 +1,16 @@
 import {
+  collection,
   deleteDoc,
   doc,
-  serverTimestamp,
+  orderBy,
+  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
-import { isSyncingAtom } from "@/stores/isSyncing";
+import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
@@ -17,23 +21,37 @@ type UseNotesProps = {
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
-  const setIsSyncing = useSetAtom(isSyncingAtom);
+  const setSyncLoading = useSetAtom(syncLoadingAtom);
+
+  const [notes] = useCollectionData(
+    userId
+      ? query(
+          collection(db, "users", userId, "notes"),
+          orderBy("updatedAt", "desc")
+        ).withConverter(notesConverter)
+      : null,
+    {
+      snapshotListenOptions: {
+        includeMetadataChanges: true,
+      },
+    }
+  );
 
   const createNote = useCallback(async () => {
     if (!userId) return;
 
     const id = crypto.randomUUID();
-    const serverTime = serverTimestamp();
+    const currentTime = new Date().getTime();
 
     const noteData: TNotesData = {
       id,
       content: "",
       public: false,
       slug: id,
-      title: "Untitled",
+      title: "",
       userId,
-      createdAt: serverTime,
-      updatedAt: serverTime,
+      createdAt: currentTime,
+      updatedAt: currentTime,
     };
 
     const notesRef = doc(db, "users", userId, "notes", id);
@@ -51,15 +69,15 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     async (note: { id: string; title: string; content: string }) => {
       if (!userId || !note) return;
 
-      setIsSyncing(true);
+      setSyncLoading(true);
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
-      const serverTime = serverTimestamp();
+      const currentTime = new Date().getTime();
 
       try {
         // Create a document inside channelsRef array
-        await updateDoc(notesRef, { ...note, updatedAt: serverTime });
-        setIsSyncing(false);
+        await updateDoc(notesRef, { ...note, updatedAt: currentTime });
+        setSyncLoading(false);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
       }
@@ -83,7 +101,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     [userId]
   );
 
-  return { createNote, updateNote, deleteNote };
+  return { notes, createNote, updateNote, deleteNote };
 };
 
 export default useNotes;

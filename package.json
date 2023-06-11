@@ -5,7 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "firebase": "firebase emulators:start --import=exported-dev-data --export-on-exit=exported-dev-data",
+    "firebase": "firebase emulators:start --import firebase --export-on-exit",
     "prepare": "husky install",
     "cypress": "cypress open"
   },
@@ -32,7 +32,7 @@
     "@testing-library/cypress": "^9.0.0",
     "cypress": "^12.9.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "firebase": "^9.17.1",
+    "firebase": "^9.22.2",
     "jotai": "^2.0.1",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.161.0",
