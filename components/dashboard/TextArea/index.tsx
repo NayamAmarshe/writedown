@@ -70,7 +70,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       setNoteUnchanged(false);
       setSynced(false);
     }
-  }, [notes, postTitle, postContent, synced]);
+  }, [notes, postTitle, postContent]);
 
   useEffect(() => {
     const debounceSave = setTimeout(() => {
