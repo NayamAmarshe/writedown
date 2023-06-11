@@ -26,7 +26,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
   const [noteUnchanged, setNoteUnchanged] = useState(false);
-  const { notes, updateNote, deleteNote, createNote } = useNotes({
+  const { notes, updateNote, createNote } = useNotes({
     userId: user?.uid,
   });
 
@@ -80,7 +80,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         title: postTitle,
         content: postContent,
       });
-    }, 2000);
+    }, 500);
     return () => {
       clearTimeout(debounceSave);
     };
