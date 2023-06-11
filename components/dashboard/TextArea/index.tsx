@@ -98,19 +98,10 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       >
         <ChevronDoubleLeft className="h-4 w-4" />
       </IconButton>
+
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
-      <PostButtons
-        deleteNote={deleteNote}
-        selectedNoteId={selectedNoteId}
-        setSelectedNoteId={setSelectedNoteId}
-        isSynced={synced}
-        setIsSynced={setSynced}
-        input={postContent}
-        title={postTitle}
-        notes={notes}
-        updateNote={updateNote}
-        shiftRight={shiftRight}
-      />
+      <PostButtons shiftRight={shiftRight} />
+
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <MilkdownProvider>
         <EditorButtons shiftRight={shiftRight} />
