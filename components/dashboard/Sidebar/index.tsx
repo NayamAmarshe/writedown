@@ -1,9 +1,6 @@
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { notesConverter } from "@/utils/firestoreDataConverter";
-import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
@@ -11,12 +8,12 @@ import useNotes from "@/components/hooks/useNotes";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import React, { useMemo } from "react";
-import { db } from "@/lib/firebase";
+import { toast } from "react-hot-toast";
 import { auth } from "@/pages/_app";
 import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
 import Link from "next/link";
+import React from "react";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -28,29 +25,15 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-
-  const [firestoreNotes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "notes"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(notesConverter),
-    {
-      snapshotListenOptions: {
-        includeMetadataChanges: true,
-      },
-    }
-  );
-
-  const notes = useMemo(() => {
-    return firestoreNotes;
-  }, [firestoreNotes]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
-    if (!newId) return;
+    if (!newId) {
+      toast.error("Failed to create new post");
+      return;
+    }
     setSelectedNoteId(newId);
   };
 

@@ -1,15 +1,16 @@
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import CloudArrowUp from "@/components/icons/CloudArrowUp";
+import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
+import { useAuthState } from "react-firebase-hooks/auth";
 import ArrowPath from "@/components/icons/ArrowPath";
-import { isSyncingAtom } from "@/stores/isSyncing";
-import { Timestamp } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import React, { useMemo } from "react";
 import { useAtomValue } from "jotai";
+import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
   isSynced: boolean;
@@ -28,16 +29,6 @@ type PostButtonsProps = {
   shiftRight?: boolean;
 };
 
-const formatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: undefined,
-  hour12: true,
-});
-
 const PostButtons = ({
   isSynced,
   setIsSynced,
@@ -50,45 +41,43 @@ const PostButtons = ({
   deleteNote,
   shiftRight,
 }: PostButtonsProps) => {
-  const isSyncing = useAtomValue(isSyncingAtom);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
-  const currentNote = useMemo(() => {
+  const syncLoading = useAtomValue(syncLoadingAtom);
+
+  useEffect(() => {
     if (!notes || !selectedNoteId) return;
-    // Format the date for the last updated time of the note
-    return formatter.format(
-      (
-        notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
-      )?.toDate()
-    );
+    const note = notes.find((note) => {
+      return note.id === selectedNoteId;
+    });
+    if (!note || !note.updatedAt) return;
+    const updatedAt = note.updatedAt;
+    const formattedDate = new Date(updatedAt).toLocaleString();
+    setLastUpdated(formattedDate);
   }, [notes, selectedNoteId]);
 
+  /**
+   * Saves the note if not already synced
+   */
   const saveNoteHandler = () => {
-    // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
-    if (isSyncing || isSynced) return;
-
-    // If there is no note selected or no note available with the selectedNoteId, don't save
+    if (syncLoading || isSynced) return;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
-
     updateNote({
       id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
+      title: title,
       content: input,
     });
-
-    // Set the note as synced
     setIsSynced(true);
   };
 
+  /**
+   * Deletes the note and selects the next note in the list
+   */
   const deleteNoteHandler = () => {
-    // If there is no note selected or no notes, don't delete
     if (!notes || !selectedNoteId) return;
-
     deleteNote(selectedNoteId);
-
     toast.success("Deleted!");
-
-    // Set the selected note to the next note in the array
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNoteId(notes[newIndex]?.id || null);
@@ -101,9 +90,9 @@ const PostButtons = ({
       }`}
     >
       {/* LAST UPDATED */}
-      {currentNote ? (
+      {lastUpdated ? (
         <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
-          Last Updated {currentNote}
+          Last Updated {lastUpdated}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
@@ -132,19 +121,19 @@ const PostButtons = ({
           size="sm"
           variant="green"
         >
-          {isSyncing && (
+          {syncLoading && (
             <span className="flex items-center justify-center gap-1">
               <ArrowPath className="h-5 w-5" />
               <p>Saving</p>
             </span>
           )}
-          {!isSyncing && isSynced && (
+          {!syncLoading && isSynced && (
             <span className="flex items-center justify-center gap-1">
               <Check className="h-5 w-5" />
               <p>Saved</p>
             </span>
           )}
-          {!isSyncing && !isSynced && (
+          {!syncLoading && !isSynced && (
             <span className="flex items-center justify-center gap-1">
               <CloudArrowUp className="h-5 w-5" />
               <p>Save Note</p>
