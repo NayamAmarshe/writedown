@@ -25,7 +25,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const setSynced = useSetAtom(isSyncedAtom);
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
-  const { notes, updateNote, createNote } = useNotes({
+  const { notes, updateNote, createNote, reload } = useNotes({
     userId: user?.uid,
   });
 
@@ -84,6 +84,10 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       clearTimeout(debounceSave);
     };
   }, [postContent, postTitle]);
+
+  useEffect(() => {
+    reload();
+  }, [selectedNoteId]);
 
   return (
     <div
