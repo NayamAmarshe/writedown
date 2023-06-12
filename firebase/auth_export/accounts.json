@@ -1,1 +1,28 @@
-{ "kind": "identitytoolkit#DownloadAccountResponse", "users": [] }
+{
+  "kind": "identitytoolkit#DownloadAccountResponse",
+  "users": [
+    {
+      "localId": "K0YZp8WAk0TZ8fUAy7ox5inKiTHe",
+      "createdAt": "1686476487898",
+      "lastLoginAt": "1686476487899",
+      "displayName": "Panda Mountain",
+      "photoUrl": "https://picsum.photos/300/300",
+      "providerUserInfo": [
+        {
+          "providerId": "google.com",
+          "rawId": "9229220275737514931382508104861325926093",
+          "federatedId": "9229220275737514931382508104861325926093",
+          "displayName": "Panda Mountain",
+          "photoUrl": "https://picsum.photos/300/300",
+          "email": "panda.mountain.136@example.com",
+          "screenName": "mountain_panda"
+        }
+      ],
+      "validSince": "1686572962",
+      "email": "panda.mountain.136@example.com",
+      "emailVerified": true,
+      "disabled": false,
+      "lastRefreshAt": "2023-06-12T12:29:50.762Z"
+    }
+  ]
+}

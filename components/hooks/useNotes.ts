@@ -7,7 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
@@ -23,18 +23,13 @@ type UseNotesProps = {
 export const useNotes = ({ userId }: UseNotesProps) => {
   const setSyncLoading = useSetAtom(syncLoadingAtom);
 
-  const [notes] = useCollectionData(
+  const [notes, loading, error, snapshot, reload] = useCollectionDataOnce(
     userId
       ? query(
           collection(db, "users", userId, "notes"),
           orderBy("updatedAt", "desc")
         ).withConverter(notesConverter)
-      : null,
-    {
-      snapshotListenOptions: {
-        includeMetadataChanges: true,
-      },
-    }
+      : null
   );
 
   const createNote = useCallback(async () => {
@@ -59,6 +54,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     try {
       // Create a document inside channelsRef array
       await setDoc(notesRef, noteData, { merge: true });
+      reload();
       return id;
     } catch (error) {
       toast.error("Failed to create post, please try again later.");
@@ -101,7 +97,16 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     [userId]
   );
 
-  return { notes, createNote, updateNote, deleteNote };
+  return {
+    notes,
+    reload,
+    notesLoading: loading,
+    notesError: error,
+    notesSnapshot: snapshot,
+    createNote,
+    updateNote,
+    deleteNote,
+  };
 };
 
 export default useNotes;

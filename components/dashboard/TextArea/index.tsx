@@ -8,11 +8,11 @@ import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { MilkdownProvider } from "@milkdown/react";
-import React, { useEffect, useState } from "react";
 import EditorButtons from "./EditorButtons";
+import { useAtom, useSetAtom } from "jotai";
+import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
-import { useAtom } from "jotai";
 
 type TextAreaProps = {
   shiftRight: boolean;
@@ -22,10 +22,9 @@ type TextAreaProps = {
 const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [user] = useAuthState(auth);
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [synced, setSynced] = useAtom(isSyncedAtom);
+  const setSynced = useSetAtom(isSyncedAtom);
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
-  const [noteUnchanged, setNoteUnchanged] = useState(false);
   const { notes, updateNote, createNote } = useNotes({
     userId: user?.uid,
   });
@@ -64,23 +63,23 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
     if (isNoteUnchanged) {
       setSynced(true);
-      setNoteUnchanged(true);
       return;
     } else {
-      setNoteUnchanged(false);
       setSynced(false);
     }
   }, [notes, postTitle, postContent]);
 
   useEffect(() => {
     const debounceSave = setTimeout(() => {
-      if (!selectedNoteId || !user || noteUnchanged) return;
+      if (!selectedNoteId || !user) return;
+      setSynced(false);
       updateNote({
         id: selectedNoteId,
         title: postTitle,
         content: postContent,
       });
-    }, 500);
+      setSynced(true);
+    }, 3000);
     return () => {
       clearTimeout(debounceSave);
     };

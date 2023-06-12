@@ -5,15 +5,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import { isSyncedAtom } from "@/stores/syncedAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
+import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { auth } from "@/pages/_app";
-import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
 import Link from "next/link";
-import React from "react";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -25,8 +26,13 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { notes, createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote, reload } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const synced = useAtomValue(isSyncedAtom);
+
+  useEffect(() => {
+    reload();
+  }, [synced]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
@@ -39,7 +45,7 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`absolute top-0 left-0 right-0 bottom-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:right-auto md:top-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
