@@ -90,6 +90,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await deleteDoc(notesRef);
+        reload();
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
       }
