@@ -1,6 +1,5 @@
 import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { TNotesData } from "@/types/utils/firebaseOperations";
 import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -42,7 +41,18 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
     });
     if (!note || !note.updatedAt) return;
     const updatedAt = note.updatedAt;
-    const formattedDate = new Date(updatedAt).toLocaleString();
+    const formattingOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    const formattedDate = new Date(updatedAt).toLocaleString(
+      "en-US",
+      formattingOptions
+    );
     setLastUpdated(formattedDate);
   }, [notes, selectedNoteId]);
 
