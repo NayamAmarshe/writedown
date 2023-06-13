@@ -167,7 +167,7 @@ const Sidebar = ({
               <Link
                 href={`dashboard/?post=${note.slug}`}
                 key={note.id}
-                as={`/dashboard/post/${note.slug}`}
+                // TODO: Uncomment this for public posts: as={`/dashboard/post/${note.slug}`}
               >
                 <PostRow
                   userId={user?.uid}
