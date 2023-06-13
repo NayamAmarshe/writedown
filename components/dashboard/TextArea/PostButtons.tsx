@@ -1,7 +1,6 @@
 import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
 import { IoMdCheckmarkCircle, IoMdRefreshCircle } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -25,7 +24,6 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const postContent = useAtomValue(postContentAtom);
   const postTitle = useAtomValue(postTitleAtom);
-  const [syncLoading, setSyncLoading] = useAtom(syncLoadingAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
@@ -58,7 +56,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
    * Saves the note if not already synced
    */
   const saveNoteHandler = async () => {
-    if (syncLoading || synced) return;
+    if (synced) return;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     await updateNote({

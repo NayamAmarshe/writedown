@@ -10,21 +10,15 @@ import {
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
-import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
-import { isSyncedAtom } from "@/stores/syncedAtom";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
-import { useSetAtom } from "jotai";
 
 type UseNotesProps = {
   userId: string | undefined;
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
-  const setSyncLoading = useSetAtom(syncLoadingAtom);
-  const setSynced = useSetAtom(isSyncedAtom);
-
   const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
       ? query(
@@ -67,8 +61,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     async (note: { id: string; title: string; content: string }) => {
       if (!userId || !note) return;
 
-      setSyncLoading(true);
-
       const notesRef = doc(db, "users", userId, "notes", note.id);
       const currentTime = new Date().getTime();
 
@@ -77,8 +69,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
         await updateDoc(notesRef, { ...note, updatedAt: currentTime });
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
-      } finally {
-        setSyncLoading(false);
       }
     },
     [userId]
