@@ -60,30 +60,29 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     const currentNote = notes?.find(
       (note) => postContent === note.content && postTitle === note.title
     );
+
+    let debounceSave: NodeJS.Timeout;
+
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
     if (isNoteUnchanged) {
       setSynced(true);
       return;
     } else {
+      debounceSave = setTimeout(() => {
+        setSynced(false);
+        updateNote({
+          id: selectedNoteId,
+          title: postTitle,
+          content: postContent,
+        });
+        setSynced(true);
+      }, 3000);
       setSynced(false);
     }
-  }, [notes, postTitle, postContent]);
-
-  useEffect(() => {
-    const debounceSave = setTimeout(() => {
-      if (!selectedNoteId || !user) return;
-      setSynced(false);
-      updateNote({
-        id: selectedNoteId,
-        title: postTitle,
-        content: postContent,
-      });
-      setSynced(true);
-    }, 3000);
     return () => {
       clearTimeout(debounceSave);
     };
-  }, [postContent, postTitle]);
+  }, [notes, postTitle, postContent]);
 
   useEffect(() => {
     refreshNotes();
