@@ -1,20 +1,18 @@
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { notesConverter } from "@/utils/firestoreDataConverter";
-import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import { isSyncedAtom } from "@/stores/syncedAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import React, { useMemo } from "react";
-import { db } from "@/lib/firebase";
+import React, { useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { auth } from "@/pages/_app";
-import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
 import Link from "next/link";
 
@@ -28,67 +26,62 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
+  const synced = useAtomValue(isSyncedAtom);
 
-  const [firestoreNotes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "notes"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(notesConverter),
-    {
-      snapshotListenOptions: {
-        includeMetadataChanges: true,
-      },
-    }
-  );
-
-  const notes = useMemo(() => {
-    return firestoreNotes;
-  }, [firestoreNotes]);
+  useEffect(() => {
+    refreshNotes();
+  }, [synced, selectedNoteId]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
-    if (!newId) return;
+    await refreshNotes();
+    console.log("REFRESH");
+    if (!newId) {
+      toast.error("Failed to create new post");
+      return;
+    }
     setSelectedNoteId(newId);
   };
 
   return (
     <aside
-      className={`absolute top-0 left-0 right-0 bottom-0 z-50 flex h-full flex-col space-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:right-auto md:top-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
+      {/* MOBILE - SIDEBAR TOGGLE BUTTON */}
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses="ml-auto md:hidden"
+        extraClasses="ml-auto md:hidden absolute right-3 z-10 !bg-slate-100"
       >
         <ChevronDoubleLeft
-          className={`duration-400 h-5 w-5 transition-transform ${
+          className={`duration-400 h-4 w-4 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
       </IconButton>
 
-      {/* SIDEBAR TOGGLE BUTTON */}
+      {/* DESKTOP - SIDEBAR TOGGLE BUTTON */}
       <IconButton
         data-testid="sidebarToggle"
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
         <ChevronDoubleLeft
-          className={`duration-400 h-5 w-5 transition-transform ${
+          className={`duration-400 h-5 w-5 translate-x-1 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
       </IconButton>
 
-      {/* USER  GREETING SECTION */}
-      {user ? (
-        <div className="relative flex items-center gap-2">
-          <div>
+      <div className="flex flex-row items-center gap-2">
+        {/* USER  GREETING SECTION */}
+        {user ? (
+          <div className="relative min-w-fit">
             <Popover
               data-testid="logout"
               buttonStyle="outline-none"
@@ -100,7 +93,7 @@ const Sidebar = ({
                       `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
                     }
                     alt="User Photo"
-                    className="h-8 w-8 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover"
                   />
                 )
               }
@@ -119,15 +112,19 @@ const Sidebar = ({
               </button>
             </Popover>
           </div>
+        ) : (
+          <Skeleton className="h-10 w-10" circle={true} />
+        )}
 
-          <h4 className="flex items-center gap-1 text-xl font-semibold text-slate-500">
+        {user ? (
+          <h4 className="truncate text-xl font-semibold text-slate-500">
             Hi there,{" "}
-            <span className="text-slate-900">{user?.displayName}</span>
+            <span className="text-slate-900">{user?.displayName} </span>
           </h4>
-        </div>
-      ) : (
-        <Skeleton className="h-6 w-2/3" />
-      )}
+        ) : (
+          <Skeleton className="w-32" />
+        )}
+      </div>
 
       {/* CREATE NEW POST BUTTON */}
       {notes ? (
@@ -170,6 +167,9 @@ const Sidebar = ({
       <div className="mt-auto">
         <p className="text-center text-xs text-slate-400">
           © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
+          <span className="ml-2 animate-pulse rounded-full bg-violet-500 px-3 text-violet-100">
+            BETA
+          </span>
         </p>
       </div>
     </aside>

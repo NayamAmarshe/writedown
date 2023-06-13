@@ -7,7 +7,14 @@ import {
   wrapInHeadingCommand,
   insertImageCommand,
   UpdateImageCommandPayload,
+  insertHrCommand,
+  wrapInBulletListCommand,
 } from "@milkdown/preset-commonmark";
+import MaterialHorizontalRule from "@/components/icons/MaterialHorizontalRule";
+import MaterialHeadingThree from "@/components/icons/MaterialHeadingThree";
+import MaterialHeadingFour from "@/components/icons/MaterialHeadingFour";
+import MaterialOrderedList from "@/components/icons/MaterialOrderedList";
+import MaterialHeadingTwo from "@/components/icons/MaterialHeadingTwo";
 import MaterialUnorderedList from "../../icons/MaterialUnorderedList";
 import OutlineStrikethrough from "../../icons/OutlineStrikethrough";
 import MaterialFormatItalic from "../../icons/MaterialFormatItalic";
@@ -63,6 +70,24 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInHeadingCommand.key, 2)}
+        >
+          <MaterialHeadingTwo />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInHeadingCommand.key, 3)}
+        >
+          <MaterialHeadingThree />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInHeadingCommand.key, 4)}
+        >
+          <MaterialHeadingFour />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(toggleStrongCommand.key)}
         >
           <MaterialFormatBold />
@@ -89,6 +114,12 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
           className="rounded-xl p-2 hover:bg-slate-200"
           onClick={() => call(wrapInOrderedListCommand.key)}
         >
+          <MaterialOrderedList />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200"
+          onClick={() => call(wrapInBulletListCommand.key)}
+        >
           <MaterialUnorderedList />
         </button>
         <button
@@ -97,14 +128,20 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         >
           <MaterialCodeRounded />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200">
+        {/* <button className="rounded-xl p-2 hover:bg-slate-200">
           <MaterialLink />
-        </button>
+        </button> */}
         <button
           onClick={() => setIsOpen(isOpen ? false : true)}
           className="rounded-xl p-2 hover:bg-slate-200"
         >
           <BootstrapImage />
+        </button>
+        <button
+          onClick={() => call(insertHrCommand.key)}
+          className="rounded-xl p-2 hover:bg-slate-200"
+        >
+          <MaterialHorizontalRule />
         </button>
         <Modal
           isOpen={isOpen}
