@@ -12,6 +12,7 @@ import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 import { auth } from "@/pages/_app";
 import PostRow from "./PostRow";
 import Link from "next/link";
@@ -25,11 +26,25 @@ const Sidebar = ({
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
+  const router = useRouter();
+
   const [user] = useAuthState(auth);
   const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
+
+  useEffect(() => {
+    if (!selectedNoteId) return;
+    router.push(`/dashboard/?post=${selectedNoteId}`, undefined, {
+      shallow: true,
+    });
+  }, [selectedNoteId]);
+
+  useEffect(() => {
+    if (!router.query.post) return;
+    setSelectedNoteId(router.query.post as string);
+  }, [router.query.post]);
 
   useEffect(() => {
     refreshNotes();
@@ -149,13 +164,18 @@ const Sidebar = ({
         <div className="flex flex-col gap-2 p-1">
           {notes ? (
             notes.map((note) => (
-              <PostRow
+              <Link
+                href={`dashboard/?post=${note.slug}`}
                 key={note.id}
-                userId={user?.uid}
-                title={note.title}
-                content={note.content}
-                noteId={note.id}
-              />
+                as={`/dashboard/post/${note.slug}`}
+              >
+                <PostRow
+                  userId={user?.uid}
+                  title={note.title}
+                  content={note.content}
+                  noteId={note.id}
+                />
+              </Link>
             ))
           ) : (
             <Skeleton className="mb-2 h-20 p-4" count={4} />
