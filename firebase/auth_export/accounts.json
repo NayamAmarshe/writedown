@@ -18,11 +18,10 @@
           "screenName": "mountain_panda"
         }
       ],
-      "validSince": "1686572962",
+      "validSince": "1686582789",
       "email": "panda.mountain.136@example.com",
       "emailVerified": true,
-      "disabled": false,
-      "lastRefreshAt": "2023-06-12T12:29:50.762Z"
+      "disabled": false
     }
   ]
 }

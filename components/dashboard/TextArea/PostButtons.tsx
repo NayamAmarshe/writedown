@@ -31,7 +31,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   const syncLoading = useAtomValue(syncLoadingAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
-  const { notes, updateNote, deleteNote } = useNotes({
+  const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
 
@@ -49,25 +49,32 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   /**
    * Saves the note if not already synced
    */
-  const saveNoteHandler = () => {
+  const saveNoteHandler = async () => {
     if (syncLoading || synced) return;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
-    updateNote({
+    await updateNote({
       id: selectedNoteId,
       title: postTitle,
       content: postContent,
     });
+    refreshNotes();
     setSynced(true);
   };
 
   /**
    * Deletes the note and selects the next note in the list
    */
-  const deleteNoteHandler = () => {
+  const deleteNoteHandler = async () => {
     if (!notes || !selectedNoteId) return;
-    deleteNote(selectedNoteId);
-    toast.success("Deleted!");
+    await deleteNote(selectedNoteId);
+    await refreshNotes();
+    toast.success("Deleted Post!", {
+      iconTheme: {
+        primary: "#f00",
+        secondary: "#ffffff",
+      },
+    });
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNoteId(notes[newIndex]?.id || null);
