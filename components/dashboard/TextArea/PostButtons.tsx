@@ -1,15 +1,13 @@
 import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
+import { IoMdCheckmarkCircle, IoMdRefreshCircle } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import CloudArrowUp from "@/components/icons/CloudArrowUp";
 import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import ArrowPath from "@/components/icons/ArrowPath";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
-import Check from "@/components/icons/Check";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
@@ -27,7 +25,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const postContent = useAtomValue(postContentAtom);
   const postTitle = useAtomValue(postTitleAtom);
-  const syncLoading = useAtomValue(syncLoadingAtom);
+  const [syncLoading, setSyncLoading] = useAtom(syncLoadingAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
@@ -127,23 +125,18 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
           onClick={saveNoteHandler}
           size="sm"
           variant="green"
+          extraClasses="w-28"
         >
-          {syncLoading && (
+          {!synced && (
             <span className="flex items-center justify-center gap-1">
-              <ArrowPath className="h-5 w-5" />
+              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
               <p>Saving</p>
             </span>
           )}
-          {!syncLoading && synced && (
+          {synced && (
             <span className="flex items-center justify-center gap-1">
-              <Check className="h-5 w-5" />
+              <IoMdCheckmarkCircle className="h-5 w-5" />
               <p>Saved</p>
-            </span>
-          )}
-          {!syncLoading && !synced && (
-            <span className="flex items-center justify-center gap-1">
-              <CloudArrowUp className="h-5 w-5" />
-              <p>Save Note</p>
             </span>
           )}
         </Button>
@@ -152,4 +145,4 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   );
 };
 
-export default React.memo(PostButtons);
+export default PostButtons;

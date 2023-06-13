@@ -11,6 +11,7 @@ import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { syncLoadingAtom } from "@/stores/syncLoadingAtom";
+import { isSyncedAtom } from "@/stores/syncedAtom";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
@@ -22,6 +23,7 @@ type UseNotesProps = {
 
 export const useNotes = ({ userId }: UseNotesProps) => {
   const setSyncLoading = useSetAtom(syncLoadingAtom);
+  const setSynced = useSetAtom(isSyncedAtom);
 
   const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
@@ -73,9 +75,10 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await updateDoc(notesRef, { ...note, updatedAt: currentTime });
-        setSyncLoading(false);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
+      } finally {
+        setSyncLoading(false);
       }
     },
     [userId]

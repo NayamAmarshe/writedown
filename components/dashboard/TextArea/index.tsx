@@ -22,7 +22,7 @@ type TextAreaProps = {
 const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [user] = useAuthState(auth);
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const setSynced = useSetAtom(isSyncedAtom);
+  const [synced, setSynced] = useAtom(isSyncedAtom);
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
@@ -69,6 +69,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       return;
     } else {
       debounceSave = setTimeout(() => {
+        console.log("debounceSave");
         setSynced(false);
         updateNote({
           id: selectedNoteId,
