@@ -38,7 +38,6 @@ const Sidebar = ({
   const newPostClickHandler = async () => {
     const newId = await createNote();
     await refreshNotes();
-    console.log("REFRESH");
     if (!newId) {
       toast.error("Failed to create new post");
       return;

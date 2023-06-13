@@ -69,7 +69,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       return;
     } else {
       debounceSave = setTimeout(() => {
-        console.log("debounceSave");
         setSynced(false);
         updateNote({
           id: selectedNoteId,
@@ -94,7 +93,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       className={`scrollbar flex w-full flex-col items-center justify-start overflow-y-scroll p-2 md:p-5`}
     >
       <IconButton
-        extraClasses={`ml-auto mr-2 md:hidden transition-transform duration-400 rotate-180 ${
+        extraClasses={`ml-auto mr-0 md:hidden transition-transform duration-400 rotate-180 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
         onClick={() => setShiftRight(true)}
