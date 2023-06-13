@@ -23,7 +23,7 @@ type UseNotesProps = {
 export const useNotes = ({ userId }: UseNotesProps) => {
   const setSyncLoading = useSetAtom(syncLoadingAtom);
 
-  const [notes, loading, error, snapshot, reload] = useCollectionDataOnce(
+  const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
       ? query(
           collection(db, "users", userId, "notes"),
@@ -54,7 +54,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     try {
       // Create a document inside channelsRef array
       await setDoc(notesRef, noteData, { merge: true });
-      reload();
+      refreshNotes();
       return id;
     } catch (error) {
       toast.error("Failed to create post, please try again later.");
@@ -90,7 +90,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await deleteDoc(notesRef);
-        reload();
+        refreshNotes();
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
       }
@@ -100,7 +100,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
   return {
     notes,
-    reload,
+    refreshNotes,
     notesLoading: loading,
     notesError: error,
     notesSnapshot: snapshot,

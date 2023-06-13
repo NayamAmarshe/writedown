@@ -26,16 +26,19 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const [user] = useAuthState(auth);
-  const { notes, createNote, reload } = useNotes({ userId: user?.uid });
+  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
 
   useEffect(() => {
-    reload();
-  }, [synced]);
+    refreshNotes();
+  }, [synced, selectedNoteId]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
+    await refreshNotes();
+    console.log("REFRESH");
     if (!newId) {
       toast.error("Failed to create new post");
       return;
