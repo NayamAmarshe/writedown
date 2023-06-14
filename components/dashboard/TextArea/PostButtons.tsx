@@ -1,94 +1,86 @@
-import { TNotesData } from "@/types/utils/firebaseOperations";
-import CloudArrowUp from "@/components/icons/CloudArrowUp";
-import ArrowPath from "@/components/icons/ArrowPath";
-import { isSyncingAtom } from "@/stores/isSyncing";
-import { Timestamp } from "firebase/firestore";
+import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
+import { IoMdCheckmarkCircle, IoMdRefreshCircle } from "react-icons/io";
+import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import useNotes from "@/components/hooks/useNotes";
+import { isSyncedAtom } from "@/stores/syncedAtom";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import Check from "@/components/icons/Check";
+import { useAtom, useAtomValue } from "jotai";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
-import React, { useMemo } from "react";
-import { useAtomValue } from "jotai";
+import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
-  isSynced: boolean;
-  setIsSynced: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedNoteId: string | null;
-  setSelectedNoteId: React.Dispatch<React.SetStateAction<string | null>>;
-  title: string;
-  input: string;
-  notes: TNotesData[] | undefined;
-  updateNote: (note: {
-    id: string;
-    title: string;
-    content: string;
-  }) => Promise<void>;
-  deleteNote: (id: string) => Promise<void>;
   shiftRight?: boolean;
 };
 
-const formatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: undefined,
-  hour12: true,
-});
+const PostButtons = ({ shiftRight }: PostButtonsProps) => {
+  const [user] = useAuthState(auth);
 
-const PostButtons = ({
-  isSynced,
-  setIsSynced,
-  selectedNoteId,
-  setSelectedNoteId,
-  title,
-  input,
-  notes,
-  updateNote,
-  deleteNote,
-  shiftRight,
-}: PostButtonsProps) => {
-  const isSyncing = useAtomValue(isSyncingAtom);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
-  const currentNote = useMemo(() => {
+  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const postContent = useAtomValue(postContentAtom);
+  const postTitle = useAtomValue(postTitleAtom);
+  const [synced, setSynced] = useAtom(isSyncedAtom);
+
+  const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
+    userId: user?.uid,
+  });
+
+  useEffect(() => {
     if (!notes || !selectedNoteId) return;
-    // Format the date for the last updated time of the note
-    return formatter.format(
-      (
-        notes.find((note) => note.id === selectedNoteId)?.updatedAt as Timestamp
-      )?.toDate()
+    const note = notes.find((note) => {
+      return note.id === selectedNoteId;
+    });
+    if (!note || !note.updatedAt) return;
+    const updatedAt = note.updatedAt;
+    const formattingOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    const formattedDate = new Date(updatedAt).toLocaleString(
+      "en-US",
+      formattingOptions
     );
+    setLastUpdated(formattedDate);
   }, [notes, selectedNoteId]);
 
-  const saveNoteHandler = () => {
-    // IF THE NOTE IS SYNCING OR ALREADY SYNCED, DON'T SAVE
-    if (isSyncing || isSynced) return;
-
-    // If there is no note selected or no note available with the selectedNoteId, don't save
+  /**
+   * Saves the note if not already synced
+   */
+  const saveNoteHandler = async () => {
+    if (synced) return;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
-
-    updateNote({
+    await updateNote({
       id: selectedNoteId,
-      title: title === "" ? "Untitled" : title,
-      content: input,
+      title: postTitle,
+      content: postContent,
     });
-
-    // Set the note as synced
-    setIsSynced(true);
+    refreshNotes();
+    setSynced(true);
   };
 
-  const deleteNoteHandler = () => {
-    // If there is no note selected or no notes, don't delete
+  /**
+   * Deletes the note and selects the next note in the list
+   */
+  const deleteNoteHandler = async () => {
     if (!notes || !selectedNoteId) return;
-
-    deleteNote(selectedNoteId);
-
-    toast.success("Deleted!");
-
-    // Set the selected note to the next note in the array
+    await deleteNote(selectedNoteId);
+    await refreshNotes();
+    toast.success("Deleted Post!", {
+      iconTheme: {
+        primary: "#f00",
+        secondary: "#ffffff",
+      },
+    });
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNoteId(notes[newIndex]?.id || null);
@@ -101,9 +93,9 @@ const PostButtons = ({
       }`}
     >
       {/* LAST UPDATED */}
-      {currentNote ? (
+      {lastUpdated ? (
         <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
-          Last Updated {currentNote}
+          Last Updated {lastUpdated}
         </p>
       ) : (
         <Skeleton className="w-44" baseColor="#cbd5e1" />
@@ -131,23 +123,18 @@ const PostButtons = ({
           onClick={saveNoteHandler}
           size="sm"
           variant="green"
+          extraClasses="w-28"
         >
-          {isSyncing && (
+          {!synced && (
             <span className="flex items-center justify-center gap-1">
-              <ArrowPath className="h-5 w-5" />
+              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
               <p>Saving</p>
             </span>
           )}
-          {!isSyncing && isSynced && (
+          {synced && (
             <span className="flex items-center justify-center gap-1">
-              <Check className="h-5 w-5" />
+              <IoMdCheckmarkCircle className="h-5 w-5" />
               <p>Saved</p>
-            </span>
-          )}
-          {!isSyncing && !isSynced && (
-            <span className="flex items-center justify-center gap-1">
-              <CloudArrowUp className="h-5 w-5" />
-              <p>Save Note</p>
             </span>
           )}
         </Button>
@@ -156,4 +143,4 @@ const PostButtons = ({
   );
 };
 
-export default React.memo(PostButtons);
+export default PostButtons;

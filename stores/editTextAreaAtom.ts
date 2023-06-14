@@ -1,4 +1,4 @@
 import { atom } from "jotai";
 
-export const titleAtom = atom<string>("");
-export const inputAtom = atom<string>("");
+export const postTitleAtom = atom<string>("");
+export const postContentAtom = atom<string>("");
