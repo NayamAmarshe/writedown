@@ -57,89 +57,89 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
 
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-950 sm:justify-start ${
+      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
       <div className="flex flex-row items-center gap-2 overflow-x-auto sm:w-full sm:justify-evenly">
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInHeadingCommand.key)}
         >
           <MaterialHeadingOne className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInHeadingCommand.key, 2)}
         >
           <MaterialHeadingTwo className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInHeadingCommand.key, 3)}
         >
           <MaterialHeadingThree className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInHeadingCommand.key, 4)}
         >
           <MaterialHeadingFour className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(toggleStrongCommand.key)}
         >
           <MaterialFormatBold className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(toggleEmphasisCommand.key)}
         >
           <MaterialFormatItalic className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInBlockquoteCommand.key)}
         >
           <MingcuteQuoteRight className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(toggleStrikethroughCommand.key)}
         >
           <OutlineStrikethrough className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInOrderedListCommand.key)}
         >
           <MaterialOrderedList className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(wrapInBulletListCommand.key)}
         >
           <MaterialUnorderedList className="dark:text-slate-200" />
         </button>
         <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => call(toggleInlineCodeCommand.key)}
         >
           <MaterialCodeRounded className="dark:text-slate-200" />
         </button>
-        {/* <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800">
+        {/* <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialLink />
         </button> */}
         <button
           onClick={() => setIsOpen(isOpen ? false : true)}
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
         >
           <BootstrapImage className="dark:text-slate-200" />
         </button>
         <button
           onClick={() => call(insertHrCommand.key)}
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
         >
           <MaterialHorizontalRule className="dark:text-slate-200" />
         </button>
