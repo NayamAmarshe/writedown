@@ -35,16 +35,16 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
     <div
       className={`flex cursor-pointer flex-col gap-2 rounded-xl p-4 ${
         selectedNoteId === noteId
-          ? "bg-slate-200"
-          : "bg-slate-50 hover:bg-slate-100"
+          ? "bg-slate-200 dark:bg-slate-800"
+          : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-700"
       }`}
       onClick={() => switchNotesHandler(noteId)}
     >
-      <h6 className="font-medium">
+      <h6 className="font-medium dark:text-slate-50">
         {title === "" ? "Untitled" : title || <Skeleton className="w-1/2" />}
       </h6>
       <button className="flex flex-col gap-2">
-        <p className="w-full truncate text-left text-sm text-slate-600">
+        <p className="w-full truncate text-left text-sm text-slate-600 dark:text-slate-300">
           {content === (undefined || null) && <Skeleton />}
           {RemoveMarkdown(content.slice(0, 50)) || "Empty Post"}
         </p>
