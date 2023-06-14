@@ -15,6 +15,7 @@ import Button from "@/components/ui/Button";
 import ThemeChanger from "./ThemeChanger";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
 import { auth } from "@/pages/_app";
 import PostRow from "./PostRow";
 import Link from "next/link";
@@ -35,6 +36,7 @@ const Sidebar = ({
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
+  const { theme, setTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
 
@@ -124,13 +126,21 @@ const Sidebar = ({
                 href="/"
                 className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                Home
+                🏠️ Home
               </Link>
+              <button
+                onClick={() => {
+                  theme === "light" ? setTheme("dark") : setTheme("light");
+                }}
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                {theme === "light" ? "🌚 Dark Mode" : "🌞 Light Mode"}
+              </button>
               <button
                 onClick={() => auth.signOut()}
                 className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                Logout
+                🏃 Logout
               </button>
             </Popover>
           </div>
@@ -147,12 +157,6 @@ const Sidebar = ({
           </h4>
         ) : (
           <Skeleton className="w-32" />
-        )}
-
-        {mounted ? (
-          <ThemeChanger />
-        ) : (
-          <Skeleton className="h-9 w-9" circle={true} />
         )}
       </div>
 

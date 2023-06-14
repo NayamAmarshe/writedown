@@ -123,7 +123,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
           onClick={saveNoteHandler}
           size="sm"
           variant="green"
-          extraClasses="w-28"
+          className="w-28"
         >
           {!synced && (
             <span className="flex items-center justify-center gap-1">

@@ -4,14 +4,14 @@ interface ButtonProps {
   variant?: "red" | "green" | "slate";
   size?: "sm";
   children: React.ReactNode;
-  extraClasses?: string;
+  className?: string;
 }
 
 const Button = ({
   variant,
   size,
   children,
-  extraClasses,
+  className,
   ...rest
 }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
   const getButtonClass = () => {
@@ -39,7 +39,7 @@ const Button = ({
   return (
     <button
       type="button"
-      className={getButtonClass() + " " + extraClasses}
+      className={getButtonClass() + " " + className}
       {...rest}
     >
       {children}
