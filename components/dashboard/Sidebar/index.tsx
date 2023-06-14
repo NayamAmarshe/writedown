@@ -94,7 +94,7 @@ const Sidebar = ({
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
         <BsChevronBarLeft
-          className={`duration-400 h-5 w-5 translate-x-1 text-black transition-transform dark:text-slate-50 ${
+          className={`duration-400 h-5 w-5 translate-x-1 text-black transition-transform dark:text-slate-100 ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
