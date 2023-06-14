@@ -11,63 +11,41 @@ import {
   FiUserCheck,
   FiWifiOff,
 } from "react-icons/fi";
+import FeatureCard from "./FeatureCard";
 import React from "react";
 
 const Features = () => {
   return (
     <div className="mb-10 grid grid-cols-1 content-center gap-4 px-4 sm:grid-cols-2 sm:gap-8 sm:px-5 md:px-20 lg:grid-cols-2 lg:px-36 xl:grid-cols-5">
-      <div className="flex w-full cursor-default flex-col gap-4 rounded-xl bg-slate-200 p-5 transition-all duration-300 hover:scale-105 hover:bg-sky-100 sm:hover:scale-110">
-        <h6 className="flex flex-col items-center gap-1 text-lg font-medium text-slate-900">
-          <FiGlobe className="h-6 w-6" /> Free and Open Source
-        </h6>
-        <p className="text-slate-600">
-          Sharing is caring, writedown is completely free and open source and
-          licensed under AGPLv3.
-        </p>
-      </div>
+      <FeatureCard
+        icon={<FiGlobe className="h-6 w-6" />}
+        title="Free and Open Source"
+        description="Sharing is caring, writedown is completely free and open source and licensed under AGPLv3."
+      />
 
-      <div className="flex cursor-default flex-col gap-4 rounded-xl bg-slate-200 p-5 transition-all duration-300 hover:scale-105 hover:bg-emerald-100 sm:hover:scale-110">
-        <h6 className="flex flex-col items-center gap-1 text-lg font-medium text-slate-900">
-          <FiCloudLightning className="h-6 w-6" />
-          Synced on all your devices
-        </h6>
-        <p className="text-slate-600">
-          All your notes are synced on all your devices. You can access them
-          from anywhere.
-        </p>
-      </div>
+      <FeatureCard
+        icon={<FiCloudLightning className="h-6 w-6" />}
+        title="Synced on all your devices"
+        description="All your notes are synced on all your devices. You can access them from anywhere."
+      />
 
-      <div className="flex cursor-default flex-col gap-4 rounded-xl bg-slate-200 p-5 transition-all duration-300 hover:scale-105 hover:bg-violet-100 sm:hover:scale-110">
-        <h6 className="flex flex-col items-center gap-1 text-lg font-medium text-slate-900">
-          <FiWifiOff className="h-6 w-6" />
-          Offline Support
-        </h6>
-        <p className="text-slate-600">
-          Write and save notes even when you are away from the internet!
-        </p>
-      </div>
+      <FeatureCard
+        icon={<FiWifiOff className="h-6 w-6" />}
+        title="Offline Support"
+        description="Write and save notes even when you are away from the internet!"
+      />
 
-      <div className="flex cursor-default flex-col gap-4 rounded-xl bg-slate-200 p-5 transition-all duration-300 hover:scale-105 hover:bg-rose-100 sm:hover:scale-110">
-        <h6 className="flex flex-col items-center gap-1 text-lg font-medium text-slate-900">
-          <FiEye className="h-6 w-6" />
-          Live Markdown
-        </h6>
-        <p className="text-slate-600">
-          Writedown supports Markdown. You can write markdown and preview it in
-          real-time.
-        </p>
-      </div>
+      <FeatureCard
+        icon={<FiEye className="h-6 w-6" />}
+        title="Live Markdown"
+        description="Writedown supports Markdown. You can write markdown and preview it in real-time."
+      />
 
-      <div className="flex cursor-default flex-col gap-4 rounded-xl bg-slate-200 p-5 transition-all duration-300 hover:scale-105 hover:bg-yellow-100 sm:hover:scale-110">
-        <h6 className="flex flex-col items-center gap-1 text-lg font-medium text-slate-900">
-          <FiSmile className="h-6 w-6" />
-          Easy to Use
-        </h6>
-        <p className="text-slate-600">
-          Writedown is easy to use with a beautiful interface. Get started in
-          just 5 seconds!
-        </p>
-      </div>
+      <FeatureCard
+        icon={<FiSmile className="h-6 w-6" />}
+        title="Easy to Use"
+        description="Writedown is easy to use with a beautiful interface. Get started in just 5 seconds!"
+      />
     </div>
   );
 };
