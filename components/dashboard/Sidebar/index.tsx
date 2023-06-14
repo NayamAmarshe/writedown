@@ -70,7 +70,7 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`dark:slate-950 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 dark:bg-slate-950 dark:text-slate-50 dark:shadow-slate-950 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`dark:slate-950 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -122,13 +122,13 @@ const Sidebar = ({
             >
               <Link
                 href="/"
-                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-500"
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 Home
               </Link>
               <button
                 onClick={() => auth.signOut()}
-                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-500"
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 Logout
               </button>
