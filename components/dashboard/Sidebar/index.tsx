@@ -1,21 +1,20 @@
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
-import { notesConverter } from "@/utils/firestoreDataConverter";
-import { collection, orderBy, query } from "firebase/firestore";
-import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import { isSyncedAtom } from "@/stores/syncedAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import ThemeChanger from "./ThemeChanger";
-import { db } from "@/lib/firebase";
+import React, { useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 import { auth } from "@/pages/_app";
-import { useSetAtom } from "jotai";
 import PostRow from "./PostRow";
 import Link from "next/link";
 
@@ -28,41 +27,48 @@ const Sidebar = ({
   showSidebar,
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
+  const router = useRouter();
+
   const [user] = useAuthState(auth);
-  const { createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const [mounted, setMounted] = useState(false);
+  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
+  const synced = useAtomValue(isSyncedAtom);
 
-  const [firestoreNotes] = useCollectionData(
-    user &&
-      query(
-        collection(db, "users", user.uid, "notes"),
-        orderBy("updatedAt", "desc")
-      ).withConverter(notesConverter),
-    {
-      snapshotListenOptions: {
-        includeMetadataChanges: true,
-      },
-    }
-  );
+  useEffect(() => {
+    if (!selectedNoteId) return;
+    router.push(`/dashboard/?post=${selectedNoteId}`, undefined, {
+      shallow: true,
+    });
+  }, [selectedNoteId]);
 
-  const notes = useMemo(() => {
-    return firestoreNotes;
-  }, [firestoreNotes]);
+  useEffect(() => {
+    if (!router.query.post) return;
+    setSelectedNoteId(router.query.post as string);
+  }, [router.query.post]);
+
+  useEffect(() => {
+    refreshNotes();
+  }, [synced, selectedNoteId]);
 
   const newPostClickHandler = async () => {
     const newId = await createNote();
-    if (!newId) return;
+    await refreshNotes();
+    if (!newId) {
+      toast.error("Failed to create new post");
+      return;
+    }
     setSelectedNoteId(newId);
   };
 
   useEffect(() => {
-    setMounted(true);
+    set
+    (true);
   }, []);
 
   return (
     <aside
-      className={`absolute top-0 left-0 right-0 bottom-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:right-auto md:top-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -170,13 +176,18 @@ const Sidebar = ({
         <div className="flex flex-col gap-2 p-1">
           {notes ? (
             notes.map((note) => (
-              <PostRow
+              <Link
+                href={`dashboard/?post=${note.slug}`}
                 key={note.id}
-                userId={user?.uid}
-                title={note.title}
-                content={note.content}
-                noteId={note.id}
-              />
+                // TODO: Uncomment this for public posts: as={`/dashboard/post/${note.slug}`}
+              >
+                <PostRow
+                  userId={user?.uid}
+                  title={note.title}
+                  content={note.content}
+                  noteId={note.id}
+                />
+              </Link>
             ))
           ) : (
             <Skeleton className="mb-2 h-20 p-4" count={4} />
