@@ -22,7 +22,7 @@ const Button = ({
         case "green":
           return "rounded-full py-1 px-3 text-sm font-medium text-green-500 ring-2 ring-green-500 transition-colors duration-300 hover:bg-green-100 bg-green-50";
         case "slate":
-          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 bg-slate-50";
+          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 dark:hover:bg-slate-800 bg-slate-50 dark:bg-slate-950";
         default:
           return "rounded-full py-1 px-3 text-sm font-medium text-slate-900 ring-2 ring-slate-900 transition-colors duration-300 hover:bg-slate-300";
       }
@@ -32,7 +32,7 @@ const Button = ({
       case "red":
         return "inline-flex items-center justify-center px-5 py-2.5 bg-white border rounded-full border-red-900 text-sm font-medium text-red-900 hover:bg-red-200 transition-all duration-300";
       default:
-        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-50 border rounded-full border-2 border-slate-900 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-all duration-300";
+        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-50 border rounded-full border-2 border-slate-900 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-all duration-300 dark:bg-slate-950 dark:border-slate-50 dark:text-slate-50 dark:hover:bg-slate-800";
     }
   };
 

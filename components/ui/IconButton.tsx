@@ -11,7 +11,10 @@ const IconButton = ({
   ...rest
 }: IconButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
-    <button className={"rounded-full bg-white p-3 " + extraClasses} {...rest}>
+    <button
+      className={"rounded-full bg-white p-3 dark:bg-slate-950 " + extraClasses}
+      {...rest}
+    >
       {children}
     </button>
   );

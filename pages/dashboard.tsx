@@ -27,7 +27,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="max-w-screen relative flex h-screen flex-row bg-slate-200 text-gray-900">
+      <div className="max-w-screen relative flex h-screen flex-row bg-slate-200 text-gray-900 dark:bg-slate-800">
         <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
       </div>
