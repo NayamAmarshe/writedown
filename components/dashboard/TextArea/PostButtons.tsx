@@ -1,26 +1,37 @@
 import {
+  IoMdCheckmarkCircle,
+  IoMdCloudDownload,
+  IoMdDownload,
+  IoMdRefreshCircle,
+} from "react-icons/io";
+import {
   postContentAtom,
   postLastUpdatedAtom,
   postTitleAtom,
 } from "@/stores/postDataAtom";
-import { IoMdCheckmarkCircle, IoMdRefreshCircle } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { getHTML, getMarkdown } from "@milkdown/utils";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
+import { UseEditorReturn } from "@milkdown/react";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
+import { editorCtx } from "@milkdown/core";
 import { toast } from "react-hot-toast";
+import html2canvas from "html2canvas";
 import { auth } from "@/pages/_app";
+import jsPDF from "jspdf";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
+  editorRef: React.MutableRefObject<UseEditorReturn | null>;
 };
 
-const PostButtons = ({ shiftRight }: PostButtonsProps) => {
+const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
 
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -86,6 +97,19 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
     setSelectedNoteId(notes[newIndex]?.id || null);
   };
 
+  const downloadNoteHandler = async () => {
+    if (!editorRef.current) return;
+    const content = document.querySelector(".milkdown") as HTMLElement;
+    if (!content) return;
+    html2canvas(content).then((canvas) => {
+      document.body.appendChild(canvas);
+      const img = canvas.toDataURL("image/png");
+      const doc = new jsPDF("p", "pt", "letter  ");
+      doc.addImage(img, 10, 10, 0, 0, "FAST");
+      doc.save("test.pdf");
+    });
+  };
+
   return (
     <div
       className={`mt-4 flex w-full max-w-3xl select-none flex-col gap-4 transition-transform duration-300 md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
@@ -103,6 +127,20 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
 
       {/* DELETE BUTTON */}
       <div className="flex items-center justify-center gap-4 md:items-start">
+        {/* SAVE BUTTON */}
+        <Button
+          data-testid="save"
+          type="button"
+          onClick={downloadNoteHandler}
+          size="sm"
+          variant="green"
+        >
+          <span className="flex items-center justify-center gap-1">
+            <IoMdDownload className="h-5 w-5" />
+            <p>Downlaod</p>
+          </span>
+        </Button>
+
         <Button
           data-testid="del"
           type="button"

@@ -6,15 +6,15 @@ import {
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { MilkdownProvider, UseEditorReturn } from "@milkdown/react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import { MilkdownProvider } from "@milkdown/react";
+import React, { useEffect, useState } from "react";
 import EditorButtons from "./EditorButtons";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
 
@@ -33,6 +33,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
+  // LOCAL STATES
+  const editorRef = React.useRef<UseEditorReturn>(null);
 
   useEffect(() => {
     if (!notes) return;
@@ -112,7 +114,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       </IconButton>
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
-      <PostButtons shiftRight={shiftRight} />
+      <PostButtons shiftRight={shiftRight} editorRef={editorRef} />
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <MilkdownProvider>
@@ -120,6 +122,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
         <div
           tabIndex={0}
+          id="editor"
           // onMouseLeave={instaSync}
           className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
@@ -146,6 +149,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
               setInput={setPostContent}
               className="prose !max-h-none min-h-screen !max-w-none p-2 focus:outline-none"
               notes={notes}
+              editorRef={editorRef}
             />
           </ProsemirrorAdapterProvider>
         </div>

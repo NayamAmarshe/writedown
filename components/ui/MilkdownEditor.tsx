@@ -4,22 +4,23 @@ import {
   Editor,
   rootCtx,
   editorViewOptionsCtx,
+  editorCtx,
 } from "@milkdown/core";
 import {
   usePluginViewFactory,
   useWidgetViewFactory,
 } from "@prosemirror-adapter/react";
+import { $shortcut, Keymap, getMarkdown, replaceAll } from "@milkdown/utils";
+import { Milkdown, UseEditorReturn, useEditor } from "@milkdown/react";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
 import { linkPlugin } from "@/components/ui/plugins/LinkWidget";
-import { $shortcut, Keymap, replaceAll } from "@milkdown/utils";
 import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { TooltipView, tooltip } from "./plugins/Tooltip";
-import { Milkdown, useEditor } from "@milkdown/react";
 import { trailing } from "@milkdown/plugin-trailing";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
@@ -46,9 +47,16 @@ interface editorProps {
   setInput: React.Dispatch<React.SetStateAction<string>>;
   className?: React.HTMLAttributes<HTMLDivElement>["className"];
   notes?: TNotesData[] | undefined;
+  editorRef: React.MutableRefObject<UseEditorReturn | null>;
 }
 
-const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
+const MilkdownEditor = ({
+  setInput,
+  input,
+  className,
+  notes,
+  editorRef,
+}: editorProps) => {
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
 
   const pluginViewFactory = usePluginViewFactory();
@@ -90,7 +98,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     };
   });
 
-  const editor = useEditor((root) =>
+  editorRef.current = useEditor((root) =>
     Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root);
@@ -142,7 +150,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
         ctx.get(listenerCtx).markdownUpdated((_, markdown, prevMarkdown) => {
           // If the user pastes an image, we don't want to save it to the database
           if (markdown.includes("data:image") && prevMarkdown) {
-            editor.get()?.action(replaceAll(prevMarkdown));
+            ctx.get(editorCtx).action(replaceAll(prevMarkdown));
             toast.error(
               "Please paste a link to an image, pasting images from clipboard is not supported yet"
             );
@@ -167,9 +175,11 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
   );
 
   useEffect(() => {
+    if (!editorRef.current) return;
+
     // If there are no notes or no selected note, clear the editor
     if (!notes || !selectedNoteId) {
-      editor.get()?.action(replaceAll(""));
+      editorRef.current.get()?.action(replaceAll(""));
 
       return;
     }
@@ -178,7 +188,7 @@ const MilkdownEditor = ({ setInput, input, className, notes }: editorProps) => {
     const currentNote = notes.find((note) => note.id === selectedNoteId);
     if (!currentNote) return;
 
-    editor.get()?.action(replaceAll(currentNote.content));
+    editorRef.current.get()?.action(replaceAll(currentNote.content));
   }, [selectedNoteId, notes]);
 
   return <Milkdown />;
