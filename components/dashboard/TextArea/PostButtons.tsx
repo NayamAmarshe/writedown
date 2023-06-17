@@ -149,18 +149,18 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
       )}
 
       {/* DELETE BUTTON */}
-      <div className="flex items-center justify-center gap-4 md:items-start">
+      <div className="flex flex-wrap items-center justify-center gap-4 md:items-start">
         {/* SAVE BUTTON */}
         <Button
-          data-testid="save"
+          data-testid="download"
           type="button"
           onClick={downloadNoteHandler}
           size="sm"
-          variant="green"
+          variant="blue"
         >
           <span className="flex items-center justify-center gap-1">
             <IoMdDownload className="h-5 w-5" />
-            <p>Downlaod</p>
+            <p>Download</p>
           </span>
         </Button>
 
