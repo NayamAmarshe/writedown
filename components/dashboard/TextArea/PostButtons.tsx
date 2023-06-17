@@ -119,7 +119,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     >
       {/* LAST UPDATED */}
       {lastUpdated ? (
-        <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm">
+        <p className="flex items-center justify-center text-xs font-medium text-slate-500 dark:text-slate-400 md:text-sm">
           Last Updated {lastUpdated}
         </p>
       ) : (
@@ -162,7 +162,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
           onClick={saveNoteHandler}
           size="sm"
           variant="green"
-          extraClasses="w-28"
+          className="w-28"
         >
           {!synced && (
             <span className="flex items-center justify-center gap-1">

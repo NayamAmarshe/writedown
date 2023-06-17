@@ -36,8 +36,8 @@ export default function Popover({
             leaveTo="opacity-0 translate-y-1"
           >
             <HeadlessPopover.Panel className="absolute left-0 z-10 mt-2 w-52">
-              <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-slate-900 ring-opacity-5">
-                <div className="relative flex flex-col gap-2 bg-white p-2 lg:grid-cols-2">
+              <div className="ring-opacity-15 overflow-hidden rounded-lg shadow-lg shadow-black/10 ring-1 ring-slate-200 dark:shadow-slate-900 dark:ring-slate-700">
+                <div className="relative flex flex-col gap-1 bg-white p-2 dark:bg-slate-800 lg:grid-cols-2">
                   {children}
                 </div>
               </div>

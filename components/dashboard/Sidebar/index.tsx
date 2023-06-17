@@ -6,13 +6,16 @@ import PlusCircle from "@/components/icons/PlusCircle";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
+import React, { useEffect, useState } from "react";
+import { BsChevronBarLeft } from "react-icons/bs";
 import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import React, { useEffect } from "react";
+import ThemeChanger from "./ThemeChanger";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
 import { auth } from "@/pages/_app";
 import PostRow from "./PostRow";
 import Link from "next/link";
@@ -33,6 +36,9 @@ const Sidebar = ({
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
+  const { theme, setTheme } = useTheme();
+
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (!selectedNoteId) return;
@@ -60,9 +66,13 @@ const Sidebar = ({
     setSelectedNoteId(newId);
   };
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <aside
-      className={`absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`dark:slate-950 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -72,7 +82,7 @@ const Sidebar = ({
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="ml-auto md:hidden absolute right-3 z-10 !bg-slate-100"
       >
-        <ChevronDoubleLeft
+        <BsChevronBarLeft
           className={`duration-400 h-4 w-4 transition-transform ${
             showSidebar ? "" : "rotate-180"
           }`}
@@ -85,8 +95,8 @@ const Sidebar = ({
         onClick={() => setShowSidebar(!showSidebar)}
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
-        <ChevronDoubleLeft
-          className={`duration-400 h-5 w-5 translate-x-1 transition-transform ${
+        <BsChevronBarLeft
+          className={`duration-400 h-5 w-5 translate-x-1 text-black transition-transform dark:text-slate-100 ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
@@ -114,15 +124,23 @@ const Sidebar = ({
             >
               <Link
                 href="/"
-                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                Home
+                🏠️ Home
               </Link>
               <button
-                onClick={() => auth.signOut()}
-                className="rounded-xl bg-slate-100 p-4 text-left text-sm font-medium hover:bg-slate-300"
+                onClick={() => {
+                  theme === "light" ? setTheme("dark") : setTheme("light");
+                }}
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
               >
-                Logout
+                {theme === "light" ? "🌚 Dark Mode" : "🌞 Light Mode"}
+              </button>
+              <button
+                onClick={() => auth.signOut()}
+                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                🏃 Logout
               </button>
             </Popover>
           </div>
@@ -131,9 +149,11 @@ const Sidebar = ({
         )}
 
         {user ? (
-          <h4 className="truncate text-xl font-semibold text-slate-500">
+          <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
             Hi there,{" "}
-            <span className="text-slate-900">{user?.displayName} </span>
+            <span className="text-slate-900 dark:text-slate-100">
+              {user?.displayName}{" "}
+            </span>
           </h4>
         ) : (
           <Skeleton className="w-32" />
