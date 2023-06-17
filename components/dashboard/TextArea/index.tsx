@@ -104,7 +104,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   return (
     <div
-      className={`scrollbar flex w-full flex-col items-center justify-start overflow-y-scroll p-2 md:p-5`}
+      className={`scrollbar flex w-full flex-col items-center justify-start overflow-x-hidden overflow-y-scroll p-2 md:p-5`}
     >
       <IconButton
         extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden transition-transform duration-400 rotate-180 ${
