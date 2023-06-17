@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps {
-  variant?: "red" | "green" | "slate";
+  variant?: "red" | "green" | "slate" | "blue";
   size?: "sm";
   children: React.ReactNode;
   className?: string;
@@ -21,6 +21,8 @@ const Button = ({
           return "rounded-full py-1 px-3 text-sm font-medium text-red-500 ring-2 ring-red-500 transition-colors duration-300 hover:bg-red-100 bg-red-50 dark:bg-red-900/20 dark:text-red-400 dark:ring-red-400 dark:hover:bg-red-800/50";
         case "green":
           return "rounded-full py-1 px-3 text-sm font-medium text-green-500 ring-2 ring-green-500 transition-colors duration-300 hover:bg-green-100 bg-green-50 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-400 dark:hover:bg-green-800/50";
+        case "blue":
+          return "rounded-full py-1 px-3 text-sm font-medium text-blue-500 ring-2 ring-blue-500 transition-colors duration-300 hover:bg-blue-100 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-400 dark:hover:bg-blue-800/50";
         case "slate":
           return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 dark:hover:bg-slate-800 bg-slate-50 dark:bg-slate-950";
         default:
