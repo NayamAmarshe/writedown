@@ -4,7 +4,6 @@ import {
   postTitleAtom,
 } from "@/stores/postDataAtom";
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
-import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { MilkdownProvider, UseEditorReturn } from "@milkdown/react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
@@ -14,10 +13,10 @@ import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
+import { useAtom, useAtomValue } from "jotai";
 import EditorButtons from "./EditorButtons";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
-import { useAtom } from "jotai";
 
 type TextAreaProps = {
   shiftRight: boolean;
@@ -36,7 +35,22 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   });
   // LOCAL STATES
   const editorRef = React.useRef<UseEditorReturn>(null);
-  const pdfRef = useRef(null);
+
+  useEffect(() => {
+    const alertUser = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    if (!synced) {
+      window.addEventListener("beforeunload", alertUser);
+    } else {
+      window.removeEventListener("beforeunload", alertUser);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  }, [synced]);
 
   useEffect(() => {
     if (!notes) return;
