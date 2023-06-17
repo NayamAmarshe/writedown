@@ -135,7 +135,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
 
   return (
     <div
-      className={`mt-4 flex w-full max-w-3xl select-none flex-col gap-4 transition-transform duration-300 md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
+      className={`mt-14 flex w-full max-w-3xl select-none flex-col gap-4 transition-transform duration-300 md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >

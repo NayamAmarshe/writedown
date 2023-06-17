@@ -1,4 +1,3 @@
-import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,7 +11,6 @@ import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import ThemeChanger from "./ThemeChanger";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
@@ -80,11 +78,11 @@ const Sidebar = ({
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses="ml-auto md:hidden absolute right-3 z-10 !bg-slate-100"
+        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:!bg-slate-800`}
       >
         <BsChevronBarLeft
-          className={`duration-400 h-4 w-4 transition-transform ${
-            showSidebar ? "" : "rotate-180"
+          className={`duration-400 h-4 w-4 text-black transition-transform dark:text-slate-100 ${
+            showSidebar ? "rotate-0" : "rotate-180"
           }`}
         />
       </IconButton>

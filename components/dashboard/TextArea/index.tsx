@@ -13,6 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
+import { BsChevronBarLeft } from "react-icons/bs";
 import EditorButtons from "./EditorButtons";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
@@ -106,12 +107,14 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       className={`scrollbar flex w-full flex-col items-center justify-start overflow-y-scroll p-2 md:p-5`}
     >
       <IconButton
-        extraClasses={`ml-auto mr-0 md:hidden transition-transform duration-400 rotate-180 ${
+        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden transition-transform duration-400 rotate-180 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
         onClick={() => setShiftRight(true)}
       >
-        <ChevronDoubleLeft className="h-4 w-4" />
+        <BsChevronBarLeft
+          className={`duration-400 h-4 w-4 text-black transition-transform dark:text-slate-100`}
+        />
       </IconButton>
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
