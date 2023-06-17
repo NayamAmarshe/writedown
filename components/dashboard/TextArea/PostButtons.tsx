@@ -23,6 +23,7 @@ import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import { editorCtx } from "@milkdown/core";
 import { toast } from "react-hot-toast";
+import { useTheme } from "next-themes";
 import html2canvas from "html2canvas";
 import { auth } from "@/pages/_app";
 import { marked } from "marked";
@@ -35,6 +36,7 @@ type PostButtonsProps = {
 
 const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
+  const { theme } = useTheme();
 
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
@@ -119,6 +121,9 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     html2canvas(content, {
       width: jsPdf.internal.pageSize.getWidth(),
       height: jsPdf.internal.pageSize.getHeight(),
+      backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+      x: -20,
+      y: -20,
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       jsPdf.addImage(
@@ -129,7 +134,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         jsPdf.internal.pageSize.getWidth(),
         jsPdf.internal.pageSize.getHeight()
       );
-      jsPdf.save("note.pdf");
+      jsPdf.setDrawColor("#000");
+      jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
     });
   };
 
