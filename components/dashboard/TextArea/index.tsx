@@ -1,4 +1,8 @@
-import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
+import {
+  postContentAtom,
+  postLastUpdatedAtom,
+  postTitleAtom,
+} from "@/stores/postDataAtom";
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
@@ -25,6 +29,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
+  const [postUpdatedAt, setPostUpdatedAt] = useAtom(postLastUpdatedAtom);
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
@@ -46,6 +51,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       setSelectedNoteId(notes[0].id);
       setPostContent(notes[0].content);
       setPostTitle(notes[0].title);
+      setPostUpdatedAt(notes[0].updatedAt);
       return;
     }
     if (!selectedNoteId) return;
@@ -53,12 +59,16 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     if (!selectedNote) return;
     setPostContent(selectedNote.content);
     setPostTitle(selectedNote.title);
+    setPostUpdatedAt(selectedNote.updatedAt);
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
     if (!selectedNoteId || !user) return;
     const currentNote = notes?.find(
-      (note) => postContent === note.content && postTitle === note.title
+      (note) =>
+        postContent === note.content &&
+        postTitle === note.title &&
+        postUpdatedAt === note.updatedAt
     );
 
     let debounceSave: NodeJS.Timeout;

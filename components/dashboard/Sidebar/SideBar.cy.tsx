@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 import Sidebar from "./index";
 import React from "react";
 
