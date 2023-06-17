@@ -1,13 +1,8 @@
-import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
-import { debounce } from "@/utils/debounce";
-import { auth } from "@/pages/_app";
 import React from "react";
 
 type PostRowProps = {

@@ -1,4 +1,8 @@
-import { postContentAtom, postTitleAtom } from "@/stores/editTextAreaAtom";
+import {
+  postContentAtom,
+  postLastUpdatedAtom,
+  postTitleAtom,
+} from "@/stores/postDataAtom";
 import { IoMdCheckmarkCircle, IoMdRefreshCircle } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,6 +28,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const postContent = useAtomValue(postContentAtom);
   const postTitle = useAtomValue(postTitleAtom);
+  const postUpdatedAt = useAtomValue(postLastUpdatedAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
@@ -31,12 +36,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   });
 
   useEffect(() => {
-    if (!notes || !selectedNoteId) return;
-    const note = notes.find((note) => {
-      return note.id === selectedNoteId;
-    });
-    if (!note || !note.updatedAt) return;
-    const updatedAt = note.updatedAt;
+    if (!postUpdatedAt) return;
     const formattingOptions: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "long",
@@ -45,12 +45,12 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
       minute: "numeric",
       hour12: true,
     };
-    const formattedDate = new Date(updatedAt).toLocaleString(
+    const formattedDate = new Date(postUpdatedAt).toLocaleString(
       "en-US",
       formattingOptions
     );
     setLastUpdated(formattedDate);
-  }, [notes, selectedNoteId]);
+  }, [postUpdatedAt, selectedNoteId]);
 
   /**
    * Saves the note if not already synced

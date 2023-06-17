@@ -10,15 +10,18 @@ import {
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { TNotesData } from "@/types/utils/firebaseOperations";
+import { postLastUpdatedAtom } from "@/stores/postDataAtom";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
+import { useSetAtom } from "jotai";
 
 type UseNotesProps = {
   userId: string | undefined;
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
+  const setUpdatedAt = useSetAtom(postLastUpdatedAtom);
   const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
       ? query(
@@ -67,6 +70,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await updateDoc(notesRef, { ...note, updatedAt: currentTime });
+        setUpdatedAt(currentTime);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
       }
