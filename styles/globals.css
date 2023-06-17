@@ -8,27 +8,40 @@
   font-family: "Poppins", sans-serif;
 }
 
-@layer utilities {
-  .scrollbar::-webkit-scrollbar {
-    width: 12px;
-    height: 10px;
-  }
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 10px;
+}
 
-  .scrollbar::-webkit-scrollbar-track {
-    border-radius: 100vh;
-    background: #f1f5f9;
-  }
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: #f1f5f9;
+}
 
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: #a0abb8;
-    border-radius: 100vh;
-    border: 3px solid #f1f5f9;
-  }
+.dark .scrollbar::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: #0f172a;
+}
 
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #8993a0;
-    border: 3px solid #f1f5f9;
-  }
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #a0abb8;
+  border-radius: 100vh;
+  border: 3px solid #f1f5f9;
+}
+
+.dark .scrollbar::-webkit-scrollbar-thumb {
+  background: #596579;
+  border-radius: 100vh;
+  border: 3px solid #334155;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #8993a0;
+  border: 3px solid #f1f5f9;
+}
+
+.firebase-emulator-warning {
+  display: none;
 }
 
 /* .milkdown {
