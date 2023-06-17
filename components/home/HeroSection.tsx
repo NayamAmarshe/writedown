@@ -8,12 +8,12 @@ const HeroSection = () => {
     <div className="my-32 h-full w-full">
       <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-4">
         <div className="flex flex-col items-center justify-center gap-5">
-          <h1 className="flex flex-col gap-3 text-center text-5xl font-semibold text-slate-900 sm:gap-5">
+          <h1 className="flex flex-col gap-3 text-center text-5xl font-semibold text-slate-900 dark:text-slate-50 sm:gap-5">
             <span>Upgrade Your</span>
             <span>Note-Taking Game</span>
           </h1>
 
-          <p className="max-w-2xl text-center font-medium text-slate-800">
+          <p className="max-w-2xl text-center font-medium text-slate-800 dark:text-slate-200">
             All your notes, synced on all your devices. Free, easy and fast.
           </p>
 
@@ -25,7 +25,16 @@ const HeroSection = () => {
         </div>
 
         <Parallax speed={10}>
-          <img src="/screenshot.png" alt="Writedown Screenshot" />
+          <img
+            src="/screenshot.png"
+            alt="Writedown Screenshot"
+            className="dark:hidden"
+          />
+          <img
+            src="/dark-screenshot.png"
+            alt="Writedown Screenshot"
+            className="hidden dark:block"
+          />
         </Parallax>
       </div>
     </div>
