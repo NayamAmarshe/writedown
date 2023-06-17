@@ -99,14 +99,15 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
 
   const downloadNoteHandler = async () => {
     if (!editorRef.current) return;
+    const pdf = new jsPDF("p", "mm", "a4");
     const content = document.querySelector(".milkdown") as HTMLElement;
     if (!content) return;
-    html2canvas(content).then((canvas) => {
-      document.body.appendChild(canvas);
-      const img = canvas.toDataURL("image/png");
-      const doc = new jsPDF("p", "pt", "letter  ");
-      doc.addImage(img, 10, 10, 0, 0, "FAST");
-      doc.save("test.pdf");
+    pdf.html(content, {
+      callback: function (pdf) {
+        const pageCount = pdf.internal.pages.length;
+        pdf.deletePage(pageCount);
+        pdf.save(`${postTitle}-${postLastUpdatedAtom}.pdf`);
+      },
     });
   };
 

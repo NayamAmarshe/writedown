@@ -18,21 +18,17 @@
           "screenName": "mountain_panda"
         }
       ],
-      "validSince": "1686884648",
+      "validSince": "1686942560",
       "email": "panda.mountain.136@example.com",
       "emailVerified": true,
-      "disabled": false,
-      "lastRefreshAt": "2023-06-16T03:04:34.240Z"
+      "disabled": false
     },
     {
       "localId": "mBK5nqjqMutkuyOd52NscsS8gsbC",
-      "displayName": "Raccoon Algae",
-      "photoUrl": "https://picsum.photos/300/300",
-      "screenName": "algae_raccoon",
-      "email": "raccoon.algae.344@example.com",
-      "emailVerified": true,
       "createdAt": "1686884775804",
       "lastLoginAt": "1686884775807",
+      "displayName": "Raccoon Algae",
+      "photoUrl": "https://picsum.photos/300/300",
       "providerUserInfo": [
         {
           "providerId": "google.com",
@@ -44,7 +40,11 @@
           "screenName": "algae_raccoon"
         }
       ],
-      "lastRefreshAt": "2023-06-16T05:02:24.563Z"
+      "validSince": "1686942560",
+      "email": "raccoon.algae.344@example.com",
+      "emailVerified": true,
+      "disabled": false,
+      "lastRefreshAt": "2023-06-16T19:18:00.853Z"
     }
   ]
 }

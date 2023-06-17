@@ -8,11 +8,11 @@ import ChevronDoubleLeft from "@/components/icons/ChevronDoubleLeft";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { MilkdownProvider, UseEditorReturn } from "@milkdown/react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import React, { useEffect, useState } from "react";
 import EditorButtons from "./EditorButtons";
 import { useAtom, useSetAtom } from "jotai";
 import PostButtons from "./PostButtons";
@@ -35,6 +35,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   });
   // LOCAL STATES
   const editorRef = React.useRef<UseEditorReturn>(null);
+  const pdfRef = useRef(null);
 
   useEffect(() => {
     if (!notes) return;
