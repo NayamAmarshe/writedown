@@ -133,7 +133,7 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
         </button> */}
         <button
           onClick={() => setIsOpen(isOpen ? false : true)}
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
         >
           <BootstrapImage className="dark:text-slate-200" />
         </button>
