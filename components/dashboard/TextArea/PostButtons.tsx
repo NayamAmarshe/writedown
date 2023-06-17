@@ -11,6 +11,7 @@ import {
 } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { markdownStyles } from "@/utils/markdownStyles";
 import { getHTML, getMarkdown } from "@milkdown/utils";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -24,6 +25,7 @@ import { editorCtx } from "@milkdown/core";
 import { toast } from "react-hot-toast";
 import html2canvas from "html2canvas";
 import { auth } from "@/pages/_app";
+import { marked } from "marked";
 import jsPDF from "jspdf";
 
 type PostButtonsProps = {
@@ -98,16 +100,36 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   };
 
   const downloadNoteHandler = async () => {
-    if (!editorRef.current) return;
-    const pdf = new jsPDF("p", "mm", "a4");
+    const jsPdf = new jsPDF({
+      orientation: "portrait",
+      unit: "px",
+      format: "a4",
+      hotfixes: ["px_scaling"],
+    });
     const content = document.querySelector(".milkdown") as HTMLElement;
     if (!content) return;
-    pdf.html(content, {
-      callback: function (pdf) {
-        const pageCount = pdf.internal.pages.length;
-        pdf.deletePage(pageCount);
-        pdf.save(`${postTitle}-${postLastUpdatedAtom}.pdf`);
-      },
+    if (!editorRef.current) return;
+
+    // const html = `<html><head><style>${
+    //   markdownStyles.github
+    // }</style></head><body>${editorRef.current
+    //   .get()
+    //   ?.action(getHTML())}</body></html>`;
+
+    html2canvas(content, {
+      width: jsPdf.internal.pageSize.getWidth(),
+      height: jsPdf.internal.pageSize.getHeight(),
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      jsPdf.addImage(
+        imgData,
+        "PNG",
+        0,
+        0,
+        jsPdf.internal.pageSize.getWidth(),
+        jsPdf.internal.pageSize.getHeight()
+      );
+      jsPdf.save("note.pdf");
     });
   };
 
