@@ -3,6 +3,7 @@ import { ParallaxProvider } from "react-scroll-parallax";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "jotai";
@@ -74,17 +75,19 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="https://writedown.app/og-image.png"
         />
       </Head>
-      {/* EXTRA DIV IS BECAUSE OF TOAST */}
-      <Toaster position="top-center" />
-      <SkeletonTheme
-        baseColor="#e2e8f0"
-        highlightColor="#f8fafc"
-        borderRadius={10}
-      >
-        <ParallaxProvider>
-          <Component {...pageProps} />
-        </ParallaxProvider>
-      </SkeletonTheme>
+      <ThemeProvider attribute="class">
+        {/* EXTRA DIV IS BECAUSE OF TOAST */}
+        <Toaster position="top-center" />
+        <SkeletonTheme
+          baseColor="#e2e8f0"
+          highlightColor="#f8fafc"
+          borderRadius={10}
+        >
+          <ParallaxProvider>
+            <Component {...pageProps} />
+          </ParallaxProvider>
+        </SkeletonTheme>
+      </ThemeProvider>
     </Provider>
   );
 }

@@ -4,7 +4,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col items-center justify-between gap-2 bg-slate-200 px-4 text-slate-900 sm:flex-row sm:py-4 md:px-10 lg:px-36">
+    <footer className="flex flex-col items-center justify-between gap-2 bg-slate-200 px-4 text-slate-900 dark:bg-slate-700 dark:text-slate-50 sm:flex-row sm:py-4 md:px-10 lg:px-36">
       <div className="pt-4 sm:pt-0">
         <Link href="/" className="text-xl font-semibold">
           writedown <BetaBadge />
@@ -20,7 +20,7 @@ const Footer = () => {
           </li>
         </ul>
       </div>
-      <div className="pb-5 text-slate-500 sm:pb-0">
+      <div className="pb-5 text-slate-500 dark:text-slate-400 sm:pb-0">
         <p className="text-sm">
           © {new Date().getFullYear()}{" "}
           <Link href="/" className="font-semibold">
