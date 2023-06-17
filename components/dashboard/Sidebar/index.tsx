@@ -78,7 +78,7 @@ const Sidebar = ({
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:!bg-slate-800`}
+        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:!bg-slate-800 !bg-slate-100`}
       >
         <BsChevronBarLeft
           className={`duration-400 h-4 w-4 text-black transition-transform dark:text-slate-100 ${
