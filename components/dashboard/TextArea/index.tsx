@@ -148,7 +148,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
             <MilkdownEditor
               input={postContent}
               setInput={setPostContent}
-              className="prose prose-invert !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none"
+              className="prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none"
               notes={notes}
               editorRef={editorRef}
             />
