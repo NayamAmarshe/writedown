@@ -124,6 +124,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
       backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
       x: -20,
       y: -20,
+      windowHeight: jsPdf.internal.pageSize.getHeight(),
+      windowWidth: jsPdf.internal.pageSize.getWidth(),
     }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       jsPdf.addImage(
