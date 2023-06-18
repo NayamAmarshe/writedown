@@ -8,3 +8,7 @@ export type TNotesData = {
   slug: string;
   public: boolean;
 };
+
+export type TPublicNotes = {
+  userId: string;
+};
