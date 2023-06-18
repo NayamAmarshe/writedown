@@ -1,9 +1,9 @@
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { ParallaxProvider } from "react-scroll-parallax";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { ThemeProvider, useTheme } from "next-themes";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
-import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "jotai";
@@ -18,6 +18,8 @@ if (env === "development") {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { theme } = useTheme();
+
   return (
     <Provider>
       <Head>
@@ -79,8 +81,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         {/* EXTRA DIV IS BECAUSE OF TOAST */}
         <Toaster position="top-center" />
         <SkeletonTheme
-          baseColor="#e2e8f0"
-          highlightColor="#f8fafc"
+          baseColor={theme === "light" ? "#e2e8f0" : "#020617"}
+          highlightColor={theme === "light" ? "#f8fafc" : "#1e293b"}
           borderRadius={10}
         >
           <ParallaxProvider>
