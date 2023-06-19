@@ -1,18 +1,15 @@
 import {
-  IoMdCheckmarkCircle,
-  IoMdCloudDownload,
-  IoMdDownload,
-  IoMdRefreshCircle,
-} from "react-icons/io";
-import {
   postContentAtom,
   postLastUpdatedAtom,
   postTitleAtom,
 } from "@/stores/postDataAtom";
+import {
+  IoMdCheckmarkCircle,
+  IoMdDownload,
+  IoMdRefreshCircle,
+} from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { markdownStyles } from "@/utils/markdownStyles";
-import { getHTML, getMarkdown } from "@milkdown/utils";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
@@ -21,13 +18,9 @@ import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
-import { editorCtx } from "@milkdown/core";
 import { toast } from "react-hot-toast";
 import { useTheme } from "next-themes";
-import html2canvas from "html2canvas";
 import { auth } from "@/pages/_app";
-import { marked } from "marked";
-import jsPDF from "jspdf";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
@@ -102,43 +95,115 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   };
 
   const downloadNoteHandler = async () => {
-    const jsPdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: "a4",
-      hotfixes: ["px_scaling"],
-    });
-    const content = document.querySelector(".milkdown") as HTMLElement;
+    const content = document.querySelector(".milkdown > div") as HTMLElement;
     if (!content) return;
-    if (!editorRef.current) return;
-
-    // const html = `<html><head><style>${
-    //   markdownStyles.github
-    // }</style></head><body>${editorRef.current
-    //   .get()
-    //   ?.action(getHTML())}</body></html>`;
-
-    html2canvas(content, {
-      width: jsPdf.internal.pageSize.getWidth(),
-      height: jsPdf.internal.pageSize.getHeight(),
-      backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
-      x: -20,
-      y: -20,
-      windowHeight: jsPdf.internal.pageSize.getHeight(),
-      windowWidth: jsPdf.internal.pageSize.getWidth(),
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      jsPdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        jsPdf.internal.pageSize.getWidth(),
-        jsPdf.internal.pageSize.getHeight()
-      );
-      jsPdf.setDrawColor("#000");
-      jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
+    const originalColor = content.style.color;
+    const originalBgColor = content.style.backgroundColor;
+    import("html2pdf.js").then((html2pdf) => {
+      content.style.color = "#000";
+      content.style.backgroundColor = "#fff";
+      html2pdf
+        .default()
+        .set({
+          margin: 1,
+          backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+        })
+        .from(content)
+        .save()
+        .then(() => {
+          content.style.color = originalColor;
+          content.style.backgroundColor = originalBgColor;
+        });
     });
+    // html2pdf()
+    //   .set({
+    //     margin: 1,
+    //     filename: `${postTitle}-${lastUpdated}.pdf`,
+    //     image: { type: "jpeg", quality: 0.98 },
+    //   })
+    //   .from(content)
+    // function download(text: string, name: string, type: string) {
+    //   var a = document.getElementById("a");
+    //   var file = new Blob([text], { type: type });
+    //   if (a) {
+    //     a.href = URL.createObjectURL(file);
+    //     a.download = name;
+    //   }
+    // }
+    // const jsPdf = new jsPDF({
+    //   orientation: "p",
+    //   unit: "mm",
+    // });
+    // content.classList.toggle(theme === "dark" ? "bg-slate-900" : "bg-white");
+    // if (!content) return;
+    // if (!editorRef.current) return;
+    // const pageHeight = 295;
+    // const docWidth = jsPdf.internal.pageSize.getWidth();
+    // let positionY = 0;
+    // let currentPage = 1;
+    // const addNewPage = () => {
+    //   jsPdf.addPage();
+    //   positionY = 0;
+    //   currentPage++;
+    // };
+    // const renderContent = async (child: HTMLElement) => {
+    //   const canvas = await html2canvas(child, {
+    //     backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+    //   });
+    //   const imgData = canvas.toDataURL("image/png");
+    //   const imgHeight = (canvas.height * docWidth) / canvas.width;
+    //   if (positionY + imgHeight > pageHeight) {
+    //     addNewPage();
+    //   }
+    //   jsPdf.addImage(imgData, "PNG", 0, positionY, docWidth, imgHeight);
+    //   positionY += imgHeight;
+    // };
+    // // const html = `<html><head><style>${
+    // //   markdownStyles.github
+    // // }</style></head><body>${editorRef.current
+    // //   .get()
+    // //   ?.action(getHTML())}</body></html>`;
+    // const children = Array.from(content.children);
+    // for (let i = 0; i < children.length; i++) {
+    //   const child = children[i];
+    //   console.log("🚀 => file: PostButtons.tsx:142 => child:", child);
+    //   await renderContent(child as HTMLElement);
+    // }
+    // jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
+    // html2canvas(content, {
+    //   backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+    //   x: -20,
+    //   y: -20,
+    //   allowTaint: true,
+    //   scrollY: -window.scrollY,
+    // }).then(async (canvas) => {
+    //   // const imgData = canvas.toDataURL("image/png");
+    //   // const imgProps = jsPdf.getImageProperties(imgData);
+    //   // const pdfWidth = jsPdf.internal.pageSize.getWidth();
+    //   // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    //   // jsPdf.addImage(
+    //   //   imgData,
+    //   //   "PNG",
+    //   //   0,
+    //   //   position,
+    //   //   jsPdf.internal.pageSize.getWidth(),
+    //   //   jsPdf.internal.pageSize.getHeight()
+    //   // );
+    //   // while (remainingHeight > 0) {
+    //   //   position = -jsPdf.internal.pageSize.getHeight();
+    //   //   jsPdf.addPage();
+    //   //   jsPdf.addImage(
+    //   //     imgData,
+    //   //     "PNG",
+    //   //     0,
+    //   //     position,
+    //   //     jsPdf.internal.pageSize.getWidth(),
+    //   //     jsPdf.internal.pageSize.getHeight()
+    //   //   );
+    //   //   remainingHeight = remainingHeight - jsPdf.internal.pageSize.getHeight();
+    //   // }
+    //   jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
+    // });
   };
 
   return (

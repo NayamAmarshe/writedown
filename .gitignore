@@ -49,3 +49,6 @@ firestore-debug.log
 /public/workbox-*.js.map
 /public/worker-*.js.map
 /public/fallback-*.js
+
+/firebase/
+/firebase/**/*
