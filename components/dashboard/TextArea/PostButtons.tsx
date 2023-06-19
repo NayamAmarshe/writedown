@@ -106,7 +106,10 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         .default()
         .set({
           margin: 1,
-          backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+          filename: `${postTitle}-${lastUpdated}.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          jsPDF: { compress: true },
+          enableLinks: true,
         })
         .from(content)
         .save()
