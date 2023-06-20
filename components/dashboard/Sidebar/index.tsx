@@ -1,13 +1,14 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
+import { postPublicAtom } from "@/stores/postDataAtom";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
 import { BsChevronBarLeft } from "react-icons/bs";
-import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -28,15 +29,18 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
-
   const [user] = useAuthState(auth);
-  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
-  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
-  const synced = useAtomValue(isSyncedAtom);
   const { theme, setTheme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
+  console.log("🚀 => file: index.tsx:37 => postPublic:", postPublic);
+
+  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
+  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
+  const synced = useAtomValue(isSyncedAtom);
+
+  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
 
   useEffect(() => {
     if (!selectedNoteId) return;
@@ -183,9 +187,13 @@ const Sidebar = ({
           {notes ? (
             notes.map((note) => (
               <Link
-                href={`dashboard/?post=${note.slug}`}
+                href={`/dashboard/?post=${note.slug}`}
                 key={note.id}
-                // TODO: Uncomment this for public posts: as={`/dashboard/post/${note.slug}`}
+                as={
+                  note.public
+                    ? `/posts/${note.slug}`
+                    : `/dashboard/?post=${note.slug}`
+                }
               >
                 <PostRow
                   userId={user?.uid}
