@@ -66,7 +66,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       id: string;
       title: string;
       content: string;
-      public: boolean;
+      public?: boolean;
     }) => {
       if (!userId || !note) return;
 

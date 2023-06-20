@@ -5,13 +5,13 @@ import React from "react";
 export const PostPage = () => {
   const router = useRouter();
 
-  const { note, publicError } = usePublicNotes({
+  const { note, publicNotesError } = usePublicNotes({
     noteId: router.query.slug as string,
   });
 
   return (
     <>
-      {!note || publicError ? (
+      {!note || publicNotesError ? (
         <p>Loading...</p>
       ) : (
         <>
