@@ -333,7 +333,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
             <p
               className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
                 postPublic
-                  ? "cursor-pointer bg-emerald-300 text-slate-900 hover:scale-95 dark:text-emerald-900"
+                  ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
                   : "select-none bg-slate-300 text-slate-500 dark:bg-slate-700 dark:text-slate-500"
               }`}
               onClick={() => {
