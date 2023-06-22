@@ -6,8 +6,8 @@ import {
   notesConverter,
   publicNotesConverter,
 } from "@/utils/firestoreDataConverter";
-import { TNotesData } from "@/types/utils/firebaseOperations";
 import { collection, doc, query } from "firebase/firestore";
+import { Note } from "@/types/utils/firebaseOperations";
 import { db } from "@/lib/firebase";
 
 type UseNotesProps = {

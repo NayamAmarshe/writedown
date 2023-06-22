@@ -17,10 +17,10 @@ import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import { history, historyKeymap } from "@milkdown/plugin-history";
 import { EditorState, Transaction } from "@milkdown/prose/state";
 import { linkPlugin } from "@/components/ui/plugins/LinkWidget";
-import { TNotesData } from "@/types/utils/firebaseOperations";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { commonmark } from "@milkdown/preset-commonmark";
 import { TooltipView, tooltip } from "./plugins/Tooltip";
+import { Note } from "@/types/utils/firebaseOperations";
 import { trailing } from "@milkdown/plugin-trailing";
 import javascript from "refractor/lang/javascript";
 import typescript from "refractor/lang/typescript";
@@ -46,7 +46,7 @@ interface editorProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   className?: React.HTMLAttributes<HTMLDivElement>["className"];
-  notes?: TNotesData[] | undefined;
+  notes?: Note[] | undefined;
   editorRef: React.MutableRefObject<UseEditorReturn | null>;
 }
 
