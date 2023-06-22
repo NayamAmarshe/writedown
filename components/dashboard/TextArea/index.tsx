@@ -141,32 +141,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons shiftRight={shiftRight} editorRef={editorRef} />
-      <div className="flex gap-2 text-white">
-        <p className="">public</p>
-        <p
-          onClick={() => {
-            navigator.clipboard.writeText(selectedNoteId || "");
-            toast.success("copied to clipboard");
-          }}
-          className="cursor-pointer"
-        >
-          copy
-        </p>
-        <Switch
-          onChange={() => {
-            setPostPublic(!postPublic);
-          }}
-          checked={postPublic}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600`}
-        >
-          <span className="sr-only">Enable notifications</span>
-          <span
-            className={`${
-              postPublic ? "translate-x-6" : "translate-x-1"
-            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <MilkdownProvider>
