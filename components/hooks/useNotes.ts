@@ -2,6 +2,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   orderBy,
   query,
   setDoc,
@@ -9,8 +10,8 @@ import {
 } from "firebase/firestore";
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { notesConverter } from "@/utils/firestoreDataConverter";
-import { TNotesData } from "@/types/utils/firebaseOperations";
 import { postLastUpdatedAtom } from "@/stores/postDataAtom";
+import { Note } from "@/types/utils/firebaseOperations";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
@@ -37,7 +38,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     const id = crypto.randomUUID();
     const currentTime = new Date().getTime();
 
-    const noteData: TNotesData = {
+    const noteData: Note = {
       id,
       content: "",
       public: false,
@@ -61,11 +62,19 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   }, [userId]);
 
   const updateNote = useCallback(
-    async (note: { id: string; title: string; content: string }) => {
+    async (note: {
+      id: string;
+      title: string;
+      content: string;
+      public?: boolean;
+    }) => {
       if (!userId || !note) return;
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
+      const publicRef = doc(db, "public_notes", note.id);
       const currentTime = new Date().getTime();
+
+      const publicNote = await getDoc(publicRef);
 
       try {
         // Create a document inside channelsRef array
@@ -73,6 +82,12 @@ export const useNotes = ({ userId }: UseNotesProps) => {
         setUpdatedAt(currentTime);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
+      }
+
+      if (note.public) {
+        await setDoc(publicRef, { userId: userId });
+      } else if (publicNote.exists()) {
+        await deleteDoc(publicRef);
       }
     },
     [userId]
@@ -83,10 +98,16 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       if (!userId || !noteId) return;
 
       const notesRef = doc(db, "users", userId, "notes", noteId);
+      const publicRef = doc(db, "public_notes", noteId);
+
+      const publicNote = await getDoc(publicRef);
 
       try {
         // Create a document inside channelsRef array
         await deleteDoc(notesRef);
+        if (publicNote.exists()) {
+          await deleteDoc(publicRef);
+        }
         refreshNotes();
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");

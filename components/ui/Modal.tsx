@@ -27,7 +27,7 @@ const Modal = ({
     <Transition appear show={isOpen} as={React.Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-50"
         onClose={() => {
           setIsOpen(false);
         }}
@@ -55,33 +55,39 @@ const Modal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-50 p-6 text-left align-middle shadow-xl transition-all dark:bg-slate-900">
                 {title && (
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-xl font-semibold leading-6 text-slate-900 dark:text-slate-100"
                   >
                     {title}
                   </Dialog.Title>
                 )}
 
-                <Dialog.Description className="mt-2 mb-4">
-                  <p className="text-sm text-gray-500">{description}</p>
+                <Dialog.Description className="mb-4 mt-2">
+                  <p className="text-sm text-slate-500 dark:text-slate-600">
+                    {description}
+                  </p>
                 </Dialog.Description>
 
                 {children}
 
                 <div className="mt-4 flex justify-end gap-2">
-                  <Button onClick={saveHandler}>{saveText}</Button>
+                  {saveText && (
+                    <Button onClick={saveHandler}>{saveText}</Button>
+                  )}
 
-                  <Button
-                    variant="red"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    {closeText}
-                  </Button>
+                  {closeText && (
+                    <Button
+                      variant="red"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                    >
+                      {closeText}
+                    </Button>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

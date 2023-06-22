@@ -1,13 +1,15 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
+import { postPublicAtom } from "@/stores/postDataAtom";
+import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
 import { BsChevronBarLeft } from "react-icons/bs";
-import { useAtomValue, useSetAtom } from "jotai";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -28,15 +30,16 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
-
   const [user] = useAuthState(auth);
-  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
+
+  const [mounted, setMounted] = useState(false);
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
+
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
-  const { theme, setTheme } = useTheme();
 
-  const [mounted, setMounted] = useState(false);
+  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
 
   useEffect(() => {
     if (!selectedNoteId) return;
@@ -104,43 +107,10 @@ const Sidebar = ({
         {/* USER  GREETING SECTION */}
         {user ? (
           <div className="relative min-w-fit">
-            <Popover
-              data-testid="logout"
-              buttonStyle="outline-none"
-              button={
-                user && (
-                  <img
-                    src={
-                      user.photoURL ||
-                      `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
-                    }
-                    alt="User Photo"
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                )
-              }
-            >
-              <Link
-                href="/"
-                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
-              >
-                🏠️ Home
-              </Link>
-              <button
-                onClick={() => {
-                  theme === "light" ? setTheme("dark") : setTheme("light");
-                }}
-                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
-              >
-                {theme === "light" ? "🌚 Dark Mode" : "🌞 Light Mode"}
-              </button>
-              <button
-                onClick={() => auth.signOut()}
-                className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
-              >
-                🏃 Logout
-              </button>
-            </Popover>
+            <UserMenu
+              displayName={user?.displayName}
+              photoURL={user?.photoURL}
+            />
           </div>
         ) : (
           <Skeleton className="h-10 w-10" circle={true} />
@@ -183,9 +153,13 @@ const Sidebar = ({
           {notes ? (
             notes.map((note) => (
               <Link
-                href={`dashboard/?post=${note.slug}`}
+                href={`/dashboard/?post=${note.slug}`}
                 key={note.id}
-                // TODO: Uncomment this for public posts: as={`/dashboard/post/${note.slug}`}
+                as={
+                  note.public
+                    ? `/${note.userId}/posts/${note.slug}`
+                    : `/dashboard/?post=${note.slug}`
+                }
               >
                 <PostRow
                   userId={user?.uid}
