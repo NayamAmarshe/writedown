@@ -337,6 +337,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
                   : "select-none bg-slate-300 text-slate-500 dark:bg-slate-700 dark:text-slate-500"
               }`}
               onClick={() => {
+                if (!postPublic) return;
                 toast.success("Copied link to clipboard!");
                 navigator.clipboard.writeText(
                   `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
