@@ -29,7 +29,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       setTheme("light");
     }
   }, []);
-  console.log("🚀 => file: _app.tsx:22 => theme:", theme);
 
   return (
     <Provider>
