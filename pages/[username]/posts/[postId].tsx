@@ -59,34 +59,58 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { postId, username } = context.query;
 
-  // Get public notes document
-  const publicNotesDoc = doc(db, "public_notes", postId as string);
-  const publicNotesSnapshot = await getDoc(publicNotesDoc);
-  const publicNotes = publicNotesSnapshot.data();
-  if (!publicNotes) {
+  // // Get public notes document
+  // const publicNotesDoc = doc(db, "public_notes", postId as string);
+  // const publicNotesSnapshot = await getDoc(publicNotesDoc);
+  // const publicNotes = publicNotesSnapshot.data();
+  // if (!publicNotes) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
+  // Get user notes document
+
+  let user: User;
+  let note: Note;
+
+  try {
+    const userDoc = doc(db, "users", username as string);
+    const userSnapshot = await getDoc(userDoc);
+    user = userSnapshot.data() as User;
+  } catch (error) {
     return {
       notFound: true,
     };
   }
-  // Get user notes document
-  const userNotesDoc = doc(
-    db,
-    "users",
-    publicNotes.userId,
-    "notes",
-    postId as string
-  );
-  const userNotesSnapshot = await getDoc(userNotesDoc);
-  const note = userNotesSnapshot.data() as Note;
 
-  const userDoc = doc(db, "users", publicNotes.userId);
-  const userSnapshot = await getDoc(userDoc);
-  const user = userSnapshot.data() as User;
+  try {
+    const noteDoc = doc(
+      db,
+      "users",
+      username as string,
+      "notes",
+      postId as string
+    );
+    const noteSnapshot = await getDoc(noteDoc);
+    note = noteSnapshot.data() as Note;
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
+
   if (!note || !user) {
     return {
       notFound: true,
     };
   }
+
+  if (note && !note.public) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       note,
