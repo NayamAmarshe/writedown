@@ -1,4 +1,4 @@
-export type TNotesData = {
+export type Note = {
   id: string;
   createdAt?: number;
   updatedAt: number;
@@ -7,4 +7,8 @@ export type TNotesData = {
   userId: string;
   slug: string;
   public: boolean;
+};
+
+export type PublicNote = {
+  userId: string;
 };

@@ -4,6 +4,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import { ThemeProvider, useTheme } from "next-themes";
 import "react-loading-skeleton/dist/skeleton.css";
 import { firebaseApp } from "@/lib/firebase";
+import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "jotai";
@@ -18,7 +19,16 @@ if (env === "development") {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { theme } = useTheme();
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme) {
+      setTheme(currentTheme);
+    } else {
+      setTheme("light");
+    }
+  }, []);
 
   return (
     <Provider>

@@ -2,6 +2,7 @@ import {
   postContentAtom,
   postLastUpdatedAtom,
   postTitleAtom,
+  postPublicAtom,
 } from "@/stores/postDataAtom";
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
@@ -15,6 +16,8 @@ import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
 import { useAtom, useAtomValue } from "jotai";
 import EditorButtons from "./EditorButtons";
+import { Switch } from "@headlessui/react";
+import { toast } from "react-hot-toast";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
 
@@ -28,6 +31,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [postTitle, setPostTitle] = useAtom(postTitleAtom);
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
   const [postUpdatedAt, setPostUpdatedAt] = useAtom(postLastUpdatedAtom);
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
@@ -70,6 +74,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       setPostContent(notes[0].content);
       setPostTitle(notes[0].title);
       setPostUpdatedAt(notes[0].updatedAt);
+      setPostPublic(notes[0].public);
       return;
     }
     if (!selectedNoteId) return;
@@ -78,6 +83,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     setPostContent(selectedNote.content);
     setPostTitle(selectedNote.title);
     setPostUpdatedAt(selectedNote.updatedAt);
+    setPostPublic(selectedNote.public);
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
@@ -86,7 +92,8 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       (note) =>
         postContent === note.content &&
         postTitle === note.title &&
-        postUpdatedAt === note.updatedAt
+        postUpdatedAt === note.updatedAt &&
+        postPublic === note.public
     );
 
     let debounceSave: NodeJS.Timeout;
@@ -102,6 +109,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           id: selectedNoteId,
           title: postTitle,
           content: postContent,
+          public: postPublic,
         });
         setSynced(true);
       }, 3000);
@@ -110,7 +118,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     return () => {
       clearTimeout(debounceSave);
     };
-  }, [notes, postTitle, postContent]);
+  }, [notes, postTitle, postContent, postPublic]);
 
   useEffect(() => {
     refreshNotes();
