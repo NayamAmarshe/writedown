@@ -40,7 +40,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
         />
         <meta
           name="twitter:image"
-          content={`http://localhost:3000/api/og?title=${note.title}&author=${name}&profilePicture=${profilePicture}&content=${note.content}`}
+          content={`https://writedown.app/api/og?title=${note.title}&author=${name}&profilePicture=${profilePicture}&content=${note.content}`}
           key="twitter-image"
         />
 
@@ -59,7 +59,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
         <meta property="og:url" content="https://writedown.app" />
         <meta
           property="og:image"
-          content={`http://localhost:3000/api/og?title=${
+          content={`https://writedown.app/api/og?title=${
             note.title
           }&author=${encodeURI(
             name
