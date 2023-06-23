@@ -1,11 +1,11 @@
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Note } from "@/types/utils/firebaseOperations";
 import UserMenu from "@/components/common/UserMenu";
+import HeadTags from "@/components/common/HeadTags";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
 import RemoveMarkdown from "remove-markdown";
-import { ImageResponse } from "@vercel/og";
 import { GetServerSideProps } from "next";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -69,6 +69,19 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
           key="og-image"
         />
       </Head>
+
+      <HeadTags
+        title={`${note.title} by ${name} - writedown`}
+        description={`Read this post by ${name} on writedown - A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire.`}
+        ogImage={`https://writedown.app/api/og?title=${
+          note.title
+        }&author=${encodeURI(
+          name
+        )}&profilePicture=${profilePicture}&content=${RemoveMarkdown(
+          note.content
+        )}`}
+        ogUrl={`https://writedown.app/${note.userId}/posts/${note.id}`}
+      />
 
       <main className="max-w-screen relative flex min-h-screen flex-row bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50">
         {/* NAVBAR */}

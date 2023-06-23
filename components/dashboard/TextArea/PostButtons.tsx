@@ -24,7 +24,6 @@ import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
 import { toast } from "react-hot-toast";
-import { useTheme } from "next-themes";
 import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {

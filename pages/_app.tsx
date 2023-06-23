@@ -9,7 +9,6 @@ import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
-import Head from "next/head";
 
 export const auth = getAuth(firebaseApp);
 
@@ -32,70 +31,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Provider>
-      <Head>
-        <title>writedown - markdown notes app</title>
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
-        <meta name="theme-color" content="#e2e8f0" />
-        <link rel="icon" type="image/png" href="/icons/favicon-32x32.png" />
-        <link
-          href="/icons/favicon-16x16.png"
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-        />
-        <link
-          href="/icons/favicon-32x32.png"
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-        />
-        <meta name="application-name" content="writedown" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta
-          name="apple-mobile-web-app-title"
-          content="writedown - Notes made simple"
-        />
-        <meta
-          name="description"
-          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
-          key="description"
-        />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://writedown.app" />
-        <meta name="twitter:title" content="writedown - Markdown Notes" />
-        <meta
-          name="twitter:description"
-          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
-          key="twitter-description"
-        />
-        <meta
-          name="twitter:image"
-          content="https://writedown.app/og-image.png"
-          key="twitter-image"
-        />
-
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content="writedown - Notes made simple"
-          key="og-title"
-        />
-        <meta
-          property="og:description"
-          content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
-          key="og-description"
-        />
-        <meta property="og:site_name" content="writedown" />
-        <meta property="og:url" content="https://writedown.app" />
-        <meta
-          property="og:image"
-          content="https://writedown.app/og-image.png"
-          key="og-image"
-        />
-      </Head>
       <ThemeProvider attribute="class">
         {/* EXTRA DIV IS BECAUSE OF TOAST */}
         <Toaster position="top-center" />
