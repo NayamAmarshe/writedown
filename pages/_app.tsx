@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         {/* EXTRA DIV IS BECAUSE OF TOAST */}
         <Toaster position="top-center" />
         <SkeletonTheme
-          baseColor={theme === "light" ? "#e2e8f0" : "#020617"}
+          baseColor={theme === "light" ? "#e2e8f0" : "#0f172a"}
           highlightColor={theme === "light" ? "#f8fafc" : "#1e293b"}
           borderRadius={10}
         >
