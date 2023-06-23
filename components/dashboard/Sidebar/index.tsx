@@ -110,6 +110,10 @@ const Sidebar = ({
             <UserMenu
               displayName={user?.displayName}
               photoURL={user?.photoURL}
+              home
+              logout
+              themeOption
+              showImageAsButton
             />
           </div>
         ) : (

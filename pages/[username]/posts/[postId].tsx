@@ -1,4 +1,5 @@
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Note } from "@/types/utils/firebaseOperations";
 import UserMenu from "@/components/common/UserMenu";
 import HeadTags from "@/components/common/HeadTags";
@@ -6,10 +7,13 @@ import BetaBadge from "@/components/ui/BetaBadge";
 import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
 import RemoveMarkdown from "remove-markdown";
+import Button from "@/components/ui/Button";
 import { GetServerSideProps } from "next";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
+import { auth } from "@/pages/_app";
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
 
 interface Props {
@@ -19,6 +23,8 @@ interface Props {
 }
 
 export const PostPage = ({ note, name, profilePicture }: Props) => {
+  const [user] = useAuthState(auth);
+
   return (
     <>
       <Head>
@@ -85,12 +91,22 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
         {/* NAVBAR */}
         <nav className="fixed top-0 z-20 flex w-full flex-row items-center justify-between border-b border-gray-300 bg-transparent p-4 backdrop-blur dark:border-gray-700">
           {/* LOGO */}
-          <h4 className="flex items-center text-2xl font-semibold">
-            writedown <BetaBadge />
-          </h4>
+          <Link href="/">
+            <h4 className="flex items-center text-2xl font-semibold">
+              writedown <BetaBadge />
+            </h4>
+          </Link>
           {/* USER MENU */}
           <div className="flex flex-row items-center gap-4">
-            <UserMenu displayName={name} photoURL={profilePicture} reverse />
+            <UserMenu
+              displayName={name}
+              photoURL={user?.photoURL}
+              dashboard
+              home
+              logout
+              themeOption
+              reverse
+            />
           </div>
         </nav>
 
@@ -109,6 +125,12 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
               </p>
+
+              <Link href={`/dashboard?post=${note.id}`}>
+                <Button variant="slate" size="sm">
+                  Edit Post
+                </Button>
+              </Link>
             </div>
 
             <div className="mb-40 flex items-center justify-center px-4">
