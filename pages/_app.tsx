@@ -60,6 +60,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta
           name="description"
           content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+          key="description"
         />
 
         <meta name="twitter:card" content="summary_large_image" />
@@ -68,23 +69,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta
           name="twitter:description"
           content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+          key="twitter-description"
         />
         <meta
           name="twitter:image"
           content="https://writedown.app/og-image.png"
+          key="twitter-image"
         />
 
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="writedown - Notes made simple" />
+        <meta
+          property="og:title"
+          content="writedown - Notes made simple"
+          key="og-title"
+        />
         <meta
           property="og:description"
           content="writedown - A Free and Open Source Markdown Notes App with Cloud Sync, Offline Support and a Beautiful Interface."
+          key="og-description"
         />
         <meta property="og:site_name" content="writedown" />
         <meta property="og:url" content="https://writedown.app" />
         <meta
           property="og:image"
           content="https://writedown.app/og-image.png"
+          key="og-image"
         />
       </Head>
       <ThemeProvider attribute="class">
