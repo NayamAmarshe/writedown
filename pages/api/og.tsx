@@ -1,11 +1,11 @@
+import { NextRequest, NextResponse } from "next/server";
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
 
 export const config = {
   runtime: "edge",
 };
 
-export default function handler(request: NextRequest) {
+export default function handler(request: NextRequest, res: NextResponse) {
   try {
     const { searchParams } = new URL(request.url);
 
@@ -17,7 +17,7 @@ export default function handler(request: NextRequest) {
       ? searchParams.get("title")?.slice(0, 100)
       : "writedown";
     const content = hasContent
-      ? searchParams.get("content")?.slice(0, 100)
+      ? searchParams.get("content")?.slice(0, 200) + ".."
       : "A free markdown notes app that is simple and beautiful.";
     const author = hasAuthor
       ? searchParams.get("author")?.slice(0, 100)
@@ -37,12 +37,12 @@ export default function handler(request: NextRequest) {
             />
             <div tw="flex flex-col font-semibold mb-5 text-slate-700 items-center w-11/12 justify-center text-3xl text-center">
               {title}
-              <p tw="text-slate-400 mx-auto font-medium text-sm mt-2">
+              <p tw="text-slate-400 mx-auto text-center font-medium text-sm mt-2">
                 By {author}
               </p>
             </div>
 
-            <div tw="text-slate-600 mx-auto w-7/12">{content}</div>
+            <div tw="text-slate-600 mx-auto w-7/12 text-center">{content}</div>
           </div>
 
           <div tw="font-semibold text-slate-500 text-lg mt-auto mb-2">
