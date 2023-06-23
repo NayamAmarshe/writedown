@@ -1,4 +1,5 @@
 @import url("https://api.fonts.coollabs.io/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +7,10 @@
 
 * {
   font-family: "Poppins", sans-serif;
+}
+
+.text-pacifico {
+  font-family: "Pacifico", sans-serif;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -42,6 +47,13 @@
 
 .firebase-emulator-warning {
   display: none;
+}
+
+.font-outline-2 {
+  -webkit-text-stroke: 2px black;
+}
+.font-outline-4 {
+  -webkit-text-stroke: 4px black;
 }
 
 /* .milkdown {

@@ -30,7 +30,7 @@ const SignInArea = () => {
     <div className="flex h-1/2 w-full flex-col items-center justify-end gap-4 bg-slate-300 dark:bg-slate-600 dark:text-slate-50 md:h-full md:w-1/2">
       <div className="absolute left-5 top-0 px-4 pb-4 text-2xl font-semibold">
         <Link href="/" className="fixed top-4 z-10 flex items-center">
-          writedown <BetaBadge />
+          writedown
         </Link>
       </div>
       <div className="bottom-0 flex h-full w-full flex-col items-center gap-4 bg-slate-50 px-10 py-16 pb-20 dark:bg-slate-900 md:justify-center md:rounded-r-xl">

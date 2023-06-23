@@ -19,7 +19,7 @@ const Loading = () => {
           loop={true}
         />
         <p className="flex items-center text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">
-          writedown <BetaBadge />
+          writedown
         </p>
       </div>
     </div>

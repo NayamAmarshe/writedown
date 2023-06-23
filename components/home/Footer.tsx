@@ -1,4 +1,5 @@
 import BetaBadge from "../ui/BetaBadge";
+import { auth } from "@/pages/_app";
 import Link from "next/link";
 import React from "react";
 
@@ -13,13 +14,15 @@ const Footer = ({ className }: { className?: string }) => {
     >
       <div className="pt-4 sm:pt-0">
         <Link href="/" className="text-xl font-semibold">
-          writedown <BetaBadge />
+          writedown
         </Link>
       </div>
       <div className="text-sm">
         <ul className="flex flex-row gap-5">
           <li>
-            <Link href="/login">Login</Link>
+            <Link href="/login">
+              {auth.currentUser ? "Dashboard" : "Login"}
+            </Link>
           </li>
           <li>
             <a href="https://github.com/NayamAmarshe/writedown">GitHub</a>
