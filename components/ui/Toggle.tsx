@@ -14,6 +14,7 @@ export default function Toggle({
 }: ToggleProps) {
   return (
     <Switch
+      name="toggle"
       checked={enabled}
       onChange={onChange}
       className={`${!enabled ? "bg-rose-500" : "bg-emerald-400"}
