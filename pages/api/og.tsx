@@ -35,14 +35,16 @@ export default function handler(request: NextRequest, res: NextResponse) {
               tw="w-12 mx-auto mb-2 rounded-full"
               alt="Author profile picture"
             />
-            <div tw="flex flex-col font-semibold mb-5 text-slate-700 items-center w-11/12 justify-center text-3xl text-center">
+            <div tw="flex flex-col font-semibold mb-5 text-slate-700 items-center w-11/12 justify-center text-6xl text-center">
               {title}
-              <p tw="text-slate-400 mx-auto text-center font-medium text-sm mt-2">
+              <p tw="text-slate-400 mx-auto text-center font-medium text-base mt-2">
                 By {author}
               </p>
             </div>
 
-            <div tw="text-slate-600 mx-auto w-7/12 text-center">{content}</div>
+            <div tw="text-slate-600 mx-auto w-7/12 text-center text-lg">
+              {content}
+            </div>
           </div>
 
           <div tw="font-semibold text-slate-500 text-lg mt-auto mb-2">
