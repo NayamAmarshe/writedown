@@ -318,7 +318,14 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         >
           <div className="p-2">
             <div className="mb-4 flex flex-row items-center gap-2">
-              <label className="font-medium dark:text-slate-300">
+              <label
+                htmlFor="toggle"
+                className="cursor-pointer select-none font-medium dark:text-slate-300"
+                onClick={() => {
+                  setPostPublic((prev) => !prev);
+                  saveNoteHandler();
+                }}
+              >
                 Enable Public Viewing
               </label>
               <Toggle
@@ -334,7 +341,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
                 postPublic
                   ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
-                  : "select-none bg-slate-300 text-slate-500 dark:bg-slate-700 dark:text-slate-500"
+                  : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-600 dark:ring-slate-600"
               }`}
               onClick={() => {
                 if (!postPublic) return;
