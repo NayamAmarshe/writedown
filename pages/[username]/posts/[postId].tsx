@@ -85,16 +85,20 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
 
         <div className="flex h-full w-full flex-col items-center justify-center">
           <div className="mt-52 flex flex-col items-center justify-center gap-20">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <img src={profilePicture} alt="" className="w-24 rounded-full" />
-              <h1 className="text-5xl font-bold">{note.title}</h1>
+            <div className="flex flex-col items-center justify-center gap-4 px-2">
+              <img
+                src={profilePicture}
+                alt="User Profile Picture"
+                className="w-24 rounded-full"
+              />
+              <h1 className="text-center text-5xl font-bold">{note.title}</h1>
               <p className="text-xl dark:text-slate-200">
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
               </p>
             </div>
 
-            <div className="mb-40 flex items-center justify-center">
+            <div className="mb-40 flex items-center justify-center px-4">
               <ReactMarkdown className="prose dark:prose-invert">
                 {note.content}
               </ReactMarkdown>
