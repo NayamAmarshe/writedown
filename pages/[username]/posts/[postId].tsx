@@ -4,9 +4,11 @@ import UserMenu from "@/components/common/UserMenu";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
+import { ImageResponse } from "@vercel/og";
 import { GetServerSideProps } from "next";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
+import Head from "next/head";
 import React from "react";
 
 interface Props {
@@ -18,6 +20,41 @@ interface Props {
 export const PostPage = ({ note, name, profilePicture }: Props) => {
   return (
     <>
+      <Head>
+        <title>{note.title} - writedown</title>
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://writedown.app" />
+        <meta
+          name="twitter:title"
+          content={`${note.title} by ${name} - writedown`}
+        />
+        <meta
+          name="twitter:description"
+          content={`Read this post by ${name} on writedown - a free markdown notes app that is simple and beautiful.`}
+        />
+        <meta
+          name="twitter:image"
+          content={`https://writedown.app/api/og?title=${note.title}&author=${name}&profilePicture=${profilePicture}&content=${note.content}`}
+        />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`${note.title} by ${name} - writedown`}
+        />
+        <meta
+          property="og:description"
+          content={`Read this post by ${name} on writedown - a free markdown notes app that is simple and beautiful.`}
+        />
+        <meta property="og:site_name" content="writedown" />
+        <meta property="og:url" content="https://writedown.app" />
+        <meta
+          property="og:image"
+          content={`https://writedown.app/api/og?title=${note.title}&author=${name}&profilePicture=${profilePicture}&content=${note.content}`}
+        />
+      </Head>
+
       <main className="max-w-screen relative flex min-h-screen flex-row bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50">
         {/* NAVBAR */}
         <nav className="fixed top-0 z-20 flex w-full flex-row items-center justify-between border-b border-gray-300 bg-transparent p-4 backdrop-blur dark:border-gray-700">
