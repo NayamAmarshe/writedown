@@ -1,6 +1,9 @@
 import {
   connectFirestoreEmulator,
   enableMultiTabIndexedDbPersistence,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
 } from "firebase/firestore";
 import { connectAuthEmulator } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -19,6 +22,12 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
+initializeFirestore(firebaseApp, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager(),
+  }),
+});
+
 const db = getFirestore(firebaseApp);
 
 const env = process.env["NODE_ENV"];
@@ -27,8 +36,8 @@ if (!(db as any)._settingsFrozen && env === "development") {
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
 }
 
-if (!(db as any)._firestoreClient) {
-  enableMultiTabIndexedDbPersistence(db);
-}
+// if (!(db as any)._firestoreClient) {
+//   enableMultiTabIndexedDbPersistence(db);
+// }
 
 export { db, firebaseApp };
