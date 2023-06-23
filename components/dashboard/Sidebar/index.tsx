@@ -65,6 +65,7 @@ const Sidebar = ({
       return;
     }
     setSelectedNoteId(newId);
+    window.innerWidth <= 768 && setShowSidebar(false);
   };
 
   useEffect(() => {
@@ -171,6 +172,7 @@ const Sidebar = ({
                   title={note.title}
                   content={note.content}
                   noteId={note.id}
+                  setShowSidebar={setShowSidebar}
                 />
               </Link>
             ))

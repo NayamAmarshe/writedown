@@ -10,9 +10,10 @@ type PostRowProps = {
   content: string;
   noteId: string;
   userId: string | undefined;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const PostRow = ({ title, content, noteId }: PostRowProps) => {
+const PostRow = ({ title, content, noteId, setShowSidebar }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
 
@@ -24,6 +25,7 @@ const PostRow = ({ title, content, noteId }: PostRowProps) => {
       if (!confirm) return;
     }
     setSelectedNoteId(noteId);
+    window.innerWidth <= 768 && setShowSidebar(false);
   };
 
   return (
