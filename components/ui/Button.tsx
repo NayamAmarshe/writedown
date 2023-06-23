@@ -24,7 +24,7 @@ const Button = ({
         case "blue":
           return "rounded-full py-1 px-3 text-sm font-medium text-blue-500 ring-2 ring-blue-500 transition-colors duration-300 hover:bg-blue-100 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-400 dark:hover:bg-blue-800/50";
         case "slate":
-          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 dark:hover:bg-slate-800 bg-slate-50 dark:bg-slate-950";
+          return "rounded-full py-1 px-3 text-sm font-medium text-slate-500 ring-2 ring-slate-500 transition-colors duration-300 hover:bg-slate-100 bg-slate-50 dark:bg-slate-900/20 dark:text-slate-400 dark:ring-slate-400 dark:hover:bg-slate-800/50";
         default:
           return "rounded-full py-1 px-3 text-sm font-medium text-slate-900 ring-2 ring-slate-900 transition-colors duration-300 hover:bg-slate-300";
       }
