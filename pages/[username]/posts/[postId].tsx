@@ -45,7 +45,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
           {/* LOGO */}
           <Link href="/">
             <h4 className="flex items-center text-2xl font-semibold">
-              writedown <BetaBadge />
+              writedown
             </h4>
           </Link>
           {/* USER MENU */}
