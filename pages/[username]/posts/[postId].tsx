@@ -75,11 +75,9 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
         description={`Read this post by ${name} on writedown - A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire.`}
         ogImage={`https://writedown.app/api/og?title=${
           note.title
-        }&author=${encodeURI(
-          name
-        )}&profilePicture=${profilePicture}&content=${RemoveMarkdown(
-          note.content
-        )}`}
+        }&content=${RemoveMarkdown(
+          note.content.slice(0, 100)
+        )}&author=${name}&profilePicture=${profilePicture}`}
         ogUrl={`https://writedown.app/${note.userId}/posts/${note.id}`}
       />
 

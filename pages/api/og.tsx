@@ -52,7 +52,7 @@ export default function handler(request: NextRequest, res: NextResponse) {
       ),
       {
         width: 1200,
-        height: 630,
+        height: 600,
       }
     );
   } catch (e: any) {
