@@ -341,7 +341,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
                 postPublic
                   ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
-                  : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-600 dark:ring-slate-600"
+                  : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
               }`}
               onClick={() => {
                 if (!postPublic) return;
