@@ -103,34 +103,35 @@ const Sidebar = ({
         />
       </IconButton>
 
-      <div className="flex flex-row items-center gap-2">
-        {/* USER  GREETING SECTION */}
-        {user ? (
-          <div className="relative min-w-fit">
-            <UserMenu
-              displayName={user?.displayName}
-              photoURL={user?.photoURL}
-              home
-              logout
-              themeOption
-              showImageAsButton
-            />
-          </div>
-        ) : (
-          <Skeleton className="h-10 w-10" circle={true} />
-        )}
-
-        {user ? (
-          <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
-            Hi there,{" "}
-            <span className="text-slate-900 dark:text-slate-100">
-              {user?.displayName}{" "}
-            </span>
-          </h4>
-        ) : (
-          <Skeleton className="w-32" />
-        )}
-      </div>
+      {/* USER  GREETING SECTION */}
+      {user ? (
+        <div className="relative min-w-fit">
+          <UserMenu home logout themeOption showImageAsButton>
+            <div className="flex flex-row items-center gap-2">
+              <img
+                src={
+                  user?.photoURL ||
+                  `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+                }
+                alt="User Photo"
+                className="h-10 w-10 rounded-full object-cover"
+              />
+              {user ? (
+                <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
+                  Hi there,{" "}
+                  <span className="text-slate-900 dark:text-slate-100">
+                    {user?.displayName}{" "}
+                  </span>
+                </h4>
+              ) : (
+                <Skeleton className="w-32" />
+              )}
+            </div>
+          </UserMenu>
+        </div>
+      ) : (
+        <Skeleton className="h-10 w-10" circle={true} />
+      )}
 
       {/* CREATE NEW POST BUTTON */}
       {notes ? (
