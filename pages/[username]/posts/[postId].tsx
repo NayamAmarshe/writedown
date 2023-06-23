@@ -91,7 +91,9 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
                 alt="User Profile Picture"
                 className="w-24 rounded-full"
               />
-              <h1 className="text-center text-5xl font-bold">{note.title}</h1>
+              <h1 className="text-center text-5xl font-bold leading-tight">
+                {note.title}
+              </h1>
               <p className="text-xl dark:text-slate-200">
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
