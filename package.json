@@ -34,7 +34,7 @@
     "@testing-library/cypress": "^9.0.0",
     "cypress": "^12.14.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "firebase": "^9.22.2",
+    "firebase": "^9.23.0",
     "html2pdf.js": "^0.10.1",
     "jotai": "^2.1.1",
     "lottie-react": "^2.4.0",
