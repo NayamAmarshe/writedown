@@ -253,7 +253,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
           Last Updated {lastUpdated}
         </p>
       ) : (
-        <Skeleton className="w-44" baseColor="#cbd5e1" />
+        <Skeleton className="w-44" />
       )}
 
       {/* ACTION BUTTONS */}
