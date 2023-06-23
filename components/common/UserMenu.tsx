@@ -6,25 +6,23 @@ import Link from "next/link";
 import React from "react";
 
 type UserMenuProps = {
-  photoURL?: string | null;
-  displayName: string | null;
   reverse?: boolean;
   dashboard?: boolean;
   home?: boolean;
   themeOption?: boolean;
   logout?: boolean;
   showImageAsButton?: boolean;
+  children?: React.ReactNode;
 };
 
 const UserMenu = ({
-  photoURL,
-  displayName,
   reverse,
   dashboard,
   home,
   themeOption,
   logout,
   showImageAsButton,
+  children,
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
 
@@ -32,20 +30,7 @@ const UserMenu = ({
     <Popover
       data-testid="logout"
       buttonStyle="outline-none"
-      button={
-        showImageAsButton ? (
-          <img
-            src={
-              photoURL ||
-              `https://ui-avatars.com/api/?name=${displayName}&rounded=true&format=svg&background=random`
-            }
-            alt="User Photo"
-            className="h-10 w-10 rounded-full object-cover"
-          />
-        ) : (
-          <RiMenu5Fill className="h-7 w-7" />
-        )
-      }
+      button={<>{children}</>}
       reverse={reverse}
     >
       {dashboard && auth.currentUser && (

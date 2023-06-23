@@ -7,6 +7,7 @@ import BetaBadge from "@/components/ui/BetaBadge";
 import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
 import RemoveMarkdown from "remove-markdown";
+import { RiMenu5Fill } from "react-icons/ri";
 import Button from "@/components/ui/Button";
 import { GetServerSideProps } from "next";
 import { User } from "firebase/auth";
@@ -98,15 +99,20 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
           </Link>
           {/* USER MENU */}
           <div className="flex flex-row items-center gap-4">
-            <UserMenu
-              displayName={name}
-              photoURL={user?.photoURL}
-              dashboard
-              home
-              logout
-              themeOption
-              reverse
-            />
+            <UserMenu dashboard home logout themeOption reverse>
+              {auth.currentUser ? (
+                <img
+                  src={
+                    user?.photoURL ||
+                    `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+                  }
+                  alt="User Photo"
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+              ) : (
+                <RiMenu5Fill className="h-7 w-7" />
+              )}
+            </UserMenu>
           </div>
         </nav>
 
