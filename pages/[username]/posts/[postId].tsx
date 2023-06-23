@@ -28,62 +28,13 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          {note.title} by {name} - writedown
-        </title>
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://writedown.app" />
-        <meta
-          name="twitter:title"
-          content={`${note.title} by ${name} - writedown`}
-          key="twitter-title"
-        />
-        <meta
-          name="twitter:description"
-          content={`Read this post by ${name} on writedown - a free markdown notes app that is simple and beautiful.`}
-          key="twitter-description"
-        />
-        <meta
-          name="twitter:image"
-          content={`https://writedown.app/api/og?title=${note.title}&author=${name}&profilePicture=${profilePicture}&content=${note.content}`}
-          key="twitter-image"
-        />
-
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content={`${note.title} by ${name} - writedown`}
-          key="og-title"
-        />
-        <meta
-          property="og:description"
-          content={`Read this post by ${name} on writedown - a free markdown notes app that is simple and beautiful.`}
-          key="og-description"
-        />
-        <meta property="og:site_name" content="writedown" />
-        <meta property="og:url" content="https://writedown.app" />
-        <meta
-          property="og:image"
-          content={`https://writedown.app/api/og?title=${
-            note.title
-          }&author=${encodeURI(
-            name
-          )}&profilePicture=${profilePicture}&content=${RemoveMarkdown(
-            note.content
-          )}`}
-          key="og-image"
-        />
-      </Head>
-
       <HeadTags
         title={`${note.title} by ${name} - writedown`}
         description={`Read this post by ${name} on writedown - A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire.`}
         ogImage={`https://writedown.app/api/og?title=${
           note.title
         }&content=${RemoveMarkdown(
-          note.content.slice(0, 100)
+          note.content.slice(0, 200)
         )}&author=${name}&profilePicture=${profilePicture}`}
         ogUrl={`https://writedown.app/${note.userId}/posts/${note.id}`}
       />
