@@ -23,13 +23,13 @@ export default function handler(request: NextRequest) {
       ? searchParams.get("author")?.slice(0, 100)
       : "writedown";
     const profilePicture = hasProfilePicture
-      ? searchParams.get("profilePicture")?.slice(0, 100)
+      ? searchParams.get("profilePicture")?.slice()
       : "https://writedown.app/og-image.png";
 
     return new ImageResponse(
       (
-        <div tw="flex flex-col w-full h-full truncate items-center justify-center bg-slate-100">
-          <div tw="flex flex-col mt-auto">
+        <div tw="flex flex-col w-full h-full items-center justify-center bg-slate-100">
+          <div tw="flex flex-col items-center justify-center mt-auto">
             <img
               src={profilePicture}
               tw="w-12 mx-auto mb-2 rounded-full"
@@ -37,9 +37,9 @@ export default function handler(request: NextRequest) {
             />
             <div tw="flex flex-col font-semibold mb-5 text-slate-700 items-center w-11/12 justify-center text-3xl text-center">
               {title}
-              <div tw="text-slate-400 mx-auto font-medium text-sm mt-2">
+              <p tw="text-slate-400 mx-auto font-medium text-sm mt-2">
                 By {author}
-              </div>
+              </p>
             </div>
 
             <div tw="text-slate-600 mx-auto w-7/12">{content}</div>
