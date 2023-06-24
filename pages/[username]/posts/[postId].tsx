@@ -78,6 +78,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
               <h1 className="text-center text-5xl font-bold leading-tight">
                 {note.title}
               </h1>
+              <p>Last Published: {formatNumber(note.publishedAt)}</p>
               <p className="text-xl dark:text-slate-200">
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
@@ -102,6 +103,23 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
       </main>
     </>
   );
+};
+
+const formatNumber = (publishedAt: number | undefined) => {
+  if (!publishedAt) return;
+  const formattingOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  const formattedDate = new Date(publishedAt).toLocaleString(
+    "en-US",
+    formattingOptions
+  );
+  return formattedDate;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
