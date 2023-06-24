@@ -2,7 +2,6 @@ import {
   postContentAtom,
   postLastUpdatedAtom,
   postPublicAtom,
-  postPublishAtom,
   postTitleAtom,
 } from "@/stores/postDataAtom";
 import {
@@ -50,8 +49,6 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
-
-  const [publish, setPublish] = useAtom(postPublishAtom);
 
   useEffect(() => {
     if (!postUpdatedAt) return;
@@ -270,7 +267,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         <Button
           data-testid="save"
           type="button"
-          onClick={() => saveNoteHandler()}
+          onClick={saveNoteHandler}
           size="sm"
           variant="green"
           className="w-28"
@@ -338,8 +335,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               <Toggle
                 enabled={postPublic}
                 onChange={() => {
-                  setPublish(!postPublic);
                   setPostPublic((prev) => !prev);
+                  saveNoteHandler();
                 }}
                 screenReaderPrompt="Toggle Public Sharing"
               />

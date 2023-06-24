@@ -3,7 +3,6 @@ import {
   postLastUpdatedAtom,
   postTitleAtom,
   postPublicAtom,
-  postPublishAtom,
 } from "@/stores/postDataAtom";
 import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
@@ -35,7 +34,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [postPublic, setPostPublic] = useAtom(postPublicAtom);
   const [postContent, setPostContent] = useAtom(postContentAtom);
   const [postUpdatedAt, setPostUpdatedAt] = useAtom(postLastUpdatedAtom);
-  const [publish, setPublish] = useAtom(postPublishAtom);
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
@@ -107,19 +105,15 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     } else {
       debounceSave = setTimeout(() => {
         setSynced(false);
-        updateNote(
-          {
-            id: selectedNoteId,
-            title: postTitle,
-            content: postContent,
-            public: postPublic,
-          },
-          publish
-        );
+        updateNote({
+          id: selectedNoteId,
+          title: postTitle,
+          content: postContent,
+          public: postPublic,
+        });
         setSynced(true);
       }, 3000);
       setSynced(false);
-      setPublish(false);
     }
     return () => {
       clearTimeout(debounceSave);
