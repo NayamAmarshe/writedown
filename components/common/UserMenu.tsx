@@ -1,4 +1,11 @@
-import { RiMenu5Fill } from "react-icons/ri";
+import {
+  BiHomeAlt,
+  BiLogInCircle,
+  BiLogOutCircle,
+  BiMoon,
+  BiPencil,
+  BiSun,
+} from "react-icons/bi";
 import { useTheme } from "next-themes";
 import Popover from "../ui/Popover";
 import { auth } from "@/pages/_app";
@@ -36,25 +43,26 @@ const UserMenu = ({
       {dashboard && auth.currentUser && (
         <Link
           href="/dashboard"
-          className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          ✏️ Dashboard
+          <BiPencil /> Write Down
         </Link>
       )}
       {dashboard && !auth.currentUser && (
         <Link
           href="/login"
-          className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          ↩️ Login
+          <BiLogInCircle className="" /> Login
         </Link>
       )}
       {home && (
         <Link
           href="/"
-          className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          🏠️ Home
+          <BiHomeAlt className="" />
+          Home
         </Link>
       )}
       {themeOption && (
@@ -62,17 +70,18 @@ const UserMenu = ({
           onClick={() => {
             theme === "light" ? setTheme("dark") : setTheme("light");
           }}
-          className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          {theme === "light" ? "🌚 Dark Mode" : "🌞 Light Mode"}
+          {theme === "light" ? <BiMoon className="" /> : <BiSun className="" />}
+          {theme === "light" ? "Dark" : "Light"} Mode
         </button>
       )}
       {logout && auth.currentUser && (
         <button
           onClick={() => auth.signOut()}
-          className="rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          🏃 Logout
+          <BiLogOutCircle className="" /> Logout
         </button>
       )}
     </Popover>
