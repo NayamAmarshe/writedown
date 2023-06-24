@@ -17,9 +17,5 @@ service cloud.firestore {
       allow read: if resource.data.public == true;
     }
 
-    match /public_notes/{document=**} {
-    	allow read: if true;
-      allow create, write, update, delete: if request.auth.uid != null;
-    }
   }
 }
