@@ -24,6 +24,7 @@ import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
 import { toast } from "react-hot-toast";
+import { useTheme } from "next-themes";
 import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
@@ -33,6 +34,7 @@ type PostButtonsProps = {
 
 const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
+  const { theme } = useTheme();
 
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [showPublishModal, setShowPublishModal] = useState(false);
@@ -107,15 +109,15 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     const originalColor = content.style.color;
     const originalBgColor = content.style.backgroundColor;
     import("html2pdf.js").then((html2pdf) => {
-      content.style.color = "#000";
-      content.style.backgroundColor = "#fff";
+      // content.style.color = "#000 !important";
+      content.style.backgroundColor = theme === "dark" ? "#000" : "#fff";
       html2pdf
         .default()
         .set({
           margin: 1,
           filename: `${postTitle}-${lastUpdated}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
-          jsPDF: { compress: true },
+          jsPDF: { compress: true, backgroundColor: "#000" },
           enableLinks: true,
         })
         .from(content)
