@@ -68,13 +68,10 @@ export const useNotes = ({ userId }: UseNotesProps) => {
         title: string;
         content: string;
         public?: boolean;
-        publishedAt?: number;
       },
-      publish?: boolean | null
+      publish?: boolean
     ) => {
       if (!userId || !note) return;
-
-      console.log("published: ", publish);
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
       const currentTime = new Date().getTime();
