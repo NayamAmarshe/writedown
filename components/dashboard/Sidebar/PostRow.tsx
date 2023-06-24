@@ -37,9 +37,9 @@ const PostRow = ({ title, content, noteId, setShowSidebar }: PostRowProps) => {
       }`}
       onClick={() => switchNotesHandler(noteId)}
     >
-      <h6 className="font-medium dark:text-slate-200">
+      <div className="w-full truncate font-medium dark:text-slate-200">
         {title === "" ? "Untitled" : title || <Skeleton className="w-1/2" />}
-      </h6>
+      </div>
       <button className="flex flex-col gap-2">
         <p className="w-full truncate text-left text-sm text-slate-600 dark:text-slate-400">
           {content === (undefined || null) && <Skeleton />}
