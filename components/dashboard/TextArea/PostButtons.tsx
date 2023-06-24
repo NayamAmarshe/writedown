@@ -106,7 +106,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const downloadPDFHandler = async () => {
     const content = document.querySelector(".milkdown > div") as HTMLElement;
     if (!content) return;
-    const originalColor = content.style.color;
+    // const originalColor = content.style.color;
     const originalBgColor = content.style.backgroundColor;
     import("html2pdf.js").then((html2pdf) => {
       // content.style.color = "#000 !important";
@@ -123,7 +123,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         .from(content)
         .save()
         .then(() => {
-          content.style.color = originalColor;
+          // content.style.color = originalColor;
           content.style.backgroundColor = originalBgColor;
         });
     });
