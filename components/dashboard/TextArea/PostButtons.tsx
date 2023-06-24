@@ -74,11 +74,10 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
    * Saves the note if not already synced
    */
   const saveNoteHandler = async () => {
-    if (synced) return;
+    const publish = !postPublic;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     setSynced(false);
-
     await updateNote(
       {
         id: selectedNoteId,
