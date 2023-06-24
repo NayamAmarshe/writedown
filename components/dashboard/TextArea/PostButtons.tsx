@@ -2,6 +2,7 @@ import {
   postContentAtom,
   postLastUpdatedAtom,
   postPublicAtom,
+  postPublishAtom,
   postTitleAtom,
 } from "@/stores/postDataAtom";
 import {
@@ -50,6 +51,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     userId: user?.uid,
   });
 
+  const [publish, setPublish] = useAtom(postPublishAtom);
+
   useEffect(() => {
     if (!postUpdatedAt) return;
     const formattingOptions: Intl.DateTimeFormatOptions = {
@@ -75,12 +78,16 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     setSynced(false);
-    await updateNote({
-      id: selectedNoteId,
-      title: postTitle,
-      content: postContent,
-      public: postPublic,
-    });
+
+    await updateNote(
+      {
+        id: selectedNoteId,
+        title: postTitle,
+        content: postContent,
+        public: postPublic,
+      },
+      publish
+    );
     refreshNotes();
     setSynced(true);
   };
@@ -264,7 +271,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
         <Button
           data-testid="save"
           type="button"
-          onClick={saveNoteHandler}
+          onClick={() => saveNoteHandler()}
           size="sm"
           variant="green"
           className="w-28"
@@ -332,8 +339,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               <Toggle
                 enabled={postPublic}
                 onChange={() => {
+                  setPublish(!postPublic);
                   setPostPublic((prev) => !prev);
-                  saveNoteHandler();
                 }}
                 screenReaderPrompt="Toggle Public Sharing"
               />

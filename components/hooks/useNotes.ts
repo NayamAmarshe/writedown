@@ -62,32 +62,32 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   }, [userId]);
 
   const updateNote = useCallback(
-    async (note: {
-      id: string;
-      title: string;
-      content: string;
-      public?: boolean;
-    }) => {
+    async (
+      note: {
+        id: string;
+        title: string;
+        content: string;
+        public?: boolean;
+        publishedAt?: number;
+      },
+      publish?: boolean | null
+    ) => {
       if (!userId || !note) return;
 
-      const notesRef = doc(db, "users", userId, "notes", note.id);
-      const publicRef = doc(db, "public_notes", note.id);
-      const currentTime = new Date().getTime();
+      console.log("published: ", publish);
 
-      const publicNote = await getDoc(publicRef);
+      const notesRef = doc(db, "users", userId, "notes", note.id);
+      const currentTime = new Date().getTime();
+      const updatedContent = publish
+        ? { ...note, updatedAt: currentTime, publishedAt: currentTime }
+        : { ...note, updatedAt: currentTime };
 
       try {
         // Create a document inside channelsRef array
-        await updateDoc(notesRef, { ...note, updatedAt: currentTime });
+        await updateDoc(notesRef, updatedContent);
         setUpdatedAt(currentTime);
       } catch (error) {
         toast.error("Failed to update post, please try again later.");
-      }
-
-      if (note.public) {
-        await setDoc(publicRef, { userId: userId });
-      } else if (publicNote.exists()) {
-        await deleteDoc(publicRef);
       }
     },
     [userId]
@@ -98,16 +98,10 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       if (!userId || !noteId) return;
 
       const notesRef = doc(db, "users", userId, "notes", noteId);
-      const publicRef = doc(db, "public_notes", noteId);
-
-      const publicNote = await getDoc(publicRef);
 
       try {
         // Create a document inside channelsRef array
         await deleteDoc(notesRef);
-        if (publicNote.exists()) {
-          await deleteDoc(publicRef);
-        }
         refreshNotes();
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
