@@ -76,7 +76,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
                 alt="User Profile Picture"
                 className="w-24 rounded-full"
               />
-              <h1 className="text-center text-5xl font-bold leading-tight">
+              <h1 className="max-w-4xl text-center text-5xl font-bold leading-tight">
                 {note.title}
               </h1>
               <p className="text-xl dark:text-slate-200">
