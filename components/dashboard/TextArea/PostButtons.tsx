@@ -32,6 +32,23 @@ type PostButtonsProps = {
   editorRef: React.MutableRefObject<UseEditorReturn | null>;
 };
 
+export const formatTimeStamp = (time: number | undefined) => {
+  if (!time) return "never";
+  const formattingOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  const formattedDate = new Date(time).toLocaleString(
+    "en-US",
+    formattingOptions
+  );
+  return formattedDate;
+};
+
 const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
   const { theme } = useTheme();
@@ -49,23 +66,6 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
-
-  const formatTimeStamp = (publishedAt: number | undefined) => {
-    if (!publishedAt) return "never";
-    const formattingOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    const formattedDate = new Date(publishedAt).toLocaleString(
-      "en-US",
-      formattingOptions
-    );
-    return formattedDate;
-  };
 
   useEffect(() => {
     if (!postUpdatedAt) return;

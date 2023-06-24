@@ -1,3 +1,4 @@
+import { formatTimeStamp } from "@/components/dashboard/TextArea/PostButtons";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Note } from "@/types/utils/firebaseOperations";
@@ -81,6 +82,9 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
               <p className="text-xl dark:text-slate-200">
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
+              </p>
+              <p className="text-sm dark:text-slate-400">
+                Published {formatTimeStamp(note.publishedAt)}
               </p>
 
               <Link href={`/dashboard?post=${note.id}`}>
