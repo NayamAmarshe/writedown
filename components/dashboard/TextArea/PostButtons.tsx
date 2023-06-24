@@ -50,8 +50,8 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
     userId: user?.uid,
   });
 
-  useEffect(() => {
-    if (!postUpdatedAt) return;
+  const formatTimeStamp = (publishedAt: number | undefined) => {
+    if (!publishedAt) return "never";
     const formattingOptions: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "long",
@@ -60,10 +60,16 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
       minute: "numeric",
       hour12: true,
     };
-    const formattedDate = new Date(postUpdatedAt).toLocaleString(
+    const formattedDate = new Date(publishedAt).toLocaleString(
       "en-US",
       formattingOptions
     );
+    return formattedDate;
+  };
+
+  useEffect(() => {
+    if (!postUpdatedAt) return;
+    const formattedDate = formatTimeStamp(postUpdatedAt);
     setLastUpdated(formattedDate);
   }, [postUpdatedAt, selectedNoteId]);
 
@@ -71,19 +77,15 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
    * Saves the note if not already synced
    */
   const saveNoteHandler = async () => {
-    const publish = !postPublic;
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     setSynced(false);
-    await updateNote(
-      {
-        id: selectedNoteId,
-        title: postTitle,
-        content: postContent,
-        public: postPublic,
-      },
-      publish
-    );
+    await updateNote({
+      id: selectedNoteId,
+      title: postTitle,
+      content: postContent,
+      public: postPublic,
+    });
     refreshNotes();
     setSynced(true);
   };
@@ -365,6 +367,9 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               )}
             </p>
 
+            {/* TODO */}
+            <p>Last updated: </p>
+
             <div className="mt-5">
               <label className="font-medium dark:text-slate-300">
                 Download Post
@@ -384,6 +389,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
                   Download HTML
                 </Button>
               </div>
+              pp
             </div>
           </div>
         </Modal>

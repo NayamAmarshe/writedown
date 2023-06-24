@@ -62,20 +62,17 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   }, [userId]);
 
   const updateNote = useCallback(
-    async (
-      note: {
-        id: string;
-        title: string;
-        content: string;
-        public?: boolean;
-      },
-      publish?: boolean
-    ) => {
+    async (note: {
+      id: string;
+      title: string;
+      content: string;
+      public?: boolean;
+    }) => {
       if (!userId || !note) return;
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
       const currentTime = new Date().getTime();
-      const updatedContent = publish
+      const updatedContent = note.public
         ? { ...note, updatedAt: currentTime, publishedAt: currentTime }
         : { ...note, updatedAt: currentTime };
 
