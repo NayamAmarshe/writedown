@@ -150,7 +150,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           tabIndex={0}
           id="editor"
           // onMouseLeave={instaSync}
-          className={`w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
+          className={`mb-64 w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
             shiftRight ? "translate-x-52" : "translate-x-0"
           }`}
         >
