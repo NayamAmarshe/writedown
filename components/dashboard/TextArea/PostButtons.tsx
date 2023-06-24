@@ -367,9 +367,6 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               )}
             </p>
 
-            {/* TODO */}
-            <p>Last updated: </p>
-
             <div className="mt-5">
               <label className="font-medium dark:text-slate-300">
                 Download Post
@@ -389,7 +386,6 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
                   Download HTML
                 </Button>
               </div>
-              pp
             </div>
           </div>
         </Modal>
