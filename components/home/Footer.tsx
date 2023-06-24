@@ -21,7 +21,7 @@ const Footer = ({ className }: { className?: string }) => {
         <ul className="flex flex-row gap-5">
           <li>
             <Link href="/login">
-              {auth.currentUser ? "Dashboard" : "Login"}
+              {auth.currentUser ? "Write Down" : "Login"}
             </Link>
           </li>
           <li>
