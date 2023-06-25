@@ -27,7 +27,7 @@ writedown's focus is on providing a polished experience. A simple markdown edito
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
 
-## Installation
+##  🧑‍💻️ Development
 
 writedown is self-hostable with Firebase and Node.js.   
 To run a local instance, follow these steps:
