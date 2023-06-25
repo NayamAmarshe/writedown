@@ -13,18 +13,19 @@ With a beautiful interface and polished user experience, writedown is simple but
 
 ## 🤔 Why writedown?
 
-Love simplicity? Good.  
-Hate complexity? Even Better!
+Love simplicity? **Good.**  
+Hate complexity? **Even Better!**
 
-writedown's focus is on providing a polished experience. A simple markdown editor you can use for writing notes quickly to publish and share them with the world.
+**writedown**'s focus is on providing a polished experience. A simple markdown editor you can use for writing notes quickly to publish and share them with the world.
 
-**Here's what writedown provides that most other editors don't:**
+### Here's what writedown provides that most other editors don't:
 
 📴 **Offline support**  
 ☁️ **Cloud Sync**  
 🤝 **Free and Open Source**  
 🪟 **Real-time Markdown Preview**  
 📨 **Publishing and Sharing**
+🌹 **Simple and beautiful interface**
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
 
