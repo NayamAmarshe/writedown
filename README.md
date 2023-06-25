@@ -2,6 +2,7 @@
 
 # ✏ [writedown (beta)](https://writedown.app)
 #### Free and Open Source Markdown Diary
+#### Public Blogs and Private Notes
 Write. Share. Inspire.
 
 **writedown** is the new way of writing markdown notes fast and easily.  
