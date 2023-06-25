@@ -27,6 +27,23 @@ writedown's focus is on providing a polished experience. A simple markdown edito
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
 
+## Installation
+
+writedown is self-hostable with Firebase and Node.js.   
+To run a local instance, follow these steps:
+
+0. First install [Volta](https://volta.sh/). Then open your terminal and enter: `volta install node`.
+1. 
+```bash
+git clone https://github.com/NayamAmarshe/writedown
+cd writedown
+
+# INSTALL DEPENDENCIES
+npm install
+```
+2. [Setup Firebase Emulator](https://github.com/NayamAmarshe/writedown/blob/main/docs/firebase.md)
+3. Run local dev server with: `npm run dev`
+
 #
 
 <div align="center">
