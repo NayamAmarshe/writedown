@@ -1,7 +1,8 @@
 <div align="center">
 
 # ✏ [writedown (beta)](https://writedown.app)
-#### Free and Open Source Markdown App - Your private and public diary
+#### Free and Open Source Markdown Diary
+Write. Share. Inspire.
 
 **writedown** is the new way of writing markdown notes fast and easily.  
 With a beautiful interface and polished user experience, writedown is simple but powerful.
