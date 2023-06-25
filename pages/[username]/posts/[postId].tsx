@@ -52,7 +52,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
           {/* USER MENU */}
           <div className="flex flex-row items-center gap-4">
             <UserMenu dashboard home logout themeOption reverse>
-              {auth.currentUser ? (
+              {user ? (
                 <img
                   src={
                     user?.photoURL ||
@@ -87,11 +87,13 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
                 Published {formatTimeStamp(note.publishedAt)}
               </p>
 
-              <Link href={`/dashboard?post=${note.id}`}>
-                <Button variant="slate" size="sm">
-                  Edit Post
-                </Button>
-              </Link>
+              {user?.uid === note.userId && (
+                <Link href={`/dashboard?post=${note.id}`}>
+                  <Button variant="slate" size="sm">
+                    Edit Post
+                  </Button>
+                </Link>
+              )}
             </div>
 
             <div className="mb-40 flex items-center justify-center px-4">
