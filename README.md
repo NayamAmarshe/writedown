@@ -35,7 +35,7 @@ writedown is self-hostable with Firebase and Node.js.
 To run a local instance, follow these steps:
 
 0. First install [Volta](https://volta.sh/). Then open your terminal and enter: `volta install node`.
-1. 
+1. Enter the following commands in your terminal.
 ```bash
 git clone https://github.com/NayamAmarshe/writedown
 cd writedown
