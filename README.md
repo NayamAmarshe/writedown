@@ -45,6 +45,7 @@ npm install
 ```
 2. [Setup Firebase Emulator](https://github.com/NayamAmarshe/writedown/blob/main/docs/firebase.md)
 3. Run local dev server with: `npm run dev`
+OR local production server with `npm run build && npm run start`.
 
 #
 
