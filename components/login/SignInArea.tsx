@@ -2,13 +2,15 @@ import {
   useSignInWithGithub,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
+import { authErrorCodes } from "@/constants/firebase-auth-error-codes";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
+import React, { useEffect } from "react";
 import BetaBadge from "../ui/BetaBadge";
+import toast from "react-hot-toast";
 import { auth } from "@/pages/_app";
 import Button from "../ui/Button";
 import Link from "next/link";
-import React from "react";
 
 const SignInArea = () => {
   // GOOGLE SIGN IN HOOK
@@ -25,6 +27,15 @@ const SignInArea = () => {
       signInWithGithub();
     }
   };
+
+  useEffect(() => {
+    const error = githubError || googleError;
+
+    if (!error) return;
+    toast.error(
+      authErrorCodes[error.code as keyof typeof authErrorCodes] || error.message
+    );
+  }, [githubError, googleError]);
 
   return (
     <div className="flex h-1/2 w-full flex-col items-center justify-end gap-4 bg-slate-300 dark:bg-slate-600 dark:text-slate-50 md:h-full md:w-1/2">
