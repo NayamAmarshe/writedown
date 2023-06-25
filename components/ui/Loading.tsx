@@ -1,5 +1,6 @@
 import darkLoadingAnimation from "@/animations/pencil-write-dark.json";
 import loadingAnimation from "@/animations/pencil-write.json";
+import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import BetaBadge from "./BetaBadge";
 import Lottie from "lottie-react";
 import React from "react";
@@ -19,7 +20,7 @@ const Loading = () => {
           loop={true}
         />
         <p className="flex items-center text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">
-          writedown
+          writedown {FEATURE_FLAGS.beta && <BetaBadge />}
         </p>
       </div>
     </div>

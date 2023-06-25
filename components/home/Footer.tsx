@@ -1,3 +1,4 @@
+import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import BetaBadge from "../ui/BetaBadge";
 import { auth } from "@/pages/_app";
 import Link from "next/link";
@@ -14,7 +15,7 @@ const Footer = ({ className }: { className?: string }) => {
     >
       <div className="pt-4 sm:pt-0">
         <Link href="/" className="text-xl font-semibold">
-          writedown
+          writedown {FEATURE_FLAGS.beta && <BetaBadge />}
         </Link>
       </div>
       <div className="text-sm">
