@@ -1,3 +1,4 @@
+import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { FiMoon, FiSun } from "react-icons/fi";
 import BetaBadge from "../ui/BetaBadge";
 import { useTheme } from "next-themes";
@@ -12,7 +13,11 @@ const Navbar = () => {
   return (
     <nav className="fixed z-10 flex w-full flex-row justify-between bg-slate-50/50 px-4 py-4 backdrop-blur-md dark:bg-slate-900/50 md:px-10 lg:px-36">
       <div className="flex w-full flex-row items-center justify-start gap-2">
-        <h4 className="flex items-center text-2xl font-semibold">writedown</h4>
+        <Link href="/">
+          <h4 className="flex items-center text-2xl font-semibold">
+            writedown {FEATURE_FLAGS.beta && <BetaBadge />}
+          </h4>
+        </Link>
       </div>
       <div className="flex w-full flex-row items-center justify-end gap-4">
         <button

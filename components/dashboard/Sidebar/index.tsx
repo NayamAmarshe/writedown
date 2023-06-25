@@ -1,5 +1,6 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
 import PlusCircle from "@/components/icons/PlusCircle";
@@ -9,6 +10,7 @@ import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
+import BetaBadge from "@/components/ui/BetaBadge";
 import { BsChevronBarLeft } from "react-icons/bs";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
@@ -185,9 +187,7 @@ const Sidebar = ({
       <div className="mt-auto">
         <p className="text-center text-xs text-slate-400">
           © {new Date().getFullYear()} <b>writedown</b>. All rights reserved.
-          <span className="ml-2 animate-pulse rounded-full bg-violet-500 px-3 text-violet-100">
-            BETA
-          </span>
+          {FEATURE_FLAGS.beta && <BetaBadge pulse />}
         </p>
       </div>
     </aside>
