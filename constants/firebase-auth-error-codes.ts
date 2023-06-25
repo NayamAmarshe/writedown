@@ -6,7 +6,7 @@ export const authErrorCodes = {
   "auth/id-token-expired": "The provided Firebase ID token is expired.",
   "auth/id-token-revoked": "The Firebase ID token has been revoked.",
   "auth/account-exists-with-different-credential":
-    "The account with this email already exists with different login method, please login with that",
+    "An account with this email address already exists, but it was registered using a different login method. Please log in using the appropriate method associated with this email address.",
   "auth/insufficient-permission":
     "The credential used to initialize the Admin SDK has insufficient permission to access the requested Authentication resource. Refer to Set up a Firebase project for documentation on how to generate a credential with appropriate permissions and use it to authenticate the Admin SDKs.",
   "auth/internal-error":
