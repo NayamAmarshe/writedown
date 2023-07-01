@@ -9,12 +9,14 @@ const HeroSection = () => {
     <div className="my-32 h-full w-full">
       <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-4">
         <div className="flex flex-col items-center justify-center gap-5">
-          <h1 className="flex flex-col leading-tight text-center text-7xl font-semibold text-slate-900 dark:text-slate-50 sm:gap-5">
-            <span>Upgrade Your</span>
-            <span className="text-pacifico font-light">Dear Diary</span>
+          <h1 className="flex flex-col gap-5 text-center text-4xl font-semibold leading-tight text-slate-900 dark:text-slate-50 xs:text-5xl sm:text-7xl">
+            <span className="whitespace-nowrap">Upgrade Your</span>
+            <span className="text-pacifico whitespace-nowrap font-light">
+              Dear Diary
+            </span>
           </h1>
 
-          <p className="mt-4 max-w-lg text-center text-xl font-medium text-slate-800 dark:text-slate-200">
+          <p className="mt-4 max-w-lg text-center text-base font-medium text-slate-800 dark:text-slate-200 xs:text-xl">
             All your notes, synced on all your devices. <br />
             Free, easy and fast.
           </p>
