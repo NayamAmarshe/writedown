@@ -32,7 +32,7 @@ const Navbar = () => {
           )}
         </button>
 
-        <Link href="/login">
+        <Link href="/login" className="hidden sm:block">
           <Button>{auth.currentUser ? "Write Down" : "Try Now"}</Button>
         </Link>
       </div>

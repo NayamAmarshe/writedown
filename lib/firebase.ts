@@ -1,11 +1,9 @@
 import {
   connectFirestoreEmulator,
-  enableMultiTabIndexedDbPersistence,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
 } from "firebase/firestore";
-import { connectAuthEmulator } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import "firebase/firestore";
