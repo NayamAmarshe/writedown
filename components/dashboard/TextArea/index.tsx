@@ -10,6 +10,7 @@ import { MilkdownProvider, UseEditorReturn } from "@milkdown/react";
 import MilkdownEditor from "@/components/ui/MilkdownEditor";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import TiptapEditor from "@/components/ui/TipTapEditor";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -39,6 +40,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   });
   // LOCAL STATES
   const editorRef = React.useRef<UseEditorReturn>(null);
+  const tiptapFlag = true;
 
   useEffect(() => {
     const alertUser = (e: BeforeUnloadEvent) => {
@@ -170,13 +172,22 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
 
           <ProsemirrorAdapterProvider>
-            <MilkdownEditor
-              input={postContent}
-              setInput={setPostContent}
-              className="prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none"
-              notes={notes}
-              editorRef={editorRef}
-            />
+            {tiptapFlag ? (
+              <TiptapEditor
+                input={postContent}
+                setInput={setPostContent}
+                className="prose-sm mx-auto h-screen dark:prose-invert sm:prose-sm lg:prose-lg xl:prose-2xl focus:outline-none"
+                notes={notes}
+              />
+            ) : (
+              <MilkdownEditor
+                input={postContent}
+                setInput={setPostContent}
+                className="prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none"
+                notes={notes}
+                editorRef={editorRef}
+              />
+            )}
           </ProsemirrorAdapterProvider>
         </div>
       </MilkdownProvider>
