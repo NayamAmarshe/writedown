@@ -1,15 +1,14 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
-import PlusCircle from "@/components/icons/PlusCircle";
 import { postPublicAtom } from "@/stores/postDataAtom";
 import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import { IoMdRefreshCircle } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { BsChevronBarLeft } from "react-icons/bs";
@@ -152,7 +151,7 @@ const Sidebar = ({
             {createPostLoading ? (
               <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
             ) : (
-              <PlusCircle className="h-5 w-5" />
+              <IoMdAddCircle className="h-5 w-5" />
             )}
             Create New Post
           </span>

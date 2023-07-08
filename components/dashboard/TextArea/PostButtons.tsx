@@ -9,6 +9,7 @@ import {
   IoMdCopy,
   IoMdRefreshCircle,
   IoMdSend,
+  IoMdTrash,
 } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,7 +18,6 @@ import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
-import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
@@ -292,7 +292,7 @@ const PostButtons = ({ shiftRight }: PostButtonsProps) => {
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
-            <Trash className="h-5 w-5" />
+            <IoMdTrash className="h-5 w-5" />
             <p>Delete Post</p>
           </span>
         </Button>
