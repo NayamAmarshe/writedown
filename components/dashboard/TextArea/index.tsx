@@ -14,6 +14,7 @@ import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
 import StarterKit from "@tiptap/starter-kit";
 import { lowlight } from "lowlight/lib/core";
+import Image from "@tiptap/extension-image";
 import EditorButtons from "./EditorButtons";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
@@ -56,6 +57,10 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
             class: "font-bold",
           },
         },
+      }),
+      Image.configure({
+        inline: true,
+        allowBase64: false,
       }),
       Code.configure({
         HTMLAttributes: {
