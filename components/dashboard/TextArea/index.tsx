@@ -189,7 +189,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       <PostButtons shiftRight={shiftRight} />
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
-      <EditorButtons shiftRight={shiftRight} />
+      <EditorButtons shiftRight={shiftRight} editor={editor} />
 
       <div
         tabIndex={0}

@@ -1,24 +1,31 @@
-import MaterialHorizontalRule from "@/components/icons/MaterialHorizontalRule";
-import MaterialHeadingThree from "@/components/icons/MaterialHeadingThree";
-import MaterialHeadingFour from "@/components/icons/MaterialHeadingFour";
-import MaterialOrderedList from "@/components/icons/MaterialOrderedList";
-import MaterialHeadingTwo from "@/components/icons/MaterialHeadingTwo";
-import MaterialUnorderedList from "../../icons/MaterialUnorderedList";
-import OutlineStrikethrough from "../../icons/OutlineStrikethrough";
-import MaterialFormatItalic from "../../icons/MaterialFormatItalic";
-import MaterialCodeRounded from "../../icons/MaterialCodeRounded";
-import MaterialFormatBold from "../../icons/MaterialFormatBold";
-import MingcuteQuoteRight from "../../icons/MingcuteQuoteRight";
-import MaterialHeadingOne from "../../icons/MaterialHeadingOne";
-import BootstrapImage from "../../icons/BootstrapImage";
-import React, { useCallback, useState } from "react";
+import {
+  LuBold,
+  LuCode,
+  LuDivide,
+  LuHeading1,
+  LuHeading2,
+  LuHeading3,
+  LuHeading4,
+  LuImage,
+  LuItalic,
+  LuList,
+  LuListOrdered,
+  LuMinus,
+  LuQuote,
+  LuRuler,
+  LuStrikethrough,
+} from "react-icons/lu";
+import React, { useState } from "react";
+import { Editor } from "@tiptap/react";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
+
 type EditorButtonsProps = {
   shiftRight?: boolean;
+  editor: Editor | null;
 };
 
-const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
+const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -31,46 +38,46 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
     >
       <div className="flex flex-row items-center gap-2 overflow-x-auto sm:w-full sm:justify-evenly">
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialHeadingOne className="dark:text-slate-200" />
+          <LuHeading1 className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialHeadingTwo className="dark:text-slate-200" />
+          <LuHeading2 className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialHeadingThree className="dark:text-slate-200" />
+          <LuHeading3 className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialHeadingFour className="dark:text-slate-200" />
+          <LuHeading4 className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialFormatBold className="dark:text-slate-200" />
+          <LuBold className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialFormatItalic className="dark:text-slate-200" />
+          <LuItalic className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MingcuteQuoteRight className="dark:text-slate-200" />
+          <LuQuote className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <OutlineStrikethrough className="dark:text-slate-200" />
+          <LuStrikethrough className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialOrderedList className="dark:text-slate-200" />
+          <LuListOrdered className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialUnorderedList className="dark:text-slate-200" />
+          <LuList className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialCodeRounded className="dark:text-slate-200" />
+          <LuCode className="dark:text-slate-200" />
         </button>
         {/* <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialLink />
         </button> */}
         <button className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <BootstrapImage className="dark:text-slate-200" />
+          <LuImage className="dark:text-slate-200" />
         </button>
         <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <MaterialHorizontalRule className="dark:text-slate-200" />
+          <LuMinus className="dark:text-slate-200" />
         </button>
         <Modal
           isOpen={isOpen}
