@@ -191,7 +191,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       </IconButton>
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
-      <PostButtons shiftRight={shiftRight} />
+      <PostButtons shiftRight={shiftRight} editor={editor} />
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
       <EditorButtons shiftRight={shiftRight} editor={editor} />

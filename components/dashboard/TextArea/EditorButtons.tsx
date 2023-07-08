@@ -34,7 +34,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
 
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
+      className={`sticky z-50 m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
@@ -127,7 +127,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          onClick={() =>
+            editor.chain().focus().toggleCodeBlock().unsetCode().run()
+          }
         >
           <LuCode className="dark:text-slate-200" />
         </button>
