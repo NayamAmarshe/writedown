@@ -9,6 +9,7 @@ import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
+import { IoMdRefreshCircle } from "react-icons/io";
 import React, { useEffect, useState } from "react";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { BsChevronBarLeft } from "react-icons/bs";
@@ -35,8 +36,9 @@ const Sidebar = ({
   const [user] = useAuthState(auth);
 
   const [mounted, setMounted] = useState(false);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
+  const [createPostLoading, setCreatePostLoading] = useState(false);
 
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
@@ -60,6 +62,7 @@ const Sidebar = ({
   }, [synced, selectedNoteId]);
 
   const newPostClickHandler = async () => {
+    setCreatePostLoading(true);
     const newId = await createNote();
     await refreshNotes();
     if (!newId) {
@@ -67,6 +70,7 @@ const Sidebar = ({
       return;
     }
     setSelectedNoteId(newId);
+    setCreatePostLoading(false);
     window.innerWidth <= 768 && setShowSidebar(false);
   };
 
@@ -140,11 +144,16 @@ const Sidebar = ({
       {notes ? (
         <Button
           data-testid="new-note"
-          onLoad={newPostClickHandler}
           onClick={newPostClickHandler}
+          disabled={createPostLoading}
+          className="disabled:cursor-not-allowed"
         >
           <span className="flex items-center justify-center gap-1">
-            <PlusCircle className="h-5 w-5" />
+            {createPostLoading ? (
+              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
+            ) : (
+              <PlusCircle className="h-5 w-5" />
+            )}
             Create New Post
           </span>
         </Button>

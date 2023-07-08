@@ -12,11 +12,9 @@ import {
 } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getHTML, getMarkdown } from "@milkdown/utils";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
-import { UseEditorReturn } from "@milkdown/react";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import Trash from "@/components/icons/Trash";
@@ -29,7 +27,6 @@ import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
-  editorRef: React.MutableRefObject<UseEditorReturn | null>;
 };
 
 export const formatTimeStamp = (time: number | undefined) => {
@@ -49,7 +46,7 @@ export const formatTimeStamp = (time: number | undefined) => {
   return formattedDate;
 };
 
-const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
+const PostButtons = ({ shiftRight }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
   const { theme } = useTheme();
 
@@ -224,28 +221,27 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   };
 
   const downloadMarkdownHandler = () => {
-    if (!editorRef.current) return;
-    const markdown = editorRef.current.get()?.action(getMarkdown());
-
-    if (!markdown) return;
-    const blob = new Blob([markdown], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.md`;
-    a.click();
+    // if (!editorRef.current) return;
+    // const markdown = editorRef.current.get()?.action(getMarkdown());
+    // if (!markdown) return;
+    // const blob = new Blob([markdown], { type: "text/plain" });
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement("a");
+    // a.href = url;
+    // a.download = `${postTitle}-${lastUpdated}.md`;
+    // a.click();
   };
 
   const downloadHTMLHandler = () => {
-    if (!editorRef.current) return;
-    const html = editorRef.current.get()?.action(getHTML());
-    if (!html) return;
-    const blob = new Blob([html], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.html`;
-    a.click();
+    // if (!editorRef.current) return;
+    // const html = editorRef.current.get()?.action(getHTML());
+    // if (!html) return;
+    // const blob = new Blob([html], { type: "text/plain" });
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement("a");
+    // a.href = url;
+    // a.download = `${postTitle}-${lastUpdated}.html`;
+    // a.click();
   };
 
   return (
@@ -352,15 +348,21 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               onClick={() => {
                 if (!postPublic) return;
                 toast.success("Copied link to clipboard!");
+                const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(
-                  `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
+                  isDev
+                    ? `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`
+                    : `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
                 );
               }}
             >
               <div className="w-11/12 truncate">
-                {postPublic
+                {process.env.NODE_ENV !== "development" && postPublic
                   ? `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
                   : `https://writedown.app/...`}
+                {process.env.NODE_ENV === "development" && postPublic
+                  ? `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`
+                  : `http://localhost:3000/...`}
               </div>
               {postPublic && (
                 <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />

@@ -1,15 +1,3 @@
-import {
-  toggleEmphasisCommand,
-  toggleStrongCommand,
-  wrapInOrderedListCommand,
-  wrapInBlockquoteCommand,
-  toggleInlineCodeCommand,
-  wrapInHeadingCommand,
-  insertImageCommand,
-  UpdateImageCommandPayload,
-  insertHrCommand,
-  wrapInBulletListCommand,
-} from "@milkdown/preset-commonmark";
 import MaterialHorizontalRule from "@/components/icons/MaterialHorizontalRule";
 import MaterialHeadingThree from "@/components/icons/MaterialHeadingThree";
 import MaterialHeadingFour from "@/components/icons/MaterialHeadingFour";
@@ -19,17 +7,11 @@ import MaterialUnorderedList from "../../icons/MaterialUnorderedList";
 import OutlineStrikethrough from "../../icons/OutlineStrikethrough";
 import MaterialFormatItalic from "../../icons/MaterialFormatItalic";
 import MaterialCodeRounded from "../../icons/MaterialCodeRounded";
-import { toggleStrikethroughCommand } from "@milkdown/preset-gfm";
 import MaterialFormatBold from "../../icons/MaterialFormatBold";
 import MingcuteQuoteRight from "../../icons/MingcuteQuoteRight";
 import MaterialHeadingOne from "../../icons/MaterialHeadingOne";
 import BootstrapImage from "../../icons/BootstrapImage";
 import React, { useCallback, useState } from "react";
-import MaterialLink from "../../icons/MaterialLink";
-import { Editor, CmdKey } from "@milkdown/core";
-import { callCommand } from "@milkdown/utils";
-import { useEditor } from "@milkdown/react";
-import "@milkdown/theme-nord/style.css";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
 type EditorButtonsProps = {
@@ -41,20 +23,6 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
 
-  const editor = useEditor(() => Editor.make());
-
-  const call = <T,>(command: CmdKey<T>, payload?: T) => {
-    return editor.get()?.action(callCommand(command, payload));
-  };
-
-  // Object for inserting images
-  const imageHandler = useCallback(() => {
-    const link = { title, url };
-    const image: UpdateImageCommandPayload = { src: link.url, alt: link.title };
-
-    call(insertImageCommand.key, image);
-  }, [title, url]);
-
   return (
     <div
       className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
@@ -62,85 +30,46 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
       }`}
     >
       <div className="flex flex-row items-center gap-2 overflow-x-auto sm:w-full sm:justify-evenly">
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInHeadingCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialHeadingOne className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInHeadingCommand.key, 2)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialHeadingTwo className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInHeadingCommand.key, 3)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialHeadingThree className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInHeadingCommand.key, 4)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialHeadingFour className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(toggleStrongCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialFormatBold className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(toggleEmphasisCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialFormatItalic className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInBlockquoteCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MingcuteQuoteRight className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(toggleStrikethroughCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <OutlineStrikethrough className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInOrderedListCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialOrderedList className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(wrapInBulletListCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialUnorderedList className="dark:text-slate-200" />
         </button>
-        <button
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => call(toggleInlineCodeCommand.key)}
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialCodeRounded className="dark:text-slate-200" />
         </button>
         {/* <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialLink />
         </button> */}
-        <button
-          onClick={() => setIsOpen(isOpen ? false : true)}
-          className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
-        >
+        <button className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700">
           <BootstrapImage className="dark:text-slate-200" />
         </button>
-        <button
-          onClick={() => call(insertHrCommand.key)}
-          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-        >
+        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialHorizontalRule className="dark:text-slate-200" />
         </button>
         <Modal
@@ -150,7 +79,7 @@ const EditorButtons = ({ shiftRight }: EditorButtonsProps) => {
           description="Enter a title and the link to an image."
           saveText="Insert"
           closeText="Cancel"
-          saveHandler={imageHandler}
+          saveHandler={() => {}}
         >
           <div className="flex flex-col items-center gap-2">
             <Input
