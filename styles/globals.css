@@ -1,5 +1,6 @@
 @import url("https://api.fonts.coollabs.io/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pattaya&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,7 +11,7 @@
 }
 
 .text-pacifico {
-  font-family: "Pacifico", sans-serif;
+  font-family: "Pattaya", sans-serif;
 }
 
 .scrollbar::-webkit-scrollbar {
