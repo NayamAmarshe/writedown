@@ -136,17 +136,13 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         </button> */}
         <button
           className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => {
-            // TODO
-          }}
+          onClick={() => setIsOpen(true)}
         >
           <LuImage className="dark:text-slate-200" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => {
-            // TODO
-          }}
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
         >
           <LuMinus className="dark:text-slate-200" />
         </button>
@@ -157,7 +153,10 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
           description="Enter a title and the link to an image."
           saveText="Insert"
           closeText="Cancel"
-          saveHandler={() => {}}
+          saveHandler={() => {
+            editor.chain().focus().setImage({ src: url, title }).run();
+            setIsOpen(false);
+          }}
         >
           <div className="flex flex-col items-center gap-2">
             <Input
