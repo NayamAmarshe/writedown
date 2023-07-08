@@ -30,6 +30,8 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
 
+  if (!editor) return <></>;
+
   return (
     <div
       className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
@@ -37,46 +39,115 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
       }`}
     >
       <div className="flex flex-row items-center gap-2 overflow-x-auto sm:w-full sm:justify-evenly">
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({
+                level: 1,
+              })
+              .run()
+          }
+        >
           <LuHeading1 className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({
+                level: 2,
+              })
+              .run()
+          }
+        >
           <LuHeading2 className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+        >
           <LuHeading3 className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({
+                level: 4,
+              })
+              .run()
+          }
+        >
           <LuHeading4 className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
           <LuBold className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
           <LuItalic className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        >
           <LuQuote className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        >
           <LuStrikethrough className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
           <LuListOrdered className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
           <LuList className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        >
           <LuCode className="dark:text-slate-200" />
         </button>
         {/* <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
           <MaterialLink />
         </button> */}
-        <button className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => {
+            // TODO
+          }}
+        >
           <LuImage className="dark:text-slate-200" />
         </button>
-        <button className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700">
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => {
+            // TODO
+          }}
+        >
           <LuMinus className="dark:text-slate-200" />
         </button>
         <Modal
