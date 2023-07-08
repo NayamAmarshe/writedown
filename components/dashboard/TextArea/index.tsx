@@ -57,6 +57,11 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
             class: "font-bold",
           },
         },
+        paragraph: {
+          HTMLAttributes: {
+            class: "dark:text-slate-100 text-base leading-none",
+          },
+        },
       }),
       Image.configure({
         inline: true,
