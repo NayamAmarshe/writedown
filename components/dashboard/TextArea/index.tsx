@@ -48,6 +48,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       attributes: {
         class:
           "prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none",
+        id: "writedown-editor",
       },
     },
     extensions: [
