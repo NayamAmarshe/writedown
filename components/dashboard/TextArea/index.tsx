@@ -54,13 +54,11 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         heading: {
           levels: [1, 2, 3, 4, 5, 6],
           HTMLAttributes: {
-            class: "font-bold",
+            class: "font-semibold",
           },
         },
         paragraph: {
-          HTMLAttributes: {
-            class: "dark:text-slate-100 text-base leading-none",
-          },
+          HTMLAttributes: {},
         },
       }),
       Image.configure({
@@ -68,16 +66,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         allowBase64: false,
       }),
       Code.configure({
-        HTMLAttributes: {
-          class:
-            "text-white bg-slate-700 dark:bg-slate-950 p-1 rounded text-base",
-        },
+        HTMLAttributes: {},
       }),
       CodeBlockLowlight.configure({
         lowlight,
         HTMLAttributes: {
           languageClassPrefix: "language-",
-          class: "text-white bg-slate-700 dark:bg-slate-950 text-base",
         },
       }),
       Markdown.configure({
