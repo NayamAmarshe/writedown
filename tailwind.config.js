@@ -11,6 +11,14 @@ module.exports = {
       screens: {
         xs: "320px",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            "code::before": { content: "" },
+            "code::after": { content: "" },
+          },
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],

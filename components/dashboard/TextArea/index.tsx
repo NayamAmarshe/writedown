@@ -4,22 +4,25 @@ import {
   postTitleAtom,
   postPublicAtom,
 } from "@/stores/postDataAtom";
-import { ProsemirrorAdapterProvider } from "@prosemirror-adapter/react";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { MilkdownProvider, UseEditorReturn } from "@milkdown/react";
-import MilkdownEditor from "@/components/ui/MilkdownEditor";
-import React, { useEffect, useRef, useState } from "react";
+import WritedownEditor from "@/components/ui/WritedownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
-import { useAtom, useAtomValue } from "jotai";
+import StarterKit from "@tiptap/starter-kit";
+import { lowlight } from "lowlight/lib/core";
+import Image from "@tiptap/extension-image";
 import EditorButtons from "./EditorButtons";
-import { Switch } from "@headlessui/react";
-import { toast } from "react-hot-toast";
+import { Markdown } from "tiptap-markdown";
+import Code from "@tiptap/extension-code";
+import { useEditor } from "@tiptap/react";
+import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
 import { auth } from "@/pages/_app";
+import { useAtom } from "jotai";
 
 type TextAreaProps = {
   shiftRight: boolean;
@@ -37,20 +40,75 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
-  // LOCAL STATES
-  const editorRef = React.useRef<UseEditorReturn>(null);
 
+  // EDITOR OPTIONS
+  const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class:
+          "prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none",
+      },
+    },
+    extensions: [
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3, 4, 5, 6],
+          HTMLAttributes: {
+            class: "font-bold",
+          },
+        },
+        paragraph: {
+          HTMLAttributes: {
+            class: "dark:text-slate-100 text-base leading-none",
+          },
+        },
+      }),
+      Image.configure({
+        inline: true,
+        allowBase64: false,
+      }),
+      Code.configure({
+        HTMLAttributes: {
+          class:
+            "text-white bg-slate-700 dark:bg-slate-950 p-1 rounded text-base",
+        },
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        HTMLAttributes: {
+          languageClassPrefix: "language-",
+          class: "text-white bg-slate-700 dark:bg-slate-950 text-base",
+        },
+      }),
+      Markdown.configure({
+        html: true,
+        tightLists: true,
+        tightListClass: "tight",
+        bulletListMarker: "-",
+        linkify: true,
+        breaks: true,
+        transformPastedText: true,
+        transformCopiedText: true,
+      }),
+    ],
+    content: postContent,
+    onUpdate: ({ editor }) => {
+      if (editor) {
+        setPostContent(editor.storage.markdown.getMarkdown());
+      }
+    },
+  });
+
+  // EFFECTS
   useEffect(() => {
     const alertUser = (e: BeforeUnloadEvent) => {
       e.preventDefault();
     };
-
     if (!synced) {
       window.addEventListener("beforeunload", alertUser);
     } else {
       window.removeEventListener("beforeunload", alertUser);
     }
-
     return () => {
       window.removeEventListener("beforeunload", alertUser);
     };
@@ -95,9 +153,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         postUpdatedAt === note.updatedAt &&
         postPublic === note.public
     );
-
     let debounceSave: NodeJS.Timeout;
-
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
     if (isNoteUnchanged) {
       setSynced(true);
@@ -140,46 +196,35 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       </IconButton>
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
-      <PostButtons shiftRight={shiftRight} editorRef={editorRef} />
+      <PostButtons shiftRight={shiftRight} editor={editor} />
 
       {/*EDITOR BUTTONS AND THE EDITOR*/}
-      <MilkdownProvider>
-        <EditorButtons shiftRight={shiftRight} />
+      <EditorButtons shiftRight={shiftRight} editor={editor} />
 
-        <div
-          tabIndex={0}
-          id="editor"
-          // onMouseLeave={instaSync}
-          className={`mb-64 w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
-            shiftRight ? "translate-x-52" : "translate-x-0"
-          }`}
-        >
-          {/* TITLE OF THE POST */}
-          <input
-            data-testid="noteTitle"
-            type="text"
-            className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
-            onChange={(e) => {
-              setPostTitle(e.target.value);
-            }}
-            placeholder="Untitled"
-            value={postTitle}
-          />
+      <div
+        tabIndex={0}
+        id="editor"
+        className={`mb-64 w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
+          shiftRight ? "translate-x-52" : "translate-x-0"
+        }`}
+      >
+        {/* TITLE OF THE POST */}
+        <input
+          data-testid="noteTitle"
+          type="text"
+          className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
+          onChange={(e) => {
+            setPostTitle(e.target.value);
+          }}
+          placeholder="Untitled"
+          value={postTitle}
+        />
 
-          {/* SEPARATOR */}
-          <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+        {/* SEPARATOR */}
+        <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
 
-          <ProsemirrorAdapterProvider>
-            <MilkdownEditor
-              input={postContent}
-              setInput={setPostContent}
-              className="prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none"
-              notes={notes}
-              editorRef={editorRef}
-            />
-          </ProsemirrorAdapterProvider>
-        </div>
-      </MilkdownProvider>
+        <WritedownEditor notes={notes} editor={editor} />
+      </div>
     </div>
   );
 };
