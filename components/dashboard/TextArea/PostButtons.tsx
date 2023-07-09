@@ -153,13 +153,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const downloadMarkdownHandler = () => {
     if (!editor) return;
     setDownloadLoading(true);
-    const markdown = editor.getText();
+    const markdown = postContent;
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.txt`;
+    a.download = `${postTitle}-${lastUpdated}.md`;
     a.click();
     setDownloadLoading(false);
   };
@@ -331,7 +331,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                   size="sm"
                   onClick={downloadMarkdownHandler}
                 >
-                  Download Text
+                  Download Markdown
                 </Button>
                 <Button variant="blue" size="sm" onClick={downloadHTMLHandler}>
                   Download HTML

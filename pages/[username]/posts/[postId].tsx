@@ -32,11 +32,12 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
       <HeadTags
         title={`${note.title} by ${name} - writedown`}
         description={`Read this post by ${name} on writedown - A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire.`}
-        ogImage={`https://writedown.app/api/og?title=${
-          note.title
-        }&content=${RemoveMarkdown(
-          note.content.slice(0, 200)
-        )}&author=${name}&profilePicture=${profilePicture}`}
+        ogImage={`https://dynamic-og-image-generator.vercel.app//api/generate?title=${note.title}&author=${name}&avatar=${profilePicture}&websiteUrl=https://writedown.app&theme=Night Owl`}
+        // ogImage={`https://writedown.app/api/og?title=${
+        //   note.title
+        // }&content=${RemoveMarkdown(
+        //   note.content.slice(0, 200)
+        // )}&author=${name}&profilePicture=${profilePicture}`}
         ogUrl={`https://writedown.app/${note.userId}/posts/${note.id}`}
       />
 
