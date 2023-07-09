@@ -1,16 +1,17 @@
 import {
+  IoMdCheckmarkCircle,
+  IoMdCopy,
+  IoMdRefresh,
+  IoMdRefreshCircle,
+  IoMdSend,
+  IoMdTrash,
+} from "react-icons/io";
+import {
   postContentAtom,
   postLastUpdatedAtom,
   postPublicAtom,
   postTitleAtom,
 } from "@/stores/postDataAtom";
-import {
-  IoMdCheckmarkCircle,
-  IoMdCopy,
-  IoMdRefreshCircle,
-  IoMdSend,
-  IoMdTrash,
-} from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useNotes from "@/components/hooks/useNotes";
@@ -49,23 +50,29 @@ export const formatTimeStamp = (time: number | undefined) => {
 };
 
 const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
+  // HOOKS
   const [user] = useAuthState(auth);
   const { theme } = useTheme();
 
+  // LOCAL STATE
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [showPublishModal, setShowPublishModal] = useState(false);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
+  // ATOMIC STATE
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const postContent = useAtomValue(postContentAtom);
-  const postTitle = useAtomValue(postTitleAtom);
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
   const postUpdatedAt = useAtomValue(postLastUpdatedAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
+  const postContent = useAtomValue(postContentAtom);
+  const postTitle = useAtomValue(postTitleAtom);
 
+  // CUSTOM HOOKS
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
 
+  // EFFECTS
   useEffect(() => {
     if (!postUpdatedAt) return;
     const formattedDate = formatTimeStamp(postUpdatedAt);
@@ -108,7 +115,9 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   };
 
   const downloadPDFHandler = async () => {
-    const content = document.querySelector(".milkdown > div") as HTMLElement;
+    if (!editor) return;
+    setDownloadLoading(true);
+    const content = document.querySelector("#writedown-editor") as HTMLElement;
     if (!content) return;
     // const originalColor = content.style.color;
     const originalBgColor = content.style.backgroundColor;
@@ -129,101 +138,16 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         .then(() => {
           // content.style.color = originalColor;
           content.style.backgroundColor = originalBgColor;
+        })
+        .finally(() => {
+          setDownloadLoading(false);
         });
     });
-    // html2pdf()
-    //   .set({
-    //     margin: 1,
-    //     filename: `${postTitle}-${lastUpdated}.pdf`,
-    //     image: { type: "jpeg", quality: 0.98 },
-    //   })
-    //   .from(content)
-    // function download(text: string, name: string, type: string) {
-    //   var a = document.getElementById("a");
-    //   var file = new Blob([text], { type: type });
-    //   if (a) {
-    //     a.href = URL.createObjectURL(file);
-    //     a.download = name;
-    //   }
-    // }
-    // const jsPdf = new jsPDF({
-    //   orientation: "p",
-    //   unit: "mm",
-    // });
-    // content.classList.toggle(theme === "dark" ? "bg-slate-900" : "bg-white");
-    // if (!content) return;
-    // if (!editorRef.current) return;
-    // const pageHeight = 295;
-    // const docWidth = jsPdf.internal.pageSize.getWidth();
-    // let positionY = 0;
-    // let currentPage = 1;
-    // const addNewPage = () => {
-    //   jsPdf.addPage();
-    //   positionY = 0;
-    //   currentPage++;
-    // };
-    // const renderContent = async (child: HTMLElement) => {
-    //   const canvas = await html2canvas(child, {
-    //     backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
-    //   });
-    //   const imgData = canvas.toDataURL("image/png");
-    //   const imgHeight = (canvas.height * docWidth) / canvas.width;
-    //   if (positionY + imgHeight > pageHeight) {
-    //     addNewPage();
-    //   }
-    //   jsPdf.addImage(imgData, "PNG", 0, positionY, docWidth, imgHeight);
-    //   positionY += imgHeight;
-    // };
-    // // const html = `<html><head><style>${
-    // //   markdownStyles.github
-    // // }</style></head><body>${editorRef.current
-    // //   .get()
-    // //   ?.action(getHTML())}</body></html>`;
-    // const children = Array.from(content.children);
-    // for (let i = 0; i < children.length; i++) {
-    //   const child = children[i];
-    //   console.log("🚀 => file: PostButtons.tsx:142 => child:", child);
-    //   await renderContent(child as HTMLElement);
-    // }
-    // jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
-    // html2canvas(content, {
-    //   backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
-    //   x: -20,
-    //   y: -20,
-    //   allowTaint: true,
-    //   scrollY: -window.scrollY,
-    // }).then(async (canvas) => {
-    //   // const imgData = canvas.toDataURL("image/png");
-    //   // const imgProps = jsPdf.getImageProperties(imgData);
-    //   // const pdfWidth = jsPdf.internal.pageSize.getWidth();
-    //   // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    //   // jsPdf.addImage(
-    //   //   imgData,
-    //   //   "PNG",
-    //   //   0,
-    //   //   position,
-    //   //   jsPdf.internal.pageSize.getWidth(),
-    //   //   jsPdf.internal.pageSize.getHeight()
-    //   // );
-    //   // while (remainingHeight > 0) {
-    //   //   position = -jsPdf.internal.pageSize.getHeight();
-    //   //   jsPdf.addPage();
-    //   //   jsPdf.addImage(
-    //   //     imgData,
-    //   //     "PNG",
-    //   //     0,
-    //   //     position,
-    //   //     jsPdf.internal.pageSize.getWidth(),
-    //   //     jsPdf.internal.pageSize.getHeight()
-    //   //   );
-    //   //   remainingHeight = remainingHeight - jsPdf.internal.pageSize.getHeight();
-    //   // }
-    //   jsPdf.save(`${postTitle}-${lastUpdated}.pdf`);
-    // });
   };
 
   const downloadMarkdownHandler = () => {
     if (!editor) return;
+    setDownloadLoading(true);
     const markdown = editor.getText();
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/plain" });
@@ -232,10 +156,12 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     a.href = url;
     a.download = `${postTitle}-${lastUpdated}.txt`;
     a.click();
+    setDownloadLoading(false);
   };
 
   const downloadHTMLHandler = () => {
     if (!editor) return;
+    setDownloadLoading(true);
     const html = editor.getHTML();
     if (!html) return;
     const blob = new Blob([html], { type: "text/plain" });
@@ -244,6 +170,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     a.href = url;
     a.download = `${postTitle}-${lastUpdated}.html`;
     a.click();
+    setDownloadLoading(false);
   };
 
   return (
@@ -381,7 +308,14 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
             <div className="mt-5">
               <label className="font-medium dark:text-slate-300">
-                Download Post
+                {!downloadLoading ? (
+                  "Download Post"
+                ) : (
+                  <div className="flex items-center gap-1">
+                    Downloading
+                    <IoMdRefresh className="h-5 w-5 animate-spin" />
+                  </div>
+                )}
               </label>
               <div className="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
                 <Button variant="red" size="sm" onClick={downloadPDFHandler}>
