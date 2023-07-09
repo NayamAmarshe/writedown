@@ -18,6 +18,7 @@ import Image from "@tiptap/extension-image";
 import EditorButtons from "./EditorButtons";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
+import Link from "@tiptap/extension-link";
 import { useEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
@@ -59,6 +60,16 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         },
         paragraph: {
           HTMLAttributes: {},
+        },
+      }),
+      Link.configure({
+        protocols: ["ftp", "mailto"],
+        autolink: true,
+        linkOnPaste: true,
+        HTMLAttributes: {
+          class: "text-sky-500 underline cursor-pointer",
+          target: "_blank",
+          rel: "noopener noreferrer",
         },
       }),
       Image.configure({
