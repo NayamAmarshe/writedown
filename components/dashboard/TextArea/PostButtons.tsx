@@ -101,6 +101,11 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
    */
   const deleteNoteHandler = async () => {
     if (!notes || !selectedNoteId) return;
+    // Confirm deletion
+    const confirm = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+    if (!confirm) return;
     await deleteNote(selectedNoteId);
     await refreshNotes();
     toast.success("Deleted Post!", {
