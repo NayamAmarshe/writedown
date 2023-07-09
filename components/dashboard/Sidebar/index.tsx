@@ -1,9 +1,9 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
-import PlusCircle from "@/components/icons/PlusCircle";
 import { postPublicAtom } from "@/stores/postDataAtom";
 import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
@@ -35,8 +35,9 @@ const Sidebar = ({
   const [user] = useAuthState(auth);
 
   const [mounted, setMounted] = useState(false);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
+  const [createPostLoading, setCreatePostLoading] = useState(false);
 
+  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
@@ -60,6 +61,7 @@ const Sidebar = ({
   }, [synced, selectedNoteId]);
 
   const newPostClickHandler = async () => {
+    setCreatePostLoading(true);
     const newId = await createNote();
     await refreshNotes();
     if (!newId) {
@@ -67,6 +69,7 @@ const Sidebar = ({
       return;
     }
     setSelectedNoteId(newId);
+    setCreatePostLoading(false);
     window.innerWidth <= 768 && setShowSidebar(false);
   };
 
@@ -140,11 +143,16 @@ const Sidebar = ({
       {notes ? (
         <Button
           data-testid="new-note"
-          onLoad={newPostClickHandler}
           onClick={newPostClickHandler}
+          disabled={createPostLoading}
+          className="disabled:cursor-not-allowed"
         >
           <span className="flex items-center justify-center gap-1">
-            <PlusCircle className="h-5 w-5" />
+            {createPostLoading ? (
+              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
+            ) : (
+              <IoMdAddCircle className="h-5 w-5" />
+            )}
             Create New Post
           </span>
         </Button>

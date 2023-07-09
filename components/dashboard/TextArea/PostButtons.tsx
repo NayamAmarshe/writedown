@@ -9,27 +9,26 @@ import {
   IoMdCopy,
   IoMdRefreshCircle,
   IoMdSend,
+  IoMdTrash,
 } from "react-icons/io";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getHTML, getMarkdown } from "@milkdown/utils";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
-import { UseEditorReturn } from "@milkdown/react";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
-import Trash from "@/components/icons/Trash";
 import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
 import { toast } from "react-hot-toast";
+import { Editor } from "@tiptap/react";
 import { useTheme } from "next-themes";
 import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
-  editorRef: React.MutableRefObject<UseEditorReturn | null>;
+  editor: Editor | null;
 };
 
 export const formatTimeStamp = (time: number | undefined) => {
@@ -49,7 +48,7 @@ export const formatTimeStamp = (time: number | undefined) => {
   return formattedDate;
 };
 
-const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
+const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [user] = useAuthState(auth);
   const { theme } = useTheme();
 
@@ -224,21 +223,20 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
   };
 
   const downloadMarkdownHandler = () => {
-    if (!editorRef.current) return;
-    const markdown = editorRef.current.get()?.action(getMarkdown());
-
+    if (!editor) return;
+    const markdown = editor.getText();
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.md`;
+    a.download = `${postTitle}-${lastUpdated}.txt`;
     a.click();
   };
 
   const downloadHTMLHandler = () => {
-    if (!editorRef.current) return;
-    const html = editorRef.current.get()?.action(getHTML());
+    if (!editor) return;
+    const html = editor.getHTML();
     if (!html) return;
     const blob = new Blob([html], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -296,7 +294,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
-            <Trash className="h-5 w-5" />
+            <IoMdTrash className="h-5 w-5" />
             <p>Delete Post</p>
           </span>
         </Button>
@@ -352,15 +350,29 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
               onClick={() => {
                 if (!postPublic) return;
                 toast.success("Copied link to clipboard!");
+                const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(
-                  `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
+                  isDev
+                    ? `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`
+                    : `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
                 );
               }}
             >
               <div className="w-11/12 truncate">
-                {postPublic
-                  ? `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
-                  : `https://writedown.app/...`}
+                {/* PROD */}
+                {process.env.NODE_ENV !== "development" &&
+                  postPublic &&
+                  `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`}
+                {process.env.NODE_ENV !== "development" &&
+                  !postPublic &&
+                  `https://writedown.app/...`}
+                {/* DEV */}
+                {process.env.NODE_ENV === "development" &&
+                  postPublic &&
+                  `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`}
+                {process.env.NODE_ENV === "development" &&
+                  !postPublic &&
+                  `http://localhost:3000/...`}
               </div>
               {postPublic && (
                 <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
@@ -380,7 +392,7 @@ const PostButtons = ({ shiftRight, editorRef }: PostButtonsProps) => {
                   size="sm"
                   onClick={downloadMarkdownHandler}
                 >
-                  Download Markdown
+                  Download Text
                 </Button>
                 <Button variant="blue" size="sm" onClick={downloadHTMLHandler}>
                   Download HTML
