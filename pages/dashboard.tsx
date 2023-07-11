@@ -21,7 +21,7 @@ const Dashboard = () => {
         router.push("/login");
         return;
       }
-      createUser(user);
+      // createUser(user);
     },
   });
 

@@ -4,12 +4,33 @@ service cloud.firestore {
     // Allow only authenticated users to read and write their own data
     match /users/{userId} {
       allow update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && isValidUser(userId);
       allow read;
     }
-    
+
+    function isValidUser(userId) {
+      let isOwner = request.auth.uid == userId;
+      let username = request.resource.data.username;
+      let createdValidUsername = existsAfter(/databases/$(database)/documents/usernames/$(username));
+
+      return isOwner && createdValidUsername;
+    }
+
+    match /usernames/{username} {
+      allow read;
+      allow create: if isValidUsername(username);
+    }
+
+    function isValidUsername(username) {
+      let isOwner = request.auth.uid == request.resource.data.uid;
+      let isValidLength = username.size() >= 3 && username.size() <= 15;
+      let isValidUserDoc = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
+
+      return isOwner && isValidLength && isValidUserDoc;
+    }
+
     match /users/{userId}/{document=**} {
-    	allow read, write: if request.auth.uid == userId;
+      allow read, write: if request.auth.uid == userId;
     }
 
     match /users/{userId}/notes/{noteId} {
