@@ -32,7 +32,7 @@ export const Details = Node.create<DetailsOptions>({
     };
   },
 
-  content: "paragraph*",
+  content: "text*",
 
   group: "block",
 
@@ -85,7 +85,17 @@ export const Details = Node.create<DetailsOptions>({
           class: "details-button",
         },
       ],
-      ["div", ["summary"], ["div", { class: "details-content" }, 0]],
+      [
+        "div",
+        [
+          "summary",
+          {
+            class: "details-summary",
+          },
+          "adsasdasd",
+        ],
+        ["div", { class: "details-content" }, 0],
+      ],
     ];
   },
 
