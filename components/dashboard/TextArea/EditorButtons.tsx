@@ -128,7 +128,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() =>
-            editor.chain().focus().toggleCodeBlock().unsetCode().run()
+            editor.chain().focus().toggleDetails().unsetCode().run()
           }
         >
           <LuCode className="dark:text-slate-200" />
