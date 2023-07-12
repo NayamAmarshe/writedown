@@ -7,6 +7,7 @@ import {
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import WritedownEditor from "@/components/ui/WritedownEditor";
+import { Details } from "@/components/ui/extensions/Details";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
@@ -96,6 +97,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         transformPastedText: true,
         transformCopiedText: true,
       }),
+      Details.configure({}),
     ],
     content: postContent,
     onUpdate: ({ editor }) => {

@@ -6,7 +6,7 @@
     "start": "next start",
     "lint": "next lint",
     "firebase": "firebase emulators:start --import firebase --export-on-exit",
-    "stop": "pids=$(ps aux | grep '[p]ubsub' | awk '{print $2}'); if [ ! -z '$pids' ]; then kill $pids; fi;",
+    "stop": "npx kill-port 3000 4000 4001 4002 3001 9150",
     "prepare": "husky install",
     "cypress": "cypress open"
   },
