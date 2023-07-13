@@ -25,7 +25,7 @@ Hate complexity? **Even Better!**
 ☁️ **Cloud Sync**  
 🤝 **Free and Open Source**  
 🪟 **Real-time Markdown Preview**  
-📨 **Publishing and Sharing**
+📨 **Publishing and Sharing**   
 🌹 **Simple and beautiful interface**
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
