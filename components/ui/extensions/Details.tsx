@@ -132,20 +132,12 @@ export const Details = Node.create<DetailsOptions>({
                 open,
               });
 
-              // Set the selection to the content of the details node
-              transaction.setSelection(
-                TextSelection.create(
-                  transaction.doc,
-                  pos + 1,
-                  pos + 1 + node.content.size
-                )
-              );
               // Dispatch the transaction
               view.dispatch(transaction);
               // Return true to signal ProseMirror the click has been handled
               return true;
             }
-            // Return false to signal ProseMirror the click has not been handled
+            // Else return false to signal ProseMirror the click has not been handled
             return false;
           },
         },
