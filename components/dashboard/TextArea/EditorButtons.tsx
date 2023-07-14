@@ -1,5 +1,6 @@
 import {
   LuBold,
+  LuCheckSquare,
   LuCode,
   LuDivide,
   LuHeading1,
@@ -12,7 +13,6 @@ import {
   LuListOrdered,
   LuMinus,
   LuQuote,
-  LuRuler,
   LuStrikethrough,
 } from "react-icons/lu";
 import React, { useState } from "react";
@@ -124,6 +124,12 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <LuList className="dark:text-slate-200" />
+        </button>
+        <button
+          className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => editor.chain().focus().toggleTaskList().run()}
+        >
+          <LuCheckSquare className="dark:text-slate-200" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
