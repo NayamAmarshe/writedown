@@ -67,12 +67,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           HTMLAttributes: {},
         },
       }),
-      TaskList.configure({
-        HTMLAttributes: {},
-      }),
+      TaskList.configure({}),
       TaskItem.configure({
         nested: true,
-        HTMLAttributes: {},
       }),
       Link.configure({
         protocols: ["ftp", "mailto"],
@@ -227,20 +224,16 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         }`}
       >
         {/* TITLE OF THE POST */}
-        {postTitle ? (
-          <input
-            data-testid="noteTitle"
-            type="text"
-            className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
-            onChange={(e) => {
-              setPostTitle(e.target.value);
-            }}
-            placeholder="Untitled"
-            value={postTitle}
-          />
-        ) : (
-          <Skeleton className="h-12 w-full p-0" />
-        )}
+        <input
+          data-testid="noteTitle"
+          type="text"
+          className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
+          onChange={(e) => {
+            setPostTitle(e.target.value);
+          }}
+          placeholder="Untitled"
+          value={postTitle}
+        />
 
         {/* SEPARATOR */}
         <div className="mb-5 mt-2 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
