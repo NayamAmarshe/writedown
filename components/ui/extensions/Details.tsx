@@ -48,37 +48,13 @@ export const Details = Node.create<DetailsOptions>({
     ];
   },
 
-  addGlobalAttributes() {
-    return [
-      {
-        types: ["details"],
-        attributes: {
-          open: {
-            default: false,
-            parseHTML: (element) => ({
-              open: element.hasAttribute("open"),
-            }),
-            renderHTML: (attributes) => {
-              if (attributes.open) {
-                return {
-                  open: false,
-                };
-              }
-              return {};
-            },
-          },
-        },
-      },
-    ];
-  },
-
   renderHTML({ node, HTMLAttributes }) {
     return [
       "details",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+      {
         class: "details",
         "data-type": "details",
-      }),
+      },
       [
         "button",
         {
@@ -116,30 +92,7 @@ export const Details = Node.create<DetailsOptions>({
       new Plugin({
         key: new PluginKey("detailsButton"),
         props: {
-          handleClick: (view, pos) => {
-            // Find the node that was clicked based on the position
-            const node = view.state.doc.nodeAt(pos);
-            // Check if the node is a details node
-            if (node?.type.name === "details") {
-              console.log("node", node);
-              // Toggle the open attribute
-              const open = !node.attrs.open;
-              // Create a transaction
-              const transaction = view.state.tr;
-              // Set the new open attribute
-              transaction.setNodeMarkup(pos, undefined, {
-                ...node.attrs,
-                open,
-              });
-
-              // Dispatch the transaction
-              view.dispatch(transaction);
-              // Return true to signal ProseMirror the click has been handled
-              return true;
-            }
-            // Else return false to signal ProseMirror the click has not been handled
-            return false;
-          },
+          handleClick: (view, pos) => {},
         },
       }),
     ];
