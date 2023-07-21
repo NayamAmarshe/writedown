@@ -2,6 +2,7 @@ import {
   LuBold,
   LuCheckSquare,
   LuCode,
+  LuDivide,
   LuHeading1,
   LuHeading2,
   LuHeading3,
@@ -132,7 +133,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
-          onClick={() => editor.chain().focus().toggleCode().unsetCode().run()}
+          onClick={() => editor.chain().focus().setCodeBlock().run()}
         >
           <LuCode className="dark:text-slate-200" />
         </button>
