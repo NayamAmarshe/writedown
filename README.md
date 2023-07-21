@@ -25,10 +25,35 @@ Hate complexity? **Even Better!**
 ☁️ **Cloud Sync**  
 🤝 **Free and Open Source**  
 🪟 **Real-time Markdown Preview**  
-📨 **Publishing and Sharing**
+📨 **Publishing and Sharing**   
 🌹 **Simple and beautiful interface**
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
+
+## ✨ Features
+
+### Here are the markdown features that writedown supports:   
+
+- Headings (1 to 4)
+- Bold
+- Italics
+- Underline
+- Quotes
+- Strikethrough
+- Ordered List
+- Unordered List
+- Task List
+- Code Block
+- Image
+- Horizontal Rule (Line)
+
+### Along with that, writedown lets you:
+
+- Share posts with people
+- Create your personalized landing page
+- Add your social media links
+
+and many more being added as you read this!
 
 ##  🧑‍💻️ Development
 
