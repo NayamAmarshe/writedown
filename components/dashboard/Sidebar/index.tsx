@@ -161,11 +161,11 @@ const Sidebar = ({
       )}
 
       {/* POSTS SECTION */}
-      <div className="flex h-full flex-col gap-3 overflow-y-auto">
-        {/* POSTS HEADING */}
-        <h6 className="font-semibold">Posts</h6>
+      {/* POSTS HEADING */}
+      <h6 className="font-semibold">Posts</h6>
+      <div className="scrollbar flex h-full flex-col  gap-3 overflow-y-auto">
         {/* POSTS LIST */}
-        <div className="flex flex-col gap-2 p-1">
+        <div className="mb-64 flex flex-col gap-2 p-1">
           {notes ? (
             notes.map((note) => (
               <Link
@@ -189,6 +189,7 @@ const Sidebar = ({
           ) : (
             <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
+          <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center bg-gradient-to-t from-white pb-32 pt-32 dark:from-slate-900"></div>
         </div>
       </div>
 
