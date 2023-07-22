@@ -10,8 +10,11 @@ import WritedownEditor from "@/components/ui/WritedownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
+import Skeleton from "react-loading-skeleton";
 import StarterKit from "@tiptap/starter-kit";
 import { lowlight } from "lowlight/lib/core";
 import Image from "@tiptap/extension-image";
@@ -62,6 +65,10 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         paragraph: {
           HTMLAttributes: {},
         },
+      }),
+      TaskList.configure({}),
+      TaskItem.configure({
+        nested: true,
       }),
       Link.configure({
         protocols: ["ftp", "mailto"],
@@ -227,7 +234,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         />
 
         {/* SEPARATOR */}
-        <div className="mb-5 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+        <div className="mb-5 mt-2 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
 
         <WritedownEditor notes={notes} editor={editor} />
       </div>

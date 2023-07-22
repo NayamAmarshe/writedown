@@ -57,6 +57,35 @@
   -webkit-text-stroke: 4px black;
 }
 
+ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+}
+
+ul[data-type="taskList"] p {
+  margin: 0;
+}
+
+ul[data-type="taskList"] li {
+  display: flex;
+}
+
+ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  margin-top: 0;
+  user-select: none;
+}
+
+ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+  margin-bottom: 0;
+}
+
+label > input[type="checkbox"] {
+  border-radius: 0.25rem;
+}
+
 /* .milkdown {
   width: 100%;
   height: 100%;
