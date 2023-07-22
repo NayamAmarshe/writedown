@@ -1,12 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run stop; npm run firebase & next dev &",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "firebase": "firebase emulators:start --import firebase --export-on-exit",
-    "stop": "npx kill-port 3000 4000 4001 4002 3001 9150",
+    "stop": "for port in 3000 3001 3002 4000 4001 4002 9150; do lsof -t -i:$port | xargs -r kill; done",
     "prepare": "husky install",
     "cypress": "cypress open"
   },
@@ -18,6 +18,8 @@
     "@tiptap/extension-code-block-lowlight": "^2.0.3",
     "@tiptap/extension-image": "^2.0.3",
     "@tiptap/extension-link": "^2.0.3",
+    "@tiptap/extension-task-item": "^2.0.3",
+    "@tiptap/extension-task-list": "^2.0.3",
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
