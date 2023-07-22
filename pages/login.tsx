@@ -17,8 +17,8 @@ const LoginPage = () => {
   const [authUser, authLoading, authError] = useAuthState(auth, {
     onUserChanged: async (user) => {
       if (!user) return;
-      // createUser(user, "TGS963");
-      createUser(user);
+      createUser(user, "TGS963");
+      // createUser(user);
     },
   });
 
