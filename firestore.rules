@@ -34,8 +34,9 @@ service cloud.firestore {
     }
 
     match /users/{userId}/notes/{noteId} {
-      allow read, write: if request.auth.uid == userId;
-      allow read: if resource.data.public == true;
+      allow create: if isValidUser(userId);
+      allow read, write: if request.auth.uid == userId && isValidUser(userId);
+      allow read: if resource.data.public == true && isValidUser(userId);
     }
 
   }

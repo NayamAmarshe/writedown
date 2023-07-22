@@ -7,12 +7,13 @@ import { useCallback } from "react";
 
 export const useUser = () => {
   const batch = writeBatch(db);
-  const createUser = async (user: User, userName: string) => {
-    const usernameDoc = doc(db, "usernames", userName);
-    batch.set(usernameDoc, {
-      uid: user.uid,
-    });
-
+  const createUser = async (user: User, userName?: string) => {
+    const usernameDoc = doc(db, "usernames", userName || "");
+    if (userName) {
+      batch.set(usernameDoc, {
+        uid: user.uid,
+      });
+    }
     const userDoc = doc(db, "users", user.uid);
     batch.set(userDoc, {
       uid: user.uid,
