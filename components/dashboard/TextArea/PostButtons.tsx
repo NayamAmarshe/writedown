@@ -116,7 +116,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     });
     const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
-    setSelectedNoteId(notes[newIndex]?.id || null);
+    setSelectedNoteId(notes[0]?.id || null);
   };
 
   const downloadPDFHandler = async () => {
