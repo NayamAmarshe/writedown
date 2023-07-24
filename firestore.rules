@@ -4,16 +4,23 @@ service cloud.firestore {
     // Allow only authenticated users to read and write their own data
     match /users/{userId} {
       allow update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null && isValidUser(userId);
+      allow create: if request.auth != null;
       allow read;
     }
 
     function isValidUser(userId) {
       let isOwner = request.auth.uid == userId;
-      let username = request.resource.data.username;
-      let createdValidUsername = existsAfter(/databases/$(database)/documents/usernames/$(username));
+      let userHasUsername = exists(
+          /databases/$(database)/documents/users/$(userId)/username);
 
-      return isOwner && createdValidUsername;
+      let username = userHasUsername && get(/databases/$(database)/documents/users/$(userId)/username);
+
+      // Check if the username exists in the usernames collection.
+      let username_exists = username && exists(/databases/$(database)/documents/usernames/$(username));
+      let uid = username_exists && get(/databases/$(database)/documents/usernames/$(username)).uid;
+
+      // Check if the username document has an userId field referring back to the original userId.
+      return userHasUsername && userId == uid && isOwner
     }
 
     match /usernames/{username} {

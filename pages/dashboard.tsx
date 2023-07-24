@@ -1,3 +1,4 @@
+import SetUsernameModal from "@/components/dashboard/SetUsernamModal";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -10,7 +11,9 @@ import { auth } from "./_app";
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
-  const { createUser } = useUser();
+  const { hasUsername } = useUser();
+
+  const [showDashboard, setShowDashboard] = useState(false);
 
   const [showSidebar, setShowSidebar] = useState(true);
 
@@ -21,24 +24,38 @@ const Dashboard = () => {
         router.push("/login");
         return;
       }
+      if (await hasUsername(user)) {
+        setShowDashboard(true);
+      }
       // createUser(user);
     },
   });
 
-  return (
-    <>
-      <div className="relative flex h-screen w-screen flex-row bg-slate-200 text-gray-900 dark:bg-slate-800">
-        <HeadTags
-          title="Dashboard - writedown"
-          description="A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire."
-          ogImage="https://writedown.app/og-image.png"
-          ogUrl="https://writedown.app"
+  if (showDashboard) {
+    return (
+      <>
+        <div className="relative flex h-screen w-screen flex-row bg-slate-200 text-gray-900 dark:bg-slate-800">
+          <HeadTags
+            title="Dashboard - writedown"
+            description="A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire."
+            ogImage="https://writedown.app/og-image.png"
+            ogUrl="https://writedown.app"
+          />
+          <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+          <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SetUsernameModal
+          setShowDashboard={setShowDashboard}
+          showDashboard={showDashboard}
         />
-        <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-        <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 export default Dashboard;

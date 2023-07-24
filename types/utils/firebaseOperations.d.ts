@@ -13,3 +13,12 @@ export type Note = {
 export type PublicNote = {
   userId: string;
 };
+
+export type UserDoc = {
+  uid: string;
+  email: string;
+  username: string | undefined;
+  photoURL: string;
+  displayName: string;
+  createdAt: string;
+};

@@ -1,4 +1,4 @@
-import { Note, PublicNote } from "@/types/utils/firebaseOperations";
+import { Note, PublicNote, UserDoc } from "@/types/utils/firebaseOperations";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 
 export const converter = <T>() => ({
@@ -8,3 +8,4 @@ export const converter = <T>() => ({
 
 export const notesConverter = converter<Note>();
 export const publicNotesConverter = converter<PublicNote>();
+export const userDocConverter = converter<UserDoc>();
