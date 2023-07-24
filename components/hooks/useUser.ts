@@ -1,20 +1,19 @@
 import { deleteDoc, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
-import { userDocConverter } from "@/utils/firestoreDataConverter";
-import { User } from "firebase/auth";
+import { UserDoc } from "@/types/utils/firebaseOperations";
+import { User, UserProfile } from "firebase/auth";
 import { db } from "@/lib/firebase";
-import { useCallback } from "react";
-
-// type UseUserProps = {};
 
 export const useUser = () => {
   const batch = writeBatch(db);
   const createUser = async (user: User) => {
+    const currentTime = new Date().getTime();
+
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
       displayName: user.displayName,
-      createdAt: new Date().toISOString(),
+      createdAt: currentTime,
     });
   };
 
@@ -47,9 +46,17 @@ export const useUser = () => {
   };
 
   const hasUsername = async (user: User) => {
-    const userDoc = doc(db, "users", user.uid);
-    const userData = await getDoc(userDoc);
-    if (userData.exists() && userData.get("username") !== undefined) {
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() as UserDoc;
+
+    if (
+      userData &&
+      (userData.username !== undefined || userData.username !== userData.uid)
+    ) {
       return true;
     }
     return false;

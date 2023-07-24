@@ -1,12 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run stop; npm run firebase & next dev &",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "firebase": "firebase emulators:start --import firebase --export-on-exit",
-    "stop": "pids=$(ps aux | grep '[p]ubsub' | awk '{print $2}'); if [ ! -z '$pids' ]; then kill $pids; fi;",
+    "stop": "for port in 3000 3001 3002 4000 4001 4002 9150; do lsof -t -i:$port | xargs -r kill; done",
     "prepare": "husky install",
     "cypress": "cypress open"
   },

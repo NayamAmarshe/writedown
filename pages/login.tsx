@@ -18,7 +18,6 @@ const LoginPage = () => {
     onUserChanged: async (user) => {
       if (!user) return;
       createUser(user);
-      // createUser(user);
     },
   });
 
