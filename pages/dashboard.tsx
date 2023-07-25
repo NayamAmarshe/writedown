@@ -1,45 +1,27 @@
-import SetUsernameModal from "@/components/dashboard/SetUsernamModal";
+import CheckUsername from "@/components/dashboard/CheckUsername";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
 import HeadTags from "@/components/common/HeadTags";
-import React, { useEffect, useState } from "react";
-import useUser from "@/components/hooks/useUser";
-import Modal from "@/components/ui/Modal";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { auth } from "./_app";
 
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
-  const { hasUsername } = useUser();
 
-  const [showUsernameModal, setShowUsernameModal] = useState(true);
   const [showSidebar, setShowSidebar] = useState(true);
 
   // AUTH STATE HOOK
   useAuthState(auth, {
     onUserChanged: async (user) => {
-      console.log("has no username");
       if (!user) {
         router.push("/login");
         return;
       }
-      if (await hasUsername(user)) {
-        console.log("has username");
-        setShowUsernameModal(false);
-      }
     },
   });
-
-  useEffect(() => {
-    (async () => {
-      const user = auth.currentUser;
-      if (user && !(await hasUsername(user))) {
-        setShowUsernameModal(false);
-      }
-    })();
-  }, []);
 
   return (
     <>
@@ -52,7 +34,7 @@ const Dashboard = () => {
         />
         <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
-        <Modal isOpen={showUsernameModal} setIsOpen={setShowSidebar} />
+        <CheckUsername />
       </div>
     </>
   );
