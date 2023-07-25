@@ -57,8 +57,8 @@ const CheckUsername = () => {
       saveText="Save"
       title="Set Username"
       description="Set a username to create your personal writedown space."
-      undismissable
       saveHandler={handleSaveUsername}
+      undismissable
     >
       {invalidUsername && (
         <p className="mb-2 text-sm text-red-500">
