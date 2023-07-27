@@ -15,6 +15,7 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
+import Heading from "@tiptap/extension-heading";
 import Skeleton from "react-loading-skeleton";
 import StarterKit from "@tiptap/starter-kit";
 import { lowlight } from "lowlight/lib/core";
@@ -67,6 +68,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           HTMLAttributes: {},
         },
       }),
+      Heading,
       Collapsible,
       TaskList.configure({}),
       TaskItem.configure({

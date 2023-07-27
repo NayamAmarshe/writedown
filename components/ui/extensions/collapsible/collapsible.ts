@@ -1,7 +1,7 @@
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { findBlockNodes } from "prosemirror-utils";
 import { Extension } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
 
 export interface CollapsibleOptions {
   className: string;
@@ -9,7 +9,7 @@ export interface CollapsibleOptions {
 }
 
 export const Collapsible = Extension.create<CollapsibleOptions>({
-  name: "collapse",
+  name: "folding",
 
   addOptions() {
     return {
@@ -19,66 +19,78 @@ export const Collapsible = Extension.create<CollapsibleOptions>({
   },
 
   addProseMirrorPlugins() {
+    let loaded = false;
+
     return [
       new Plugin({
         key: new PluginKey("collapse"),
-        props: {
-          decorations: ({ doc, selection }) => {
-            const { isEditable, isFocused } = this.editor;
-            const { anchor } = selection;
+        view: (view) => {
+          view.dispatch(view.state.tr.setMeta("folding", { loaded: true }));
+          return {};
+        },
+        appendTransaction: (transactions, oldState, newState) => {
+          if (loaded) return;
+          if (
+            !transactions.some((transaction) => transaction.getMeta("folding"))
+          ) {
+            return;
+          }
 
-            const decorations: Decoration[] = [];
+          let modified = false;
+          const tr = newState.tr;
+          const blocks = findBlockNodes(newState.doc);
 
-            if (!isEditable || !isFocused) {
-              return DecorationSet.create(doc, []);
+          for (const block of blocks) {
+            if (block.node.type.name === "heading") {
+              const persistKey = "heading";
+              const persistedState = localStorage?.getItem(persistKey);
+
+              if (persistedState === "collapsed") {
+                tr.setNodeMarkup(block.pos, undefined, {
+                  ...block.node.attrs,
+                  collapsed: true,
+                });
+                modified = true;
+              }
             }
+          }
 
-            doc.descendants((node, pos) => {
-              // Check if node is heading
-              const headingSchema = this.editor.schema.nodes.heading;
-              const isHeading = headingSchema === node.type;
-              if (!isHeading) {
-                return;
-              }
-              // Find heading level
-              const currentLevel = node.attrs.level;
+          loaded = true;
+          return modified ? tr : null;
+        },
+        props: {
+          decorations: (state) => {
+            const { doc } = state;
+            const decorations: Decoration[] = [];
+            const blocks = findBlockNodes(doc);
 
-              // Check the next node with the same level
-              let nextNode: Node | null = node;
+            let withinCollapsedHeading;
 
-              let nextPos = pos;
-              while (nextNode && nextNode.attrs.level >= currentLevel) {
-                nextPos += nextNode.nodeSize;
-                if (nextPos >= doc.content.size) {
-                  break;
+            for (const block of blocks) {
+              if (block.node.type.name === "heading") {
+                if (
+                  !withinCollapsedHeading ||
+                  block.node.attrs.level <= withinCollapsedHeading
+                ) {
+                  if (block.node.attrs.collapsed) {
+                    if (!withinCollapsedHeading) {
+                      withinCollapsedHeading = block.node.attrs.level;
+                    }
+                  } else {
+                    withinCollapsedHeading = undefined;
+                  }
+                  continue;
                 }
-                const newNode = doc.nodeAt(nextPos);
-                if (newNode && newNode.type === headingSchema) {
-                  nextNode = newNode;
-                }
               }
 
-              if (!nextNode) {
-                return true;
+              if (withinCollapsedHeading) {
+                decorations.push(
+                  Decoration.node(block.pos, block.pos + block.node.nodeSize, {
+                    class: "folded-content",
+                  })
+                );
               }
-              console.log(
-                "🚀 => file: collapsible.ts:48 => nextNode:",
-                nextNode
-              );
-
-              const isCurrent =
-                anchor >= pos && anchor <= nextPos + nextNode.nodeSize - 1;
-
-              if (!isCurrent) {
-                return false;
-              }
-
-              decorations.push(
-                Decoration.node(pos, nextPos + node.nodeSize, {
-                  class: this.options.className,
-                })
-              );
-            });
+            }
 
             return DecorationSet.create(doc, decorations);
           },
