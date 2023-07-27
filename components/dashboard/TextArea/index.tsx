@@ -6,6 +6,7 @@ import {
 } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import Collapsible from "@/components/ui/extensions/collapsible";
 import WritedownEditor from "@/components/ui/WritedownEditor";
 import { useAuthState } from "react-firebase-hooks/auth";
 import IconButton from "@/components/ui/IconButton";
@@ -66,6 +67,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           HTMLAttributes: {},
         },
       }),
+      Collapsible,
       TaskList.configure({}),
       TaskItem.configure({
         nested: true,

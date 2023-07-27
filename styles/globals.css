@@ -86,6 +86,38 @@ label > input[type="checkbox"] {
   border-radius: 0.25rem;
 }
 
+.is-collapsed {
+  border-radius: 3px;
+  box-shadow: 0 0 0 3px #68cef8;
+}
+
+/* Basic editor styles */
+/* FILEPATH: /Users/zeffo/Public/writedown/styles/globals.css */
+/* BEGIN: ed8c6549bwf9 */
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding: 0 1rem;
+}
+
+.ProseMirror blockquote {
+  border-left: 2px solid rgba(13, 13, 13, 0.1);
+  padding-left: 1rem;
+}
+
+.ProseMirror code {
+  background-color: rgba(97, 97, 97, 0.1);
+  border-radius: 0.25em;
+  box-decoration-break: clone;
+  color: #616161;
+  font-size: 0.9rem;
+  padding: 0.25em;
+}
+/* END: ed8c6549bwf9 */
+
 /* .milkdown {
   width: 100%;
   height: 100%;
