@@ -7,6 +7,7 @@ import { firebaseApp } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
+import "katex/dist/katex.min.css";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
 
