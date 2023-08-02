@@ -6,15 +6,20 @@ import {
 } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import DetailsContent from "@tiptap-pro/extension-details-content";
+import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import WritedownEditor from "@/components/ui/WritedownEditor";
+import Mathematics from "@tiptap-pro/extension-mathematics";
 import { useAuthState } from "react-firebase-hooks/auth";
+import UniqueId from "@tiptap-pro/extension-unique-id";
+import Details from "@tiptap-pro/extension-details";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
-import Skeleton from "react-loading-skeleton";
+import Emoji from "@tiptap-pro/extension-emoji";
 import StarterKit from "@tiptap/starter-kit";
 import { lowlight } from "lowlight/lib/core";
 import Image from "@tiptap/extension-image";
@@ -93,6 +98,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           languageClassPrefix: "language-",
         },
       }),
+      Mathematics,
+      Details,
+      DetailsSummary,
+      DetailsContent,
+      Emoji,
+      UniqueId,
       Markdown.configure({
         html: true,
         tightLists: true,
