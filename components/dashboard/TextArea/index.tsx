@@ -4,6 +4,7 @@ import {
   postTitleAtom,
   postPublicAtom,
 } from "@/stores/postDataAtom";
+import { CustomHeading } from "@/components/ui/extensions/heading-extended";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import Collapsible from "@/components/ui/extensions/collapsible";
@@ -68,8 +69,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           HTMLAttributes: {},
         },
       }),
-      Heading,
-      Collapsible,
+      CustomHeading,
       TaskList.configure({}),
       TaskItem.configure({
         nested: true,

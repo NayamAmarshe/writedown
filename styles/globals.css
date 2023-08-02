@@ -118,6 +118,16 @@ label > input[type="checkbox"] {
 }
 /* END: ed8c6549bwf9 */
 
+.collapsed::before {
+  content: "▶️";
+  font-size: 1rem;
+}
+
+.uncollapsed::before {
+  content: "🔽";
+  font-size: 1rem;
+}
+
 /* .milkdown {
   width: 100%;
   height: 100%;
