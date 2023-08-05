@@ -9,9 +9,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
+import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { postLastUpdatedAtom } from "@/stores/postDataAtom";
-import { Note } from "@/types/utils/firebaseOperations";
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
@@ -38,7 +38,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     const id = crypto.randomUUID();
     const currentTime = new Date().getTime();
 
-    const noteData: Note = {
+    const noteData: NoteDocument = {
       id,
       content: "",
       public: false,

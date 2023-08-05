@@ -1,11 +1,11 @@
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { Note } from "@/types/utils/firebaseOperations";
+import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { EditorContent, Editor } from "@tiptap/react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 
 interface editorProps {
-  notes?: Note[] | undefined;
+  notes?: NoteDocument[] | undefined;
   editor: Editor | null;
 }
 

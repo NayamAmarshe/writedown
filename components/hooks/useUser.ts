@@ -1,19 +1,21 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
-import { useCallback } from "react";
-
-// type UseUserProps = {};
 
 export const useUser = () => {
   const createUser = async (user: User) => {
-    await setDoc(doc(db, "users", user.uid), {
+    const batch = writeBatch(db);
+    batch.set(doc(db, "users", user.uid), {
       uid: user.uid,
-      email: user.email,
       photoURL: user.photoURL,
       displayName: user.displayName,
+    });
+    // TODO: Create a {username: uid} doc in usernames collection
+    batch.set(doc(db, "users", user.uid, "extras", "private"), {
+      email: user.email,
       createdAt: new Date().toISOString(),
     });
+    await batch.commit();
   };
 
   return { createUser };
