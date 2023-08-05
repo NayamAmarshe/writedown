@@ -2,8 +2,6 @@ import { doc, writeBatch } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
 
-// type UseUserProps = {};
-
 export const useUser = () => {
   const createUser = async (user: User) => {
     const batch = writeBatch(db);
