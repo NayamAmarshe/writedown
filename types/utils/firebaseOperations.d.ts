@@ -1,4 +1,4 @@
-export type Note = {
+export type NoteDocument = {
   id: string;
   createdAt?: number;
   updatedAt: number;
@@ -10,15 +10,18 @@ export type Note = {
   public: boolean;
 };
 
-export type PublicNote = {
+export type PublicNoteDocument = {
   userId: string;
 };
 
-export type UserDoc = {
-  uid: string;
-  email: string;
-  username: string | undefined;
-  photoURL: string;
+export type  = {
   displayName: string;
-  createdAt: string;
+  photoURL: string;
+  uid: string;
+  username?: string;
+};
+
+export type UserPrivateDocument = {
+  createdAt: number;
+  email: string;
 };

@@ -1,13 +1,5 @@
-import {
-  useDocumentData,
-  useCollectionDataOnce,
-} from "react-firebase-hooks/firestore";
-import {
-  notesConverter,
-  publicNotesConverter,
-} from "@/utils/firestoreDataConverter";
-import { collection, doc, query } from "firebase/firestore";
-import { Note } from "@/types/utils/firebaseOperations";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 type UseNotesProps = {
