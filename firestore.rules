@@ -1,6 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     match /users/{userId} {
       allow update: if request.auth.uid == userId;
       allow create: if request.auth != null;
@@ -25,23 +26,12 @@ service cloud.firestore {
     }
 
     match /users/{userId}/notes/{noteId} {
-      allow create: if isValidUser(userId);
-      allow read, write: if isValidUser(userId);
-      allow read: if isPublicNote();
+      allow write: if request.auth.uid == userId;
+      allow read: if isPublicNote() || request.auth.uid == userId;
     }
 
     function isPublicNote() {
       return resource.data.public == true;
-    }
-
-    function isValidUser(userId) {
-      let usersUsername = get(/databases/$(database)/documents/users/$(userId)).data.username;
-      let usernamesUsername = exists(/databases/$(database)/documents/usernames/$(usersUsername));
-      let hasUsername = usersUsername && usernamesUsername;
-      let userIdMatches = get(/databases/$(database)/documents/usernames/$(usersUsername)).data.uid == userId;
-      let isOwner = request.auth.uid == userId;
-
-      return hasUsername && isOwner && userIdMatches;
     }
 
   }
