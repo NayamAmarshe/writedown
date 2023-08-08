@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-      allow update: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth.uid == userId;
       allow create: if request.auth != null;
       allow read;
     }
@@ -27,7 +27,11 @@ service cloud.firestore {
     match /users/{userId}/notes/{noteId} {
       allow create: if isValidUser(userId);
       allow read, write: if isValidUser(userId);
-      allow read: if resource.data.public == true && isValidUser(userId);
+      allow read: if isPublicNote();
+    }
+
+    function isPublicNote() {
+      return resource.data.public == true;
     }
 
     function isValidUser(userId) {
