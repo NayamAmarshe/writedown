@@ -14,7 +14,7 @@ export type PublicNoteDocument = {
   userId: string;
 };
 
-export type  = {
+export type UserDocument = {
   displayName: string;
   photoURL: string;
   uid: string;

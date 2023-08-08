@@ -1,26 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow only authenticated users to read and write their own data
     match /users/{userId} {
       allow update: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null;
       allow read;
     }
 
-    function isValidUser(userId) {
-      let isOwner = request.auth.uid == userId;
-      let userHasUsername = exists(
-          /databases/$(database)/documents/users/$(userId)/username);
-
-      let username = userHasUsername && get(/databases/$(database)/documents/users/$(userId)/username);
-
-      // Check if the username exists in the usernames collection.
-      let username_exists = username && exists(/databases/$(database)/documents/usernames/$(username));
-      let uid = username_exists && get(/databases/$(database)/documents/usernames/$(username)).uid;
-
-      // Check if the username document has an userId field referring back to the original userId.
-      return userHasUsername && userId == uid && isOwner
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth.uid == userId;
     }
 
     match /usernames/{username} {
@@ -31,19 +19,25 @@ service cloud.firestore {
     function isValidUsername(username) {
       let isOwner = request.auth.uid == request.resource.data.uid;
       let isValidLength = username.size() >= 3 && username.size() <= 15;
-      let isValidUserDoc = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
+      let isValidUserDoc = exists(/databases/$(database)/documents/users/$(request.auth.uid));
 
       return isOwner && isValidLength && isValidUserDoc;
     }
 
-    match /users/{userId}/{document=**} {
-      allow read, write: if request.auth.uid == userId;
-    }
-
     match /users/{userId}/notes/{noteId} {
       allow create: if isValidUser(userId);
-      allow read, write: if request.auth.uid == userId && isValidUser(userId);
+      allow read, write: if isValidUser(userId);
       allow read: if resource.data.public == true && isValidUser(userId);
+    }
+
+    function isValidUser(userId) {
+      let usersUsername = get(/databases/$(database)/documents/users/$(userId)).data.username;
+      let usernamesUsername = exists(/databases/$(database)/documents/usernames/$(usersUsername));
+      let hasUsername = usersUsername && usernamesUsername;
+      let userIdMatches = get(/databases/$(database)/documents/usernames/$(usersUsername)).data.uid == userId;
+      let isOwner = request.auth.uid == userId;
+
+      return hasUsername && isOwner && userIdMatches;
     }
 
   }

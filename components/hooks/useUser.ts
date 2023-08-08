@@ -1,5 +1,5 @@
 import { deleteDoc, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
-import { UserDoc } from "@/types/utils/firebaseOperations";
+import { UserDocument } from "@/types/utils/firebaseOperations";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { User, UserProfile } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -87,7 +87,7 @@ export const useUser = () => {
     const userRef = doc(db, "users", user.uid);
     try {
       const userSnap = await getDoc(userRef);
-      const userData = userSnap.data() as UserDoc;
+      const userData = userSnap.data() as UserDocument;
       return userData && userData.username ? true : false;
     } catch (error) {
       throw error;
