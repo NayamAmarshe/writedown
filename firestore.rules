@@ -1,20 +1,37 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow only authenticated users to read and write their own data
+
     match /users/{userId} {
-      allow update: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth.uid == userId;
       allow create: if request.auth != null;
       allow read;
     }
-    
+
     match /users/{userId}/{document=**} {
-    	allow read, write: if request.auth.uid == userId;
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    match /usernames/{username} {
+      allow read: if request.auth != null;
+      allow create: if isValidUsername(username);
+    }
+
+    function isValidUsername(username) {
+      let isOwner = request.auth.uid == request.resource.data.uid;
+      let isValidLength = username.size() >= 3 && username.size() <= 15;
+      let isValidUserDoc = exists(/databases/$(database)/documents/users/$(request.auth.uid));
+
+      return isOwner && isValidLength && isValidUserDoc;
     }
 
     match /users/{userId}/notes/{noteId} {
-      allow read, write: if request.auth.uid == userId;
-      allow read: if resource.data.public == true;
+      allow write: if request.auth.uid == userId;
+      allow read: if isPublicNote() || request.auth.uid == userId;
+    }
+
+    function isPublicNote() {
+      return resource.data.public == true;
     }
 
   }

@@ -1,8 +1,8 @@
+import CheckUsername from "@/components/dashboard/CheckUsername";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TextArea from "@/components/dashboard/TextArea";
 import Sidebar from "@/components/dashboard/Sidebar";
 import HeadTags from "@/components/common/HeadTags";
-import useUser from "@/components/hooks/useUser";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { auth } from "./_app";
@@ -10,7 +10,6 @@ import { auth } from "./_app";
 const Dashboard = () => {
   // NEXT ROUTER
   const router = useRouter();
-  const { createUser } = useUser();
 
   const [showSidebar, setShowSidebar] = useState(true);
 
@@ -21,7 +20,6 @@ const Dashboard = () => {
         router.push("/login");
         return;
       }
-      createUser(user);
     },
   });
 
@@ -36,6 +34,7 @@ const Dashboard = () => {
         />
         <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
+        <CheckUsername />
       </div>
     </>
   );
