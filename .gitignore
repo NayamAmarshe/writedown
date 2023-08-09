@@ -51,4 +51,4 @@ firestore-debug.log
 /public/fallback-*.js
 
 /firebase/
-/firebase/**/*
+/firebase/**/*.npmrc
