@@ -10,6 +10,7 @@ interface ModalProps {
   closeText?: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  undismissable?: boolean;
   children?: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ const Modal = ({
   closeText,
   isOpen,
   setIsOpen,
+  undismissable,
   children,
 }: ModalProps) => {
   return (
@@ -29,6 +31,9 @@ const Modal = ({
         as="div"
         className="relative z-50"
         onClose={() => {
+          if (undismissable) {
+            return;
+          }
           setIsOpen(false);
         }}
       >
