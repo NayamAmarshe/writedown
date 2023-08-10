@@ -12,17 +12,18 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == userId;
     }
 
-    match /usernames/{username} {
-      allow read: if request.auth != null;
-      allow create: if isValidUsername(username);
-    }
-
     function isValidUsername(username) {
       let isOwner = request.auth.uid == request.resource.data.uid;
       let isValidLength = username.size() >= 3 && username.size() <= 15;
+      let isValidRegex = username.matches("^[a-z][a-z0-9]*([._-][a-z0-9]+)*$");
       let isValidUserDoc = exists(/databases/$(database)/documents/users/$(request.auth.uid));
 
-      return isOwner && isValidLength && isValidUserDoc;
+      return isOwner && isValidLength && isValidRegex && isValidUserDoc;
+    }
+
+    match /usernames/{username} {
+      allow read: if request.auth != null;
+      allow create: if isValidUsername(username);
     }
 
     match /users/{userId}/notes/{noteId} {

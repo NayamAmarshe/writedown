@@ -16,7 +16,6 @@ export const useUser = () => {
     if (!user) {
       throw new Error("User not found");
     }
-    const currentTime = new Date().getTime();
     try {
       const batch = writeBatch(db);
       batch.set(doc(db, "users", user.uid), {

@@ -61,7 +61,7 @@ const CheckUsername = () => {
       undismissable
     >
       {invalidUsername && (
-        <p className="mb-2 text-sm text-red-500">
+        <p className="mb-2 text-sm text-red-400">
           Username is not valid or already taken
         </p>
       )}
