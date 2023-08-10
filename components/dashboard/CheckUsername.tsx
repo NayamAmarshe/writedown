@@ -33,6 +33,7 @@ const CheckUsername = () => {
       setShowUsernameModal(false);
     } catch (error) {
       toast.error("Error setting username");
+      setInvalidUsername(true);
     }
   };
 
@@ -72,6 +73,15 @@ const CheckUsername = () => {
         small
         onChange={(e) => setInput(e.target.value)}
       />
+      <p className="mt-4">Username must:</p>
+      <ul className="m-4 list-disc text-xs leading-relaxed text-slate-300">
+        <li>Begin with a lowercase letter (a-z).</li>
+        <li>Combine lowercase letters (a-z) and digits (0-9).</li>
+        <li className="leading-normal">
+          Enhance with periods (.), underscores (_), or hyphens (-) between
+          groups.
+        </li>
+      </ul>
     </Modal>
   );
 };
