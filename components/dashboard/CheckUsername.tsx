@@ -73,15 +73,18 @@ const CheckUsername = () => {
         small
         onChange={(e) => setInput(e.target.value)}
       />
-      <p className="mt-4">Username must:</p>
-      <ul className="m-4 list-disc text-xs leading-relaxed text-slate-300">
-        <li>Begin with a lowercase letter (a-z).</li>
-        <li>Combine lowercase letters (a-z) and digits (0-9).</li>
-        <li className="leading-normal">
-          Enhance with periods (.), underscores (_), or hyphens (-) between
-          groups.
-        </li>
-      </ul>
+      <div className="flex flex-col">
+        <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+          Username must:
+        </p>
+        <ul className="ml-4 list-disc text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+          <li>Begin with a lowercase letter (a-z).</li>
+          <li>Combine lowercase letters (a-z) and digits (0-9).</li>
+          <li className="leading-normal">
+            Optionally contain periods (.), underscores (_), or hyphens (-).
+          </li>
+        </ul>
+      </div>
     </Modal>
   );
 };
