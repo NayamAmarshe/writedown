@@ -1,4 +1,6 @@
 import { deleteDoc, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
+import { userDocConverter } from "@/utils/firestoreDataConverter";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { UserDocument } from "@/types/utils/firebaseOperations";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { User, UserProfile } from "firebase/auth";
@@ -7,11 +9,27 @@ import { auth } from "@/pages/_app";
 
 export const useUser = () => {
   const [user] = useAuthState(auth);
+
+  const [publicUserDetails] = useDocumentData(
+    user ? doc(db, "users", user?.uid).withConverter(userDocConverter) : null
+  );
+
   /**
    * Create a new user document in firestore with
    * default values
    * @param user
    */
+
+  const checkUserExists = async (user: User) => {
+    const userRef = doc(db, "users", user.uid);
+    try {
+      const userSnap = await getDoc(userRef);
+      return userSnap.exists();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const createUser = async (user: User) => {
     if (!user) {
       throw new Error("User not found");
@@ -93,7 +111,16 @@ export const useUser = () => {
     }
   };
 
-  return { user, createUser, setUsername, checkUsernameValidity, hasUsername };
+  return {
+    user,
+    /** The user document with public details */
+    publicUserDetails,
+    createUser,
+    setUsername,
+    checkUsernameValidity,
+    hasUsername,
+    checkUserExists,
+  };
 };
 
 export default useUser;

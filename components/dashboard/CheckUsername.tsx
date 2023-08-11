@@ -5,32 +5,22 @@ import { auth } from "@/pages/_app";
 import Modal from "../ui/Modal";
 import Input from "../ui/Input";
 
-const CheckUsername = () => {
-  const { user, hasUsername, setUsername, checkUsernameValidity } = useUser();
-  const [showUsernameModal, setShowUsernameModal] = useState(true);
+const CheckUsername = ({
+  show,
+  onSetShow,
+}: {
+  show: boolean;
+  onSetShow: (state: boolean) => void;
+}) => {
+  const { user, setUsername, checkUsernameValidity } = useUser();
   const [input, setInput] = useState("");
   const [invalidUsername, setInvalidUsername] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-      try {
-        const userHasUsername = await hasUsername(user);
-        if (userHasUsername) {
-          setShowUsernameModal(false);
-        }
-      } catch (error) {
-        console.log("Error checking username: ", error);
-      }
-    })();
-  }, []);
 
   const onUsernameSet = async (username: string) => {
     if (!user) return;
     try {
       await setUsername(user.uid, username);
-      setShowUsernameModal(false);
+      onSetShow(false);
     } catch (error) {
       toast.error("Error setting username");
       setInvalidUsername(true);
@@ -53,8 +43,8 @@ const CheckUsername = () => {
 
   return (
     <Modal
-      isOpen={showUsernameModal}
-      setIsOpen={setShowUsernameModal}
+      isOpen={show}
+      setIsOpen={onSetShow}
       saveText="Save"
       title="Set Username"
       description="Set a username to create your personal writedown space."
