@@ -1,4 +1,6 @@
 import { deleteDoc, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
+import { userDocConverter } from "@/utils/firestoreDataConverter";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { UserDocument } from "@/types/utils/firebaseOperations";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { User, UserProfile } from "firebase/auth";
@@ -7,6 +9,10 @@ import { auth } from "@/pages/_app";
 
 export const useUser = () => {
   const [user] = useAuthState(auth);
+
+  const [publicUserDetails] = useDocumentData(
+    user ? doc(db, "users", user?.uid).withConverter(userDocConverter) : null
+  );
 
   /**
    * Create a new user document in firestore with
@@ -94,7 +100,15 @@ export const useUser = () => {
     }
   };
 
-  return { user, createUser, setUsername, checkUsernameValidity, hasUsername };
+  return {
+    user,
+    /** The user document with public details */
+    publicUserDetails,
+    createUser,
+    setUsername,
+    checkUsernameValidity,
+    hasUsername,
+  };
 };
 
 export default useUser;

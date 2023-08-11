@@ -71,16 +71,12 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const postContent = useAtomValue(postContentAtom);
   const postTitle = useAtomValue(postTitleAtom);
 
-  const { user } = useUser();
+  const { user, publicUserDetails } = useUser();
 
   // CUSTOM HOOKS
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
-
-  const [userDetails] = useDocumentData(
-    user ? doc(db, "users", user?.uid).withConverter(userDocConverter) : null
-  );
 
   // EFFECTS
   useEffect(() => {
@@ -296,10 +292,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 navigator.clipboard.writeText(
                   isDev
                     ? `http://localhost:3000/${
-                        userDetails?.username || userDetails?.uid
+                        publicUserDetails?.username || publicUserDetails?.uid
                       }/posts/${selectedNoteId}`
                     : `https://writedown.app/${
-                        userDetails?.username || userDetails?.uid
+                        publicUserDetails?.username || publicUserDetails?.uid
                       }/posts/${selectedNoteId}`
                 );
               }}
@@ -309,7 +305,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 {process.env.NODE_ENV !== "development" &&
                   postPublic &&
                   `https://writedown.app/${
-                    userDetails?.username || userDetails?.uid
+                    publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV !== "development" &&
                   !postPublic &&
@@ -318,7 +314,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 {process.env.NODE_ENV === "development" &&
                   postPublic &&
                   `http://localhost:3000/${
-                    userDetails?.username || userDetails?.uid
+                    publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV === "development" &&
                   !postPublic &&

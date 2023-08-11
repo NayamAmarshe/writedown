@@ -12,6 +12,7 @@ import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { BsChevronBarLeft } from "react-icons/bs";
+import useUser from "@/components/hooks/useUser";
 import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
@@ -32,7 +33,7 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
-  const [user] = useAuthState(auth);
+  const { user, publicUserDetails } = useUser();
 
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
@@ -173,7 +174,7 @@ const Sidebar = ({
                 key={note.id}
                 as={
                   note.public
-                    ? `/${note.userId}/posts/${note.slug}`
+                    ? `/${publicUserDetails?.username}/posts/${note.slug}`
                     : `/dashboard/?post=${note.slug}`
                 }
               >

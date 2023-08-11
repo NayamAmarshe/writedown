@@ -4,6 +4,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useAuthState } from "react-firebase-hooks/auth";
 import UserMenu from "@/components/common/UserMenu";
 import HeadTags from "@/components/common/HeadTags";
+import useUser from "@/components/hooks/useUser";
 import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
 import { RiMenu5Fill } from "react-icons/ri";
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export const PostPage = ({ note, name, profilePicture }: Props) => {
-  const [user] = useAuthState(auth);
+  const { user } = useUser();
 
   return (
     <>
@@ -132,8 +133,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
-
-  console.log("user", user);
 
   try {
     const noteDoc = doc(db, "users", user.uid, "notes", postId as string);
