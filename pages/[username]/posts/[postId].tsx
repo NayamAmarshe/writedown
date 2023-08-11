@@ -107,33 +107,36 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const {
-    postId,
-    // username is the uid
-    username,
-  } = context.query;
+  const { postId, username } = context.query;
 
   let user: UserDocument;
   let note: NoteDocument;
 
   try {
-    const userDoc = doc(db, "users", username as string);
-    const userSnapshot = await getDoc(userDoc);
-    user = userSnapshot.data() as UserDocument;
+    const usernameDoc = doc(db, "usernames", username as string);
+    const usernameSnapshot = await getDoc(usernameDoc);
+    const usernameData = usernameSnapshot.data();
+    if (usernameData) {
+      const userDoc = doc(db, "users", usernameData.uid as string);
+      const userSnapshot = await getDoc(userDoc);
+      user = userSnapshot.data() as UserDocument;
+    } else {
+      const uid = username as string;
+      const userDoc = doc(db, "users", uid);
+      const userSnapshot = await getDoc(userDoc);
+      user = userSnapshot.data() as UserDocument;
+    }
   } catch (error) {
+    console.log(error);
     return {
       notFound: true,
     };
   }
 
+  console.log("user", user);
+
   try {
-    const noteDoc = doc(
-      db,
-      "users",
-      username as string,
-      "notes",
-      postId as string
-    );
+    const noteDoc = doc(db, "users", user.uid, "notes", postId as string);
     const noteSnapshot = await getDoc(noteDoc);
     note = noteSnapshot.data() as NoteDocument;
   } catch (error) {

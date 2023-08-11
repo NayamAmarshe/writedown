@@ -13,18 +13,23 @@ import {
   postTitleAtom,
 } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { userDocConverter } from "@/utils/firestoreDataConverter";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import React, { useEffect, useState } from "react";
+import useUser from "@/components/hooks/useUser";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
+import { doc } from "firebase/firestore";
 import { toast } from "react-hot-toast";
 import { Editor } from "@tiptap/react";
 import { useTheme } from "next-themes";
+import { db } from "@/lib/firebase";
 import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
@@ -51,7 +56,6 @@ export const formatTimeStamp = (time: number | undefined) => {
 
 const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   // HOOKS
-  const [user] = useAuthState(auth);
   const { theme } = useTheme();
 
   // LOCAL STATE
@@ -67,10 +71,16 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const postContent = useAtomValue(postContentAtom);
   const postTitle = useAtomValue(postTitleAtom);
 
+  const { user } = useUser();
+
   // CUSTOM HOOKS
   const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
+
+  const [userDetails] = useDocumentData(
+    user ? doc(db, "users", user?.uid).withConverter(userDocConverter) : null
+  );
 
   // EFFECTS
   useEffect(() => {
@@ -285,8 +295,12 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(
                   isDev
-                    ? `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`
-                    : `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`
+                    ? `http://localhost:3000/${
+                        userDetails?.username || userDetails?.uid
+                      }/posts/${selectedNoteId}`
+                    : `https://writedown.app/${
+                        userDetails?.username || userDetails?.uid
+                      }/posts/${selectedNoteId}`
                 );
               }}
             >
@@ -294,14 +308,18 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 {/* PROD */}
                 {process.env.NODE_ENV !== "development" &&
                   postPublic &&
-                  `https://writedown.app/${user?.uid}/posts/${selectedNoteId}`}
+                  `https://writedown.app/${
+                    userDetails?.username || userDetails?.uid
+                  }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV !== "development" &&
                   !postPublic &&
                   `https://writedown.app/...`}
                 {/* DEV */}
                 {process.env.NODE_ENV === "development" &&
                   postPublic &&
-                  `http://localhost:3000/${user?.uid}/posts/${selectedNoteId}`}
+                  `http://localhost:3000/${
+                    userDetails?.username || userDetails?.uid
+                  }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV === "development" &&
                   !postPublic &&
                   `http://localhost:3000/...`}

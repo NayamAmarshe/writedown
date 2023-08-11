@@ -7,6 +7,7 @@ import { auth } from "@/pages/_app";
 
 export const useUser = () => {
   const [user] = useAuthState(auth);
+
   /**
    * Create a new user document in firestore with
    * default values

@@ -22,7 +22,7 @@ service cloud.firestore {
     }
 
     match /usernames/{username} {
-      allow read: if request.auth != null;
+      allow read;
       allow create: if isValidUsername(username);
     }
 
