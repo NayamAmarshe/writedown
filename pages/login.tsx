@@ -11,13 +11,14 @@ import React from "react";
 const LoginPage = () => {
   // NEXT ROUTER
   const router = useRouter();
-  const { createUser } = useUser();
+  const { createUser, checkUserExists } = useUser();
 
   // AUTH STATE HOOK
   const [authUser, authLoading, authError] = useAuthState(auth, {
     onUserChanged: async (user) => {
       if (!user) return;
-      createUser(user);
+      const existingUser = await checkUserExists(user);
+      !existingUser && createUser(user);
     },
   });
 

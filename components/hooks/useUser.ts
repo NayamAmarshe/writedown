@@ -19,6 +19,17 @@ export const useUser = () => {
    * default values
    * @param user
    */
+
+  const checkUserExists = async (user: User) => {
+    const userRef = doc(db, "users", user.uid);
+    try {
+      const userSnap = await getDoc(userRef);
+      return userSnap.exists();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const createUser = async (user: User) => {
     if (!user) {
       throw new Error("User not found");
@@ -108,6 +119,7 @@ export const useUser = () => {
     setUsername,
     checkUsernameValidity,
     hasUsername,
+    checkUserExists,
   };
 };
 
