@@ -11,28 +11,99 @@ import Button from "@/components/ui/Button";
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Loading from "@/components/ui/Loading";
 
-interface Props {
-  note: NoteDocument;
-  name: string;
-  profilePicture: string;
-}
+interface Props {}
 
-export const PostPage = ({ note, name, profilePicture }: Props) => {
+export const PostPage = ({}: Props) => {
+  const router = useRouter();
+
+  const [note, setNote] = useState<NoteDocument | null>(null);
+  const [name, setName] = useState<string>("");
+  const [profilePicture, setProfilePicture] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    const { username, postId } = router.query;
+
+    console.log(router.query);
+
+    if (!username || !postId) {
+      return;
+    }
+
+    let user: UserDocument | null = null;
+    let note: NoteDocument | null = null;
+
+    try {
+      const usernameDoc = doc(db, "usernames", username as string);
+      const usernameSnapshot = await getDoc(usernameDoc);
+      const usernameData = usernameSnapshot.data();
+      console.log("🚀 => usernameData:", usernameData);
+
+      if (usernameData) {
+        const userDoc = doc(db, "users", usernameData.uid as string);
+        const userSnapshot = await getDoc(userDoc);
+        user = userSnapshot.data() as UserDocument;
+        console.log("🚀 => user:", user);
+      } else {
+        const uid = username as string;
+        const userDoc = doc(db, "users", uid);
+        const userSnapshot = await getDoc(userDoc);
+        user = userSnapshot.data() as UserDocument;
+        console.log("🚀 => user:", user);
+      }
+    } catch (error) {
+      router.push("/not-found");
+    }
+
+    if (!user) return;
+
+    try {
+      const noteDoc = doc(db, "users", user.uid, "notes", postId as string);
+      const noteSnapshot = await getDoc(noteDoc);
+      note = noteSnapshot.data() as NoteDocument;
+      console.log("🚀 => note:", note);
+    } catch (error) {
+      router.push("/not-found");
+    }
+
+    if (!note || !user) {
+      router.push("/not-found");
+    }
+
+    if (note && !note.public) {
+      router.push("/not-found");
+    }
+
+    setNote(note);
+    setName(user.displayName);
+    setProfilePicture(user.photoURL);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [router.query]);
+
   const { user } = useUser();
+
+  if (loading) return <Loading />;
 
   return (
     <>
       <HeadTags
-        title={`${note.title} by ${name} - writedown`}
+        title={`${note?.title} by ${name} - writedown`}
         description={`Read this post by ${name} on writedown - A simple and beautiful notes app with cloud sync, markdown and offline support. Write, share, inspire.`}
-        ogImage={`https://dynamic-og-image-generator.vercel.app/api/generate?title=${note.title}&author=${name}&avatar=${profilePicture}&websiteUrl=https://writedown.app&theme=nightOwl`}
+        ogImage={`https://dynamic-og-image-generator.vercel.app/api/generate?title=${note?.title}&author=${name}&avatar=${profilePicture}&websiteUrl=https://writedown.app&theme=nightOwl`}
         // ogImage={`https://writedown.app/api/og?title=${
         //   note.title
         // }&content=${RemoveMarkdown(
         //   note.content.slice(0, 200)
         // )}&author=${name}&profilePicture=${profilePicture}`}
-        ogUrl={`https://writedown.app/${note.userId}/posts/${note.id}`}
+        ogUrl={`https://writedown.app/${note?.userId}/posts/${note?.id}`}
       />
 
       <main className="max-w-screen relative flex min-h-screen flex-row bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50">
@@ -72,18 +143,18 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
                 className="w-24 rounded-full"
               />
               <h1 className="max-w-4xl text-center text-5xl font-bold leading-tight">
-                {note.title}
+                {note?.title}
               </h1>
               <p className="text-xl dark:text-slate-200">
                 <span className="font-light">By</span>{" "}
                 <span className="font-medium">{name}</span>
               </p>
               <p className="text-sm dark:text-slate-400">
-                Published {formatTimeStamp(note.publishedAt)}
+                Published {formatTimeStamp(note?.publishedAt)}
               </p>
 
-              {user?.uid === note.userId && (
-                <Link href={`/dashboard?post=${note.id}`}>
+              {user?.uid === note?.userId && (
+                <Link href={`/dashboard?post=${note?.id}`}>
                   <Button variant="slate" size="sm">
                     Edit Post
                   </Button>
@@ -93,7 +164,7 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
 
             <div className="mb-40 flex items-center justify-center px-4">
               <Markdown className="prose dark:prose-invert">
-                {note.content}
+                {note?.content}
               </Markdown>
             </div>
           </div>
@@ -103,64 +174,6 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
       </main>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { postId, username } = context.query;
-
-  let user: UserDocument;
-  let note: NoteDocument;
-
-  try {
-    const usernameDoc = doc(db, "usernames", username as string);
-    const usernameSnapshot = await getDoc(usernameDoc);
-    const usernameData = usernameSnapshot.data();
-    if (usernameData) {
-      const userDoc = doc(db, "users", usernameData.uid as string);
-      const userSnapshot = await getDoc(userDoc);
-      user = userSnapshot.data() as UserDocument;
-    } else {
-      const uid = username as string;
-      const userDoc = doc(db, "users", uid);
-      const userSnapshot = await getDoc(userDoc);
-      user = userSnapshot.data() as UserDocument;
-    }
-  } catch (error) {
-    console.log(error);
-    return {
-      notFound: true,
-    };
-  }
-
-  try {
-    const noteDoc = doc(db, "users", user.uid, "notes", postId as string);
-    const noteSnapshot = await getDoc(noteDoc);
-    note = noteSnapshot.data() as NoteDocument;
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-
-  if (!note || !user) {
-    return {
-      notFound: true,
-    };
-  }
-
-  if (note && !note.public) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      note,
-      name: user.displayName,
-      profilePicture: user.photoURL,
-    },
-  };
 };
 
 export default PostPage;
