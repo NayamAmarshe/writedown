@@ -118,7 +118,7 @@ export const PostPage = ({}: Props) => {
             <h1 className="text-2xl font-medium">
               Oops, couldn&apos;t find that post!
             </h1>
-            <p className="max-w-96 text-center dark:text-slate-400">
+            <p className="max-w-96 text-center text-slate-500 dark:text-slate-400">
               The post you are looking for might have been removed or the link
               is broken.
             </p>
