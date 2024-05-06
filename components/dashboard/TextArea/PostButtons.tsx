@@ -13,24 +13,18 @@ import {
   postTitleAtom,
 } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
-import { userDocConverter } from "@/utils/firestoreDataConverter";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
-import { doc } from "firebase/firestore";
 import { toast } from "react-hot-toast";
 import { Editor } from "@tiptap/react";
 import { useTheme } from "next-themes";
-import { db } from "@/lib/firebase";
-import { auth } from "@/pages/_app";
 
 type PostButtonsProps = {
   shiftRight?: boolean;

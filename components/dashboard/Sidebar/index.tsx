@@ -19,7 +19,7 @@ import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import PostRow from "./PostRow";
 import Link from "next/link";
 

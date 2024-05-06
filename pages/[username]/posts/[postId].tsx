@@ -1,7 +1,6 @@
 import { formatTimeStamp } from "@/components/dashboard/TextArea/PostButtons";
 import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { useAuthState } from "react-firebase-hooks/auth";
+import Markdown from "react-markdown";
 import UserMenu from "@/components/common/UserMenu";
 import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";
@@ -11,7 +10,6 @@ import { RiMenu5Fill } from "react-icons/ri";
 import Button from "@/components/ui/Button";
 import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
-import { auth } from "@/pages/_app";
 import Link from "next/link";
 
 interface Props {
@@ -94,9 +92,9 @@ export const PostPage = ({ note, name, profilePicture }: Props) => {
             </div>
 
             <div className="mb-40 flex items-center justify-center px-4">
-              <ReactMarkdown className="prose dark:prose-invert">
+              <Markdown className="prose dark:prose-invert">
                 {note.content}
-              </ReactMarkdown>
+              </Markdown>
             </div>
           </div>
         </div>

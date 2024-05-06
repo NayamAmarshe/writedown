@@ -1,5 +1,5 @@
 import { Parallax } from "react-scroll-parallax";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import Button from "../ui/Button";
 import Link from "next/link";
 import React from "react";

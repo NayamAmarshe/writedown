@@ -8,7 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import React, { useEffect } from "react";
 import BetaBadge from "../ui/BetaBadge";
 import toast from "react-hot-toast";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import Button from "../ui/Button";
 import Link from "next/link";
 

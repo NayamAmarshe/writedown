@@ -21,7 +21,7 @@ import { isSyncedAtom } from "@/stores/syncedAtom";
 import { BsChevronBarLeft } from "react-icons/bs";
 import Emoji from "@tiptap-pro/extension-emoji";
 import StarterKit from "@tiptap/starter-kit";
-import { lowlight } from "lowlight/lib/core";
+import { createLowlight } from "lowlight";
 import Image from "@tiptap/extension-image";
 import EditorButtons from "./EditorButtons";
 import { Markdown } from "tiptap-markdown";
@@ -30,8 +30,10 @@ import Link from "@tiptap/extension-link";
 import { useEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
 import PostButtons from "./PostButtons";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
+
+const lowlight = createLowlight();
 
 type TextAreaProps = {
   shiftRight: boolean;

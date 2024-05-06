@@ -1,8 +1,11 @@
 <div align="center">
 
 # ✏ [writedown (beta)](https://writedown.app)
+
 #### Free and Open Source Markdown Diary
+
 #### Public Blogs and Private Notes
+
 Write. Share. Inspire.
 
 **writedown** is the new way of writing markdown notes fast and easily.  
@@ -25,14 +28,14 @@ Hate complexity? **Even Better!**
 ☁️ **Cloud Sync**  
 🤝 **Free and Open Source**  
 🪟 **Real-time Markdown Preview**  
-📨 **Publishing and Sharing**   
+📨 **Publishing and Sharing**  
 🌹 **Simple and beautiful interface**
 
 [**GET STARTED IN JUST 5 SECONDS!**](https://writedown.app/login)
 
 ## ✨ Features
 
-### Here are the markdown features that writedown supports:   
+### Here are the markdown features that writedown supports:
 
 - Headings (1 to 4)
 - Bold
@@ -55,23 +58,24 @@ Hate complexity? **Even Better!**
 
 and many more being added as you read this!
 
-##  🧑‍💻️ Development
+## 🧑‍💻️ Development
 
-writedown is self-hostable with Firebase and Node.js.   
+writedown is self-hostable with Firebase and Node.js.  
 To run a local instance, follow these steps:
 
 0. First install [Volta](https://volta.sh/). Then open your terminal and enter: `volta install node`.
 1. Enter the following commands in your terminal.
+
 ```bash
 git clone https://github.com/NayamAmarshe/writedown
 cd writedown
-
-# INSTALL DEPENDENCIES
-npm install
 ```
+
 2. [Setup Firebase Emulator](https://github.com/NayamAmarshe/writedown/blob/main/docs/firebase.md)
-3. Run local dev server with: `npm run dev`
-OR local production server with `npm run build && npm run start`.
+3. [Setup TipTap Editor](docs/tiptap.md)
+4. Install dependencies with: `npm install`
+5. Run local dev server with: `npm run dev`
+   OR local production server with `npm run build && npm run start`.
 
 #
 

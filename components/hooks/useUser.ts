@@ -1,11 +1,11 @@
-import { deleteDoc, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, writeBatch } from "firebase/firestore";
 import { userDocConverter } from "@/utils/firestoreDataConverter";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { UserDocument } from "@/types/utils/firebaseOperations";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { User, UserProfile } from "firebase/auth";
+import { User } from "firebase/auth";
 import { db } from "@/lib/firebase";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 
 export const useUser = () => {
   const [user] = useAuthState(auth);
@@ -19,7 +19,6 @@ export const useUser = () => {
    * default values
    * @param user
    */
-
   const checkUserExists = async (user: User) => {
     const userRef = doc(db, "users", user.uid);
     try {

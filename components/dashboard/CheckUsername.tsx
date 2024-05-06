@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import useUser from "../hooks/useUser";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import Modal from "../ui/Modal";
 import Input from "../ui/Input";
 

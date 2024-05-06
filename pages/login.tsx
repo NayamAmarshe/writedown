@@ -5,8 +5,8 @@ import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";
 import Loading from "@/components/ui/Loading";
 import { useRouter } from "next/router";
-import { auth } from "./_app";
 import React from "react";
+import { auth } from "@/lib/firebase";
 
 const LoginPage = () => {
   // NEXT ROUTER

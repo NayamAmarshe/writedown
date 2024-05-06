@@ -1,6 +1,6 @@
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import BetaBadge from "../ui/BetaBadge";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import Link from "next/link";
 import React from "react";
 

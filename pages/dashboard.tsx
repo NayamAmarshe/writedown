@@ -6,7 +6,7 @@ import HeadTags from "@/components/common/HeadTags";
 import React, { useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
 import { useRouter } from "next/router";
-import { auth } from "./_app";
+import { auth } from "@/lib/firebase";
 
 const Dashboard = () => {
   // NEXT ROUTER
@@ -35,6 +35,8 @@ const Dashboard = () => {
   // AUTH STATE HOOK
   useAuthState(auth, {
     onUserChanged: async (user) => {
+      console.log("🚀 => user:", user);
+
       if (!user) {
         router.push("/login");
         return;

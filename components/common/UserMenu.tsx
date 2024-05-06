@@ -14,7 +14,7 @@ import {
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useTheme } from "next-themes";
 import Popover from "../ui/Popover";
-import { auth } from "@/pages/_app";
+import { auth } from "@/lib/firebase";
 import { useSetAtom } from "jotai";
 import Link from "next/link";
 import React from "react";
@@ -56,7 +56,7 @@ const UserMenu = ({
           href="/dashboard"
           className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
-          <BiPencil /> Write Down
+          <BiPencil /> writedown
         </Link>
       )}
       {dashboard && !auth.currentUser && (

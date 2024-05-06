@@ -1,12 +1,7 @@
-import {
-  connectFirestoreEmulator,
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
-} from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
+import { Firestore, getFirestore } from "firebase/firestore";
+import { FirebaseApp, getApps, initializeApp } from "firebase/app";
 import "firebase/firestore";
+import { Auth, getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbfVs3Q1NlARdE5wXZb4DLXonfcwMu2CI",
@@ -17,25 +12,18 @@ const firebaseConfig = {
   messagingSenderId: "991441150383",
   appId: "1:991441150383:web:73ab73141aee5c3bafcf5a",
 };
-
-const firebaseApp = initializeApp(firebaseConfig);
-
-initializeFirestore(firebaseApp, {
-  localCache: persistentLocalCache({
-    tabManager: persistentMultipleTabManager(),
-  }),
-});
-
-const db = getFirestore(firebaseApp);
-
-const env = process.env["NODE_ENV"];
-
-if (!(db as any)._settingsFrozen && env === "development") {
-  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+let firebaseApp: FirebaseApp;
+let db: Firestore;
+let auth: Auth;
+const currentApps = getApps();
+if (currentApps.length <= 0) {
+  firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+  auth = getAuth(firebaseApp);
+} else {
+  firebaseApp = currentApps[0];
+  db = getFirestore(firebaseApp);
+  auth = getAuth(firebaseApp);
 }
 
-// if (!(db as any)._firestoreClient) {
-//   enableMultiTabIndexedDbPersistence(db);
-// }
-
-export { db, firebaseApp };
+export { db, auth, firebaseApp };
