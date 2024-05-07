@@ -26,15 +26,9 @@ export const PostPage = ({}: Props) => {
   const [name, setName] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const { username, postId } = router.query;
 
   const fetchData = async () => {
-    const { username, postId } = router.query;
-
-    if (!username || !postId) {
-      setLoading(false);
-      return;
-    }
-
     let user: UserDocument | null = null;
     let note: NoteDocument | null = null;
 
@@ -89,8 +83,10 @@ export const PostPage = ({}: Props) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [router.query]);
+    if (username && postId) {
+      fetchData();
+    }
+  }, [username, postId]);
 
   const { user } = useUser();
 

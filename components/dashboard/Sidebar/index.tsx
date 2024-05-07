@@ -34,7 +34,6 @@ const Sidebar = ({
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
   const { user, publicUserDetails } = useUser();
-
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
 
