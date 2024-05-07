@@ -182,6 +182,7 @@ const Sidebar = ({
                   userId={user?.uid}
                   title={note.title}
                   content={note.content}
+                  publicShow={note.public}
                   noteId={note.id}
                   setShowSidebar={setShowSidebar}
                 />
