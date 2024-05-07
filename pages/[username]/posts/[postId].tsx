@@ -58,6 +58,7 @@ export const PostPage = ({}: Props) => {
       const noteDoc = doc(db, "users", user.uid, "notes", postId as string);
       const noteSnapshot = await getDoc(noteDoc);
       note = noteSnapshot.data() as NoteDocument;
+      console.log(note, " note");
     } catch (error) {
       toast.error("User not found");
       setLoading(false);
