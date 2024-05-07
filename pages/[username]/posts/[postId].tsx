@@ -29,11 +29,6 @@ export const PostPage = ({}: Props) => {
   const { username, postId } = router.query;
 
   const fetchData = async () => {
-    if (!username || !postId) {
-      setLoading(false);
-      return;
-    }
-
     let user: UserDocument | null = null;
     let note: NoteDocument | null = null;
 
@@ -87,15 +82,10 @@ export const PostPage = ({}: Props) => {
     setLoading(false);
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [router.query]);
-
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (username && postId) {
       fetchData();
-    }, 1000);
-    return () => clearTimeout(timer);
+    }
   }, [username, postId]);
 
   const { user } = useUser();
