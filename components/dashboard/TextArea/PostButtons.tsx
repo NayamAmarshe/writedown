@@ -259,6 +259,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 className="cursor-pointer select-none font-medium dark:text-slate-300"
                 onClick={() => {
                   setPostPublic((prev) => !prev);
+                  saveNoteHandler();
                 }}
               >
                 Enable Public Viewing
@@ -267,6 +268,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 enabled={postPublic}
                 onChange={() => {
                   setPostPublic((prev) => !prev);
+                  saveNoteHandler();
                 }}
                 screenReaderPrompt="Toggle Public Sharing"
               />
