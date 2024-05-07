@@ -82,10 +82,6 @@ export const PostPage = ({}: Props) => {
     setLoading(false);
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [router.query]);
-
   useEffect(() => {
     if (username && postId) {
       fetchData();
