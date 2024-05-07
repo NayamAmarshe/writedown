@@ -34,7 +34,6 @@ const Sidebar = ({
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
   const { user, publicUserDetails } = useUser();
-
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
 
@@ -182,6 +181,7 @@ const Sidebar = ({
                   userId={user?.uid}
                   title={note.title}
                   content={note.content}
+                  publicShow={note.public}
                   noteId={note.id}
                   setShowSidebar={setShowSidebar}
                 />
