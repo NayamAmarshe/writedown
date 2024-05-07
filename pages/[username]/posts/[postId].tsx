@@ -26,10 +26,9 @@ export const PostPage = ({}: Props) => {
   const [name, setName] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const { username, postId } = router.query;
 
   const fetchData = async () => {
-    const { username, postId } = router.query;
-
     if (!username || !postId) {
       setLoading(false);
       return;
@@ -88,9 +87,16 @@ export const PostPage = ({}: Props) => {
     setLoading(false);
   };
 
+  // useEffect(() => {
+  //   fetchData();
+  // }, [router.query]);
+
   useEffect(() => {
-    fetchData();
-  }, [router.query]);
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [username, postId]);
 
   const { user } = useUser();
 
