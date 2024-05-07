@@ -96,10 +96,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     setSynced(true);
   };
 
-  useEffect(() => {
-    saveNoteHandler();
-  }, [postPublic]);
-
   /**
    * Deletes the note and selects the next note in the list
    */
