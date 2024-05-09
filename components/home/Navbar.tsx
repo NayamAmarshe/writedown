@@ -6,9 +6,11 @@ import { auth } from "@/lib/firebase";
 import Button from "../ui/Button";
 import Link from "next/link";
 import React from "react";
+import useMounted from "../hooks/useMounted";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const isMounted = useMounted();
 
   return (
     <nav className="fixed z-10 flex w-full flex-row justify-between bg-slate-50/50 px-4 py-4 backdrop-blur-md dark:bg-slate-900/50 md:px-10 lg:px-36">
@@ -25,7 +27,7 @@ const Navbar = () => {
             setTheme(theme === "light" ? "dark" : "light");
           }}
         >
-          {theme === "light" ? (
+          {isMounted && theme === "light" ? (
             <FiMoon className="h-6 w-6 duration-300 hover:scale-110" />
           ) : (
             <FiSun className="h-6 w-6 duration-300 hover:scale-110" />
