@@ -49,6 +49,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // LOCAL STATE
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
 
