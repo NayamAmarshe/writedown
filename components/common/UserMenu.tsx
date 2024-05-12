@@ -36,7 +36,7 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const [seHEADlectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
+  const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
 
   return (
     <Popover
