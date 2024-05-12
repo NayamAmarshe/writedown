@@ -6,16 +6,12 @@ import {
   BiPencil,
   BiSun,
 } from "react-icons/bi";
-import {
-  postContentAtom,
-  postPublicAtom,
-  postTitleAtom,
-} from "@/stores/postDataAtom";
+import { selectedNoteType } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useTheme } from "next-themes";
 import Popover from "../ui/Popover";
 import { auth } from "@/lib/firebase";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Link from "next/link";
 import React from "react";
 
@@ -40,9 +36,7 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const setPostPublic = useSetAtom(postPublicAtom);
-  const setPostTitle = useSetAtom(postTitleAtom);
-  const setPostContent = useSetAtom(postContentAtom);
+  const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
 
   return (
     <Popover
@@ -92,9 +86,12 @@ const UserMenu = ({
           onClick={() => {
             auth.signOut();
             setSelectedNoteId("");
-            setPostPublic(false);
-            setPostTitle("");
-            setPostContent("");
+            setSelectedNoteAtom((prev) => ({
+              ...prev,
+              isPublic: false,
+              title: "",
+              content: "",
+            }));
           }}
           className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
         >
