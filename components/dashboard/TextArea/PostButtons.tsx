@@ -267,6 +267,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                     ...prev,
                     isPublic: !prev.isPublic,
                   }));
+
                   saveNoteHandler();
                 }}
                 screenReaderPrompt="Toggle Public Sharing"
@@ -280,6 +281,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               }`}
               onClick={() => {
                 if (!selectedNoteAtom.isPublic) return;
+
                 toast.success("Copied link to clipboard!");
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(

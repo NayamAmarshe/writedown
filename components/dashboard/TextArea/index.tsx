@@ -39,7 +39,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [user] = useAuthState(auth);
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
+
   const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
+
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
@@ -158,6 +160,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         lastUpdated: notes[0].updatedAt,
         isPublic: notes[0].public,
       }));
+
       return;
     }
     if (!selectedNoteId) return;

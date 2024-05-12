@@ -38,6 +38,7 @@ const Sidebar = ({
   const [createPostLoading, setCreatePostLoading] = useState(false);
 
   const [postPublic, setPostPublic] = useAtom(selectedNoteType);
+
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);

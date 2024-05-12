@@ -36,7 +36,7 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
+  const [seHEADlectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
 
   return (
     <Popover
@@ -86,6 +86,7 @@ const UserMenu = ({
           onClick={() => {
             auth.signOut();
             setSelectedNoteId("");
+
             setSelectedNoteAtom((prev) => ({
               ...prev,
               isPublic: false,
