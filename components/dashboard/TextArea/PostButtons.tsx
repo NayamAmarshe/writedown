@@ -6,16 +6,11 @@ import {
   IoMdSend,
   IoMdTrash,
 } from "react-icons/io";
-import {
-  postContentAtom,
-  postLastUpdatedAtom,
-  postPublicAtom,
-  postTitleAtom,
-} from "@/stores/postDataAtom";
+import { selectedNoteType } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
@@ -59,11 +54,8 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // ATOMIC STATE
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
-  const postUpdatedAt = useAtomValue(postLastUpdatedAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
-  const postContent = useAtomValue(postContentAtom);
-  const postTitle = useAtomValue(postTitleAtom);
+  const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
 
   const { user, publicUserDetails } = useUser();
 
@@ -74,10 +66,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // EFFECTS
   useEffect(() => {
-    if (!postUpdatedAt) return;
-    const formattedDate = formatTimeStamp(postUpdatedAt);
+    if (!selectedNoteAtom.lastUpdated) return;
+    const formattedDate = formatTimeStamp(selectedNoteAtom.lastUpdated);
     setLastUpdated(formattedDate);
-  }, [postUpdatedAt, selectedNoteId]);
+  }, [selectedNoteAtom.lastUpdated, selectedNoteId]);
 
   /**
    * Saves the note if not already synced
@@ -88,17 +80,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     setSynced(false);
     await updateNote({
       id: selectedNoteId,
-      title: postTitle,
-      content: postContent,
-      public: postPublic,
+      title: selectedNoteAtom.title as string,
+      content: selectedNoteAtom.content as string,
+      public: selectedNoteAtom.isPublic,
     });
     refreshNotes();
     setSynced(true);
   };
-
-  useEffect(() => {
-    saveNoteHandler();
-  }, [postPublic]);
 
   /**
    * Deletes the note and selects the next note in the list
@@ -137,7 +125,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         .default()
         .set({
           margin: 1,
-          filename: `${postTitle}-${lastUpdated}.pdf`,
+          filename: `${selectedNoteAtom.title}-${lastUpdated}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
           jsPDF: { compress: true, backgroundColor: "#000" },
           enableLinks: true,
@@ -154,16 +142,24 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     });
   };
 
+  const handleChange = useCallback(() => {
+    setSelectedNoteAtom((prev) => ({
+      ...prev,
+      isPublic: !prev.isPublic,
+    }));
+    saveNoteHandler();
+  }, []);
+
   const downloadMarkdownHandler = () => {
     if (!editor) return;
     setDownloadLoading(true);
-    const markdown = postContent;
+    const markdown = selectedNoteAtom.content;
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.md`;
+    a.download = `${selectedNoteAtom.title}-${lastUpdated}.md`;
     a.click();
     setDownloadLoading(false);
   };
@@ -177,7 +173,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.html`;
+    a.download = `${selectedNoteAtom.title}-${lastUpdated}.html`;
     a.click();
     setDownloadLoading(false);
   };
@@ -203,7 +199,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Button
           data-testid="save"
           type="button"
-          onClick={saveNoteHandler}
           size="sm"
           variant="green"
           className="w-28"
@@ -261,28 +256,24 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <label
                 htmlFor="toggle"
                 className="cursor-pointer select-none font-medium dark:text-slate-300"
-                onClick={() => {
-                  setPostPublic((prev) => !prev);
-                }}
+                onClick={handleChange}
               >
                 Enable Public Viewing
               </label>
               <Toggle
-                enabled={postPublic}
-                onChange={() => {
-                  setPostPublic((prev) => !prev);
-                }}
+                enabled={selectedNoteAtom.isPublic as boolean}
+                onChange={handleChange}
                 screenReaderPrompt="Toggle Public Sharing"
               />
             </div>
             <p
               className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
-                postPublic
+                selectedNoteAtom.isPublic
                   ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
                   : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
               }`}
               onClick={() => {
-                if (!postPublic) return;
+                if (!selectedNoteAtom.isPublic) return;
                 toast.success("Copied link to clipboard!");
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(
@@ -299,24 +290,24 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <div className="w-11/12 truncate">
                 {/* PROD */}
                 {process.env.NODE_ENV !== "development" &&
-                  postPublic &&
+                  selectedNoteAtom.isPublic &&
                   `https://writedown.app/${
                     publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV !== "development" &&
-                  !postPublic &&
+                  !selectedNoteAtom.isPublic &&
                   `https://writedown.app/...`}
                 {/* DEV */}
                 {process.env.NODE_ENV === "development" &&
-                  postPublic &&
+                  selectedNoteAtom.isPublic &&
                   `http://localhost:3000/${
                     publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV === "development" &&
-                  !postPublic &&
+                  !selectedNoteAtom.isPublic &&
                   `http://localhost:3000/...`}
               </div>
-              {postPublic && (
+              {selectedNoteAtom.isPublic && (
                 <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
               )}
             </p>

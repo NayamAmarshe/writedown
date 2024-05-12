@@ -12,7 +12,7 @@ type PostRowProps = {
   content: string;
   noteId: string;
   userId: string | undefined;
-  publicShow: boolean;
+  isPublic: boolean;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -21,7 +21,7 @@ const PostRow = ({
   content,
   noteId,
   setShowSidebar,
-  publicShow,
+  isPublic,
 }: PostRowProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
@@ -38,7 +38,7 @@ const PostRow = ({
 
   return (
     <div
-      className={`flex items-center justify-between rounded-xl 
+      className={`flex items-center justify-between rounded-xl p-4 
     ${
       selectedNoteId === noteId
         ? "bg-slate-200 dark:bg-slate-700"
@@ -46,7 +46,7 @@ const PostRow = ({
     }`}
     >
       <div
-        className={`flex w-full cursor-pointer flex-col gap-2 truncate rounded-xl p-4 `}
+        className={`flex w-full cursor-pointer flex-col gap-2 truncate`}
         onClick={() => switchNotesHandler(noteId)}
       >
         <div className="w-full truncate font-medium dark:text-slate-200">
@@ -66,7 +66,7 @@ const PostRow = ({
         </div> */}
         </button>
       </div>
-      {publicShow && <BiGlobe className="mr-2" title="Public" size={25} />}
+      {isPublic && <BiGlobe title="Public" size={25} />}
     </div>
   );
 };
