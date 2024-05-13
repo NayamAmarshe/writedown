@@ -1,9 +1,4 @@
-import {
-  postContentAtom,
-  postLastUpdatedAtom,
-  postTitleAtom,
-  postPublicAtom,
-} from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import DetailsContent from "@tiptap-pro/extension-details-content";
@@ -44,10 +39,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [user] = useAuthState(auth);
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
-  const [postTitle, setPostTitle] = useAtom(postTitleAtom);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
-  const [postContent, setPostContent] = useAtom(postContentAtom);
-  const [postUpdatedAt, setPostUpdatedAt] = useAtom(postLastUpdatedAtom);
+
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
   });
@@ -117,10 +111,13 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         transformCopiedText: true,
       }),
     ],
-    content: postContent,
+    content: selectedNote.content,
     onUpdate: ({ editor }) => {
       if (editor) {
-        setPostContent(editor.storage.markdown.getMarkdown());
+        setSelectedNote((prev) => ({
+          ...prev,
+          content: editor.storage.markdown.getMarkdown(),
+        }));
       }
     },
   });
@@ -155,29 +152,38 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     if (!notes) return;
     if (notes.length > 0 && !selectedNoteId) {
       setSelectedNoteId(notes[0].id);
-      setPostContent(notes[0].content);
-      setPostTitle(notes[0].title);
-      setPostUpdatedAt(notes[0].updatedAt);
-      setPostPublic(notes[0].public);
+
+      setSelectedNote((prev) => ({
+        ...prev,
+        content: notes[0].content,
+        title: notes[0].title,
+        lastUpdated: notes[0].updatedAt,
+        isPublic: notes[0].public,
+      }));
+
       return;
     }
     if (!selectedNoteId) return;
     const selectedNote = notes.find((note) => note.id === selectedNoteId);
     if (!selectedNote) return;
-    setPostContent(selectedNote.content);
-    setPostTitle(selectedNote.title);
-    setPostUpdatedAt(selectedNote.updatedAt);
-    setPostPublic(selectedNote.public);
+
+    setSelectedNote((prev) => ({
+      ...prev,
+      content: selectedNote.content,
+      title: selectedNote.title,
+      lastUpdated: selectedNote.updatedAt,
+      isPublic: selectedNote.public,
+    }));
   }, [notes, selectedNoteId]);
 
   useEffect(() => {
     if (!selectedNoteId || !user) return;
     const currentNote = notes?.find(
       (note) =>
-        postContent === note.content &&
-        postTitle === note.title &&
-        postUpdatedAt === note.updatedAt &&
-        postPublic === note.public
+        selectedNote.content === note.content &&
+        selectedNote.title === note.title &&
+        selectedNote.lastUpdated === note.updatedAt &&
+        selectedNote.isPublic === note.public
     );
     let debounceSave: NodeJS.Timeout;
     const isNoteUnchanged = currentNote?.id === selectedNoteId;
@@ -189,9 +195,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         setSynced(false);
         updateNote({
           id: selectedNoteId,
-          title: postTitle,
-          content: postContent,
-          public: postPublic,
+          title: selectedNote.title as string,
+          content: selectedNote.content as string,
+          public: selectedNote.isPublic,
         });
         setSynced(true);
       }, 3000);
@@ -200,7 +206,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     return () => {
       clearTimeout(debounceSave);
     };
-  }, [notes, postTitle, postContent, postPublic]);
+  }, [notes, selectedNote.title, selectedNote.content, selectedNote.isPublic]);
 
   useEffect(() => {
     refreshNotes();
@@ -240,10 +246,13 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           type="text"
           className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
           onChange={(e) => {
-            setPostTitle(e.target.value);
+            setSelectedNote((prev) => ({
+              ...prev,
+              title: e.target.value,
+            }));
           }}
           placeholder="Untitled"
-          value={postTitle}
+          value={selectedNote.title}
         />
 
         {/* SEPARATOR */}
