@@ -6,12 +6,7 @@ import {
   IoMdSend,
   IoMdTrash,
 } from "react-icons/io";
-import {
-  postContentAtom,
-  postLastUpdatedAtom,
-  postPublicAtom,
-  postTitleAtom,
-} from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -59,11 +54,8 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // ATOMIC STATE
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [postPublic, setPostPublic] = useAtom(postPublicAtom);
-  const postUpdatedAt = useAtomValue(postLastUpdatedAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
-  const postContent = useAtomValue(postContentAtom);
-  const postTitle = useAtomValue(postTitleAtom);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   const { user, publicUserDetails } = useUser();
 
@@ -74,10 +66,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // EFFECTS
   useEffect(() => {
-    if (!postUpdatedAt) return;
-    const formattedDate = formatTimeStamp(postUpdatedAt);
+    if (!selectedNote.lastUpdated) return;
+    const formattedDate = formatTimeStamp(selectedNote.lastUpdated);
     setLastUpdated(formattedDate);
-  }, [postUpdatedAt, selectedNoteId]);
+  }, [selectedNote.lastUpdated, selectedNoteId]);
 
   /**
    * Saves the note if not already synced
@@ -88,9 +80,9 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     setSynced(false);
     await updateNote({
       id: selectedNoteId,
-      title: postTitle,
-      content: postContent,
-      public: postPublic,
+      title: selectedNote.title,
+      content: selectedNote.content,
+      public: selectedNote.isPublic,
     });
     refreshNotes();
     setSynced(true);
@@ -133,7 +125,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         .default()
         .set({
           margin: 1,
-          filename: `${postTitle}-${lastUpdated}.pdf`,
+          filename: `${selectedNote.title}-${lastUpdated}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
           jsPDF: { compress: true, backgroundColor: "#000" },
           enableLinks: true,
@@ -153,13 +145,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const downloadMarkdownHandler = () => {
     if (!editor) return;
     setDownloadLoading(true);
-    const markdown = postContent;
+    const markdown = selectedNote.content;
     if (!markdown) return;
     const blob = new Blob([markdown], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.md`;
+    a.download = `${selectedNote.title}-${lastUpdated}.md`;
     a.click();
     setDownloadLoading(false);
   };
@@ -173,7 +165,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${postTitle}-${lastUpdated}.html`;
+    a.download = `${selectedNote.title}-${lastUpdated}.html`;
     a.click();
     setDownloadLoading(false);
   };
@@ -258,16 +250,24 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 htmlFor="toggle"
                 className="cursor-pointer select-none font-medium dark:text-slate-300"
                 onClick={() => {
-                  setPostPublic((prev) => !prev);
+                  setSelectedNote((prev) => ({
+                    ...prev,
+                    isPublic: !prev.isPublic,
+                  }));
+
                   saveNoteHandler();
                 }}
               >
                 Enable Public Viewing
               </label>
               <Toggle
-                enabled={postPublic}
+                enabled={selectedNote.isPublic}
                 onChange={() => {
-                  setPostPublic((prev) => !prev);
+                  setSelectedNote((prev) => ({
+                    ...prev,
+                    isPublic: !prev.isPublic,
+                  }));
+
                   saveNoteHandler();
                 }}
                 screenReaderPrompt="Toggle Public Sharing"
@@ -275,12 +275,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
             </div>
             <p
               className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
-                postPublic
+                selectedNote.isPublic
                   ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
                   : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
               }`}
               onClick={() => {
-                if (!postPublic) return;
+                if (!selectedNote.isPublic) return;
+
                 toast.success("Copied link to clipboard!");
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(
@@ -297,24 +298,24 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <div className="w-11/12 truncate">
                 {/* PROD */}
                 {process.env.NODE_ENV !== "development" &&
-                  postPublic &&
+                  selectedNote.isPublic &&
                   `https://writedown.app/${
                     publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV !== "development" &&
-                  !postPublic &&
+                  !selectedNote.isPublic &&
                   `https://writedown.app/...`}
                 {/* DEV */}
                 {process.env.NODE_ENV === "development" &&
-                  postPublic &&
+                  selectedNote.isPublic &&
                   `http://localhost:3000/${
                     publicUserDetails?.username || publicUserDetails?.uid
                   }/posts/${selectedNoteId}`}
                 {process.env.NODE_ENV === "development" &&
-                  !postPublic &&
+                  !selectedNote.isPublic &&
                   `http://localhost:3000/...`}
               </div>
-              {postPublic && (
+              {selectedNote.isPublic && (
                 <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
               )}
             </p>
