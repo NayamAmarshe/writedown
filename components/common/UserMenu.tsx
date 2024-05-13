@@ -6,7 +6,7 @@ import {
   BiPencil,
   BiSun,
 } from "react-icons/bi";
-import { selectedNoteType } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useTheme } from "next-themes";
 import Popover from "../ui/Popover";
@@ -36,7 +36,7 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const [selectedNoteAtom, setSelectedNoteAtom] = useAtom(selectedNoteType);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   return (
     <Popover
@@ -87,7 +87,7 @@ const UserMenu = ({
             auth.signOut();
             setSelectedNoteId("");
 
-            setSelectedNoteAtom((prev) => ({
+            setSelectedNote((prev) => ({
               ...prev,
               isPublic: false,
               title: "",

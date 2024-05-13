@@ -11,7 +11,7 @@ import {
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/utils/firestoreDataConverter";
-import { selectedNoteType } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
@@ -23,7 +23,7 @@ type UseNotesProps = {
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
-  const [updatedAt, setUpdatedAt] = useAtom(selectedNoteType);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
@@ -81,7 +81,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await updateDoc(notesRef, updatedContent);
-        setUpdatedAt((prev) => ({
+        setSelectedNote((prev) => ({
           ...prev,
           lastUpdated: currentTime,
         }));

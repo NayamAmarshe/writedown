@@ -1,14 +1,14 @@
 import { atom } from "jotai";
 
 type selectedNoteType = {
-  id?: string;
-  title?: string;
-  isPublic?: boolean;
-  content?: string;
-  lastUpdated?: number | null;
+  id: string;
+  title: string;
+  isPublic: boolean;
+  content: string;
+  lastUpdated: number | null;
 };
 
-export const selectedNoteType = atom<selectedNoteType>({
+export const selectedNoteAtom = atom<selectedNoteType>({
   id: "",
   title: "",
   isPublic: false,
