@@ -36,7 +36,6 @@ const UserMenu = ({
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
 
   return (

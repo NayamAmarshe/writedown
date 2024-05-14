@@ -34,10 +34,8 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
   const createNote = useCallback(async () => {
     if (!userId) return;
-
     const id = crypto.randomUUID();
     const currentTime = new Date().getTime();
-
     const noteData: NoteDocument = {
       id,
       content: "",

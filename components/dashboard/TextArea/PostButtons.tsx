@@ -58,6 +58,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
   const [refresh, setRefresh] = useState(false);
+
   const { user, publicUserDetails } = useUser();
 
   // CUSTOM HOOKS
