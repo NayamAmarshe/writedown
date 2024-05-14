@@ -57,6 +57,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+  console.log("🚀 ~ PostButtons ~ selectedNote:", selectedNote);
 
   const { user, publicUserDetails } = useUser();
 
@@ -79,30 +80,33 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     setSynced(false);
-
-    await updateNote({
-      id: selectedNoteId,
-      title: selectedNote.title,
-      content: selectedNote.content,
-      public: selectedNote.isPublic,
-    });
-    setSynced(true);
-    refreshNotes();
-  };
-
-  useEffect(() => {
-    saveNoteHandler();
-  }, [refresh]);
-
-  const handleChange = () => {
-    refreshNotes();
     setSelectedNote((prev) => ({
       ...prev,
       isPublic: !prev.isPublic,
     }));
-
-    setRefresh(!refresh);
+    await updateNote({
+      id: selectedNote.id,
+      title: selectedNote.title,
+      content: selectedNote.content,
+      public: selectedNote.isPublic,
+    });
+    refreshNotes();
+    setSynced(true);
   };
+
+  // useEffect(() => {
+  //   saveNoteHandler();
+  // }, [refresh]);
+
+  // const handleChange = () => {
+  //   refreshNotes();
+  //   setSelectedNote((prev) => ({
+  //     ...prev,
+  //     isPublic: !prev.isPublic,
+  //   }));
+
+  //   setRefresh(!refresh);
+  // };
 
   /**
    * Deletes the note and selects the next note in the list
@@ -277,14 +281,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               </label>
               <Toggle
                 enabled={selectedNote.isPublic}
-                onChange={() => {
-                  setSelectedNote((prev) => ({
-                    ...prev,
-                    isPublic: !prev.isPublic,
-                  }));
-
-                  saveNoteHandler();
-                }}
+                onChange={saveNoteHandler}
                 screenReaderPrompt="Toggle Public Sharing"
               />
             </div>

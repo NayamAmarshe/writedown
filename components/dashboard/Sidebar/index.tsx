@@ -3,7 +3,6 @@ import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
@@ -13,13 +12,10 @@ import React, { useEffect, useState } from "react";
 import BetaBadge from "@/components/ui/BetaBadge";
 import { BsChevronBarLeft } from "react-icons/bs";
 import useUser from "@/components/hooks/useUser";
-import Popover from "@/components/ui/Popover";
 import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
-import { auth } from "@/lib/firebase";
 import PostRow from "./PostRow";
 import Link from "next/link";
 
@@ -163,31 +159,41 @@ const Sidebar = ({
 
       {/* POSTS SECTION */}
       {/* POSTS HEADING */}
-      <h6 className="font-semibold">Posts</h6>
+      <h6 className="font-semibold">PFosts</h6>
       <div className="scrollbar flex h-full flex-col  gap-3 overflow-y-auto">
         {/* POSTS LIST */}
         <div className="mb-64 flex flex-col gap-2 p-1">
           {notes ? (
-            notes.map((note) => (
-              <Link
-                href={`/dashboard/?post=${note.slug}`}
-                key={note.id}
-                as={
-                  note.public
-                    ? `/${publicUserDetails?.username}/posts/${note.slug}`
-                    : `/dashboard/?post=${note.slug}`
-                }
-              >
-                <PostRow
-                  userId={user?.uid}
-                  title={note.title}
-                  content={note.content}
-                  isPublic={note.public}
-                  noteId={note.id}
-                  setShowSidebar={setShowSidebar}
-                />
-              </Link>
-            ))
+            notes.map((note) => {
+              if (note.id === selectedNote.id)
+                console.log("SIDEBAR selectedNote", selectedNote);
+              else console.log("NOTE", note);
+
+              return (
+                <Link
+                  href={`/dashboard/?post=${note.slug}`}
+                  key={note.id}
+                  as={
+                    note.public
+                      ? `/${publicUserDetails?.username}/posts/${note.slug}`
+                      : `/dashboard/?post=${note.slug}`
+                  }
+                >
+                  <PostRow
+                    userId={user?.uid}
+                    title={note.title}
+                    content={note.content}
+                    isPublic={
+                      note.id === selectedNote.id
+                        ? selectedNote.isPublic
+                        : note.public
+                    }
+                    noteId={note.id}
+                    setShowSidebar={setShowSidebar}
+                  />
+                </Link>
+              );
+            })
           ) : (
             <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
