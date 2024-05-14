@@ -6,7 +6,7 @@ import {
   IoMdSend,
   IoMdTrash,
 } from "react-icons/io";
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteType } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -56,8 +56,8 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   // ATOMIC STATE
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
   const [refresh, setRefresh] = useState(false);
-  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   const { user, publicUserDetails } = useUser();
 

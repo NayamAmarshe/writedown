@@ -1,4 +1,4 @@
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteType } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import DetailsContent from "@tiptap-pro/extension-details-content";
@@ -40,7 +40,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
-  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
 
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
@@ -111,6 +111,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         transformCopiedText: true,
       }),
     ],
+
     content: selectedNote.content,
     onUpdate: ({ editor }) => {
       if (editor) {
@@ -160,7 +161,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         lastUpdated: notes[0].updatedAt,
         isPublic: notes[0].public,
       }));
-
       return;
     }
     if (!selectedNoteId) return;
@@ -195,11 +195,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         setSynced(false);
         updateNote({
           id: selectedNoteId,
-          title: selectedNote.title,
-          content: selectedNote.content,
+          title: selectedNote.title as string,
+          content: selectedNote.content as string,
           public: selectedNote.isPublic,
         });
         setSynced(true);
+        refreshNotes();
       }, 3000);
       setSynced(false);
     }
