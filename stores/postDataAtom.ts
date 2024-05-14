@@ -1,6 +1,17 @@
 import { atom } from "jotai";
 
-export const postTitleAtom = atom<string>("");
-export const postPublicAtom = atom<boolean>(false);
-export const postContentAtom = atom<string>("");
-export const postLastUpdatedAtom = atom<number | null>(null);
+type selectedNoteType = {
+  id: string;
+  title: string;
+  isPublic: boolean;
+  content: string;
+  lastUpdated: number | null;
+};
+
+export const selectedNoteType = atom<selectedNoteType>({
+  id: "",
+  title: "",
+  isPublic: false,
+  content: "",
+  lastUpdated: null,
+});
