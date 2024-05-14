@@ -10,7 +10,7 @@ import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
@@ -49,6 +49,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   // LOCAL STATE
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
 
@@ -56,6 +57,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+  console.log("🚀 ~ PostButtons ~ selectedNote:", selectedNote);
 
   const { user, publicUserDetails } = useUser();
 
@@ -78,8 +80,12 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
       return;
     setSynced(false);
+    setSelectedNote((prev) => ({
+      ...prev,
+      isPublic: !prev.isPublic,
+    }));
     await updateNote({
-      id: selectedNoteId,
+      id: selectedNote.id,
       title: selectedNote.title,
       content: selectedNote.content,
       public: selectedNote.isPublic,
@@ -87,6 +93,20 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     refreshNotes();
     setSynced(true);
   };
+
+  // useEffect(() => {
+  //   saveNoteHandler();
+  // }, [refresh]);
+
+  // const handleChange = () => {
+  //   refreshNotes();
+  //   setSelectedNote((prev) => ({
+  //     ...prev,
+  //     isPublic: !prev.isPublic,
+  //   }));
+
+  //   setRefresh(!refresh);
+  // };
 
   /**
    * Deletes the note and selects the next note in the list
@@ -191,7 +211,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Button
           data-testid="save"
           type="button"
-          onClick={saveNoteHandler}
           size="sm"
           variant="green"
           className="w-28"
@@ -262,14 +281,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               </label>
               <Toggle
                 enabled={selectedNote.isPublic}
-                onChange={() => {
-                  setSelectedNote((prev) => ({
-                    ...prev,
-                    isPublic: !prev.isPublic,
-                  }));
-
-                  saveNoteHandler();
-                }}
+                onChange={saveNoteHandler}
                 screenReaderPrompt="Toggle Public Sharing"
               />
             </div>
@@ -281,7 +293,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               }`}
               onClick={() => {
                 if (!selectedNote.isPublic) return;
-
                 toast.success("Copied link to clipboard!");
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(

@@ -86,7 +86,6 @@ const UserMenu = ({
           onClick={() => {
             auth.signOut();
             setSelectedNoteId("");
-
             setSelectedNote((prev) => ({
               ...prev,
               isPublic: false,
