@@ -11,7 +11,8 @@ import {
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/utils/firestoreDataConverter";
-import { selectedNoteType } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
+
 import { toast } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
@@ -22,7 +23,8 @@ type UseNotesProps = {
 };
 
 export const useNotes = ({ userId }: UseNotesProps) => {
-  const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+
   const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
     userId
       ? query(

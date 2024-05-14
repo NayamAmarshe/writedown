@@ -6,7 +6,7 @@ import {
   IoMdSend,
   IoMdTrash,
 } from "react-icons/io";
-import { selectedNoteType } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -56,8 +56,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   // ATOMIC STATE
   const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
-  const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
-  const [refresh, setRefresh] = useState(false);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   const { user, publicUserDetails } = useUser();
 
@@ -265,13 +264,27 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <label
                 htmlFor="toggle"
                 className="cursor-pointer select-none font-medium dark:text-slate-300"
-                onClick={handleChange}
+                onClick={() => {
+                  setSelectedNote((prev) => ({
+                    ...prev,
+                    isPublic: !prev.isPublic,
+                  }));
+
+                  saveNoteHandler();
+                }}
               >
                 Enable Public Viewing
               </label>
               <Toggle
                 enabled={selectedNote.isPublic}
-                onChange={handleChange}
+                onChange={() => {
+                  setSelectedNote((prev) => ({
+                    ...prev,
+                    isPublic: !prev.isPublic,
+                  }));
+
+                  saveNoteHandler();
+                }}
                 screenReaderPrompt="Toggle Public Sharing"
               />
             </div>
