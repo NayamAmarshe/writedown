@@ -8,7 +8,7 @@ type selectedNoteType = {
   lastUpdated: number | null;
 };
 
-export const selectedNoteType = atom<selectedNoteType>({
+export const selectedNoteAtom = atom<selectedNoteType>({
   id: "",
   title: "",
   isPublic: false,

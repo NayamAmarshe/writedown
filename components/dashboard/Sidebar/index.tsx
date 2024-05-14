@@ -4,7 +4,7 @@ import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { selectedNoteType } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
@@ -36,7 +36,9 @@ const Sidebar = ({
   const { user, publicUserDetails } = useUser();
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
-  const [selectedNote, setSelectedNote] = useAtom(selectedNoteType);
+
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+
   const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
