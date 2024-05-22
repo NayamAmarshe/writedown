@@ -1,13 +1,11 @@
 import React from "react";
-import TBox from "../textbox";
-import Btn from "../button";
-
+import Button from "@/components/ui/Button";
 export default function FinalSection() {
   return (
-    <div className="flex h-[400px] w-screen justify-center bg-slate-200 dark:bg-slate-800">
-      <div className="flex h-full max-w-[1200px] flex-col items-center justify-center gap-3">
-        <TBox variant="h2">Still not convinced?</TBox>
-        <Btn variant="page"> {" Try it out, it's FREE! "}</Btn>
+    <div className="flex w-screen justify-center bg-slate-200 py-52 dark:bg-slate-800">
+      <div className="max-screen-xl flex h-full flex-col items-center justify-center gap-3">
+        <h2 className="text-h3 scale-125 sm:scale-100">Still not convinced?</h2>
+        <Button variant="dark"> Try it out, it&apos;s FREE!</Button>
       </div>
     </div>
   );

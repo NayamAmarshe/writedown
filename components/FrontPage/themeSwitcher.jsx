@@ -11,13 +11,13 @@ export default function ThemeSwitcher() {
     <div>
       <button
         onClick={() => setTheme("dark")}
-        className="block text-text-light dark:hidden"
+        className="block text-slate-900 dark:hidden"
       >
         <CiLight size={23}></CiLight>
       </button>
       <button
         onClick={() => setTheme("light")}
-        className="hidden text-text-dark dark:block"
+        className="hidden text-slate-50 dark:block"
       >
         <CiDark size={23}></CiDark>
       </button>

@@ -10,13 +10,13 @@ module.exports = {
     extend: {
       screens: {
         xs: "320px",
-        mxs: { max: "350px" },
+        mxs: { max: "400px" },
       },
       colors: {
         // Yes, the color is called with text-text-white
-        "text-light": "#0B101D",
-        "text-dark": "#EBECEE",
-        chalk: {
+        /* "text-light": "#0B101D",
+        "text-dark": "#EBECEE", */
+        /* chalk: {
           50: "#fafbfc",
           75: "#eaeef3",
           100: "#e1e7ee",
@@ -42,7 +42,7 @@ module.exports = {
           300: "#0f172a",
           400: "#0b101d",
           500: "#0b101d",
-        },
+        }, */
       },
       typography: {
         DEFAULT: {
