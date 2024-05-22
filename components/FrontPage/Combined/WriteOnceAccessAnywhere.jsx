@@ -10,7 +10,6 @@ export default function WriteOnceAccessAnywhere() {
       <div className="max-screen-xl flex h-full items-center justify-center gap-24 px-6">
         {/* TODO: Figure out what to do abou these percentage values */}
         <div className="ml-3 max-w-[90%] sm:max-w-[50%]">
-          {" "}
           <h2 className="text-h2">
             write once, <br /> access anywhere
           </h2>
@@ -25,6 +24,7 @@ export default function WriteOnceAccessAnywhere() {
         </div>
         <div className="hidden w-[300px] min-w-[300px] sm:block">
           <img
+            alt="an image"
             className=""
             width={300}
             height={310}

@@ -128,7 +128,6 @@ export const PostPage = ({}: Props) => {
             <div className="mt-52 flex flex-col items-center justify-center gap-20">
               <div className="flex flex-col items-center justify-center gap-4 px-2">
                 <img
-                  alt="an image"
                   src={profilePicture}
                   alt="User Profile Picture"
                   className="w-24 rounded-full"

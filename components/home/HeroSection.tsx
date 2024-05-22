@@ -30,13 +30,11 @@ const HeroSection = () => {
 
         <Parallax speed={10}>
           <img
-            alt="an image"
             src="/screenshot.png"
             alt="Writedown Screenshot"
             className="dark:hidden"
           />
           <img
-            alt="an image"
             src="/dark-screenshot.png"
             alt="Writedown Screenshot"
             className="hidden dark:block"
