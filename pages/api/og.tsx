@@ -31,6 +31,7 @@ export default function handler(request: NextRequest, res: NextResponse) {
         <div tw="flex flex-col w-full h-full items-center justify-center bg-slate-100">
           <div tw="flex flex-col items-center justify-center mt-auto">
             <img
+              alt="an image"
               src={profilePicture}
               tw="w-12 mx-auto mb-2 rounded-full"
               alt="Author profile picture"

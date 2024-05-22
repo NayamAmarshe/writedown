@@ -115,6 +115,7 @@ const Sidebar = ({
           <div className="flex flex-row items-center gap-2">
             {user ? (
               <img
+                alt="an image"
                 src={
                   user?.photoURL ||
                   `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`

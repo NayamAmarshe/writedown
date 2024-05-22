@@ -20,6 +20,7 @@ const Navbar = (props: Props) => {
         <UserMenu dashboard home logout themeOption reverse>
           {user ? (
             <img
+              alt="an image"
               src={
                 user?.photoURL ||
                 `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
