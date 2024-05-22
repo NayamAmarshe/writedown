@@ -136,7 +136,7 @@ export const PostPage = ({}: Props) => {
                   {note?.title}
                 </h1>
                 <p className="text-xl dark:text-slate-200">
-                  <span className="font-light">By</span>{" "}
+                  <span className="font-light">By</span>
                   <span className="font-medium">{name}</span>
                 </p>
                 <p className="text-sm dark:text-slate-400">

@@ -128,9 +128,9 @@ const Sidebar = ({
             )}
             {user ? (
               <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
-                Hi there,{" "}
+                Hi there,
                 <span className="text-slate-900 dark:text-slate-100">
-                  {user?.displayName}{" "}
+                  {user?.displayName}
                 </span>
               </h4>
             ) : (

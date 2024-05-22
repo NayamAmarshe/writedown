@@ -9,7 +9,7 @@ const HeroSection = () => {
     <div className="my-32 h-full w-full">
       <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-4">
         <div className="flex flex-col items-center justify-center gap-5">
-          <h1 className="flex flex-col gap-5 text-center text-4xl font-semibold leading-tight text-slate-900 dark:text-slate-50 xs:text-5xl sm:text-7xl">
+          <h1 className="flex flex-col gap-5 text-center text-4xl font-semibold leading-tight text-slate-900 dark:text-slate-50 sm:text-7xl xs:text-5xl">
             <span className="whitespace-nowrap">Upgrade Your</span>
             <span className="text-pacifico whitespace-nowrap font-light">
               Dear Diary

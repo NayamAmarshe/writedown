@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps {
-  variant?: "red" | "green" | "slate" | "blue";
+  variant?: "red" | "green" | "slate" | "blue" | "dark";
   size?: "sm";
   children: React.ReactNode;
   className?: string;
@@ -33,8 +33,10 @@ const Button = ({
     switch (variant) {
       case "red":
         return "inline-flex items-center justify-center px-5 py-2.5 bg-white border rounded-full border-red-900 text-sm font-medium text-red-900 hover:bg-red-200 transition-all duration-300";
+      case "dark":
+        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-900 border rounded-full text-sm font-medium text-slate-50 hover:bg-slate-700 transition-all duration-300";
       default:
-        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-50 border rounded-full border-2 border-slate-900 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-all duration-300 dark:bg-slate-900 dark:border-slate-50 dark:text-slate-100 dark:hover:bg-slate-800";
+        return "inline-flex items-center justify-center px-5 py-2.5 bg-slate-50 border rounded-full border border-slate-900 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-all duration-300 dark:bg-slate-900 dark:border-slate-50 dark:text-slate-100 dark:hover:bg-slate-800";
     }
   };
 

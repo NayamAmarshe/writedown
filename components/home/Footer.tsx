@@ -32,7 +32,7 @@ const Footer = ({ className }: { className?: string }) => {
       </div>
       <div className="pb-5 text-slate-500 dark:text-slate-400 sm:pb-0">
         <p className="text-sm">
-          © {new Date().getFullYear()}{" "}
+          © {new Date().getFullYear()}
           <Link href="/" className="font-semibold">
             writedown
           </Link>

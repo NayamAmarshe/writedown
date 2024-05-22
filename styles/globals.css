@@ -1,6 +1,7 @@
 @import url("https://api.fonts.coollabs.io/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Leckerli One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -84,6 +85,67 @@ ul[data-type="taskList"] li > div {
 
 label > input[type="checkbox"] {
   border-radius: 0.25rem;
+}
+
+.customShadow {
+  -webkit-box-shadow: -24px 26px 37.9px 0px rgba(137, 145, 156, 0.4);
+  -moz-box-shadow: -24px 26px 37.9px 0px rgba(137, 145, 156, 0.4);
+  box-shadow: -24px 26px 37.9px 0px rgba(137, 145, 156, 0.4);
+}
+.customShadowDark {
+  -webkit-box-shadow: -7px 4px 37.9px 0px rgba(137, 145, 156, 0.4);
+  -moz-box-shadow: -7px 4px 37.9px 0px rgba(137, 145, 156, 0.4);
+  box-shadow: -7px 4px 37.9px 0px rgba(137, 145, 156, 0.4);
+}
+
+.text-p {
+  @apply text-[18px] text-slate-900 dark:text-slate-50;
+}
+
+.text-ui {
+  @apply text-[16px] text-slate-900 dark:text-slate-50;
+}
+
+.text-h5 {
+  @apply text-[22px] text-slate-900 dark:text-slate-50 sm:text-[18px];
+}
+
+.text-h4 {
+  @apply text-[20px] font-medium text-slate-900 dark:text-slate-50 sm:text-[28px];
+}
+
+.text-h3 {
+  @apply text-[24px] font-semibold text-slate-900 dark:text-slate-50 sm:text-[36px];
+}
+
+.text-h2 {
+  @apply text-[32px] font-bold text-slate-900 dark:text-slate-50 sm:text-[42px];
+}
+
+.text-h1 {
+  @apply text-[38px] font-bold text-slate-900 dark:text-slate-50 sm:text-[52px];
+}
+
+.text-special {
+  @apply text-center text-[40px] font-bold text-slate-900 dark:text-slate-50 sm:text-[65px];
+  font-family: "Syne", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.fpButton-page {
+  @apply rounded-full bg-slate-800 px-[30px] py-1.5 transition-transform hover:scale-105 dark:bg-slate-600;
+}
+
+.fpButton-ui {
+  @apply rounded-full border border-slate-800 bg-slate-50 p-5 py-1.5 transition-colors hover:bg-slate-200 dark:border-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800;
+}
+
+.fpButton-page p {
+  @apply text-[16px] text-slate-50;
+}
+
+.fpButton-ui p {
+  @apply text-[16px] text-slate-900 dark:text-slate-50;
 }
 
 /* .milkdown {
