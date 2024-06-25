@@ -3,7 +3,6 @@ import {
   LuLink,
   LuCheckSquare,
   LuCode,
-  LuDivide,
   LuHeading1,
   LuHeading2,
   LuHeading3,
@@ -20,7 +19,7 @@ import React, { useState } from "react";
 import { Editor } from "@tiptap/react";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
-import ToggleSwitch from "@/components/ui/ToggleSwitch";
+import Toggle from "@/components/ui/Toggle";
 
 const ModalComponent = () => {};
 
@@ -170,9 +169,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
           <div className="flex flex-col items-center gap-2">
             <div className="mb-2 inline-flex w-full items-center justify-end gap-4">
               <span>Link Preview: </span>
-              <ToggleSwitch
+              <Toggle
                 enabled={isLinkPreview}
-                setEnabled={setIsLinkPreview}
+                onChange={() => setIsLinkPreview((prev) => !prev)}
               />
             </div>
 
