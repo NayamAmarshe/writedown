@@ -1,5 +1,6 @@
 import {
   LuBold,
+  LuLink,
   LuCheckSquare,
   LuCode,
   LuDivide,
@@ -19,6 +20,9 @@ import React, { useState } from "react";
 import { Editor } from "@tiptap/react";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
+
+const ModalComponent = () => {};
 
 type EditorButtonsProps = {
   shiftRight?: boolean;
@@ -29,6 +33,10 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
+
+  // Image preview states
+  const [isUrlPromptOpen, setIsUrlPromptOpen] = useState(false);
+  const [isLinkPreview, setIsLinkPreview] = useState(false);
 
   if (!editor) return <></>;
 
@@ -142,6 +150,42 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         </button> */}
         <button
           className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => setIsUrlPromptOpen(true)}
+        >
+          <LuLink className="dark:text-slate-200" />
+        </button>
+        <Modal
+          isOpen={isUrlPromptOpen}
+          setIsOpen={setIsUrlPromptOpen}
+          title="Insert Link"
+          saveText="Insert"
+          closeText="Cancel"
+          saveHandler={() => {
+            isLinkPreview
+              ? editor.chain().setLinkPreview({ url: url }).run()
+              : editor.chain().insertContent(`[${url}](${url})`).run();
+            setIsUrlPromptOpen(false);
+          }}
+        >
+          <div className="flex flex-col items-center gap-2">
+            <div className="mb-2 inline-flex w-full items-center justify-end gap-4">
+              <span>Link Preview: </span>
+              <ToggleSwitch
+                enabled={isLinkPreview}
+                setEnabled={setIsLinkPreview}
+              />
+            </div>
+
+            <Input
+              id="url"
+              placeholder="Enter URL"
+              onChange={(e) => setUrl(e.target.value)}
+            />
+          </div>
+        </Modal>
+
+        <button
+          className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => setIsOpen(true)}
         >
           <LuImage className="dark:text-slate-200" />
@@ -152,6 +196,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         >
           <LuMinus className="dark:text-slate-200" />
         </button>
+
         <Modal
           isOpen={isOpen}
           setIsOpen={setIsOpen}

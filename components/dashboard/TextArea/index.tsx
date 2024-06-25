@@ -6,6 +6,7 @@ import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import WritedownEditor from "@/components/ui/WritedownEditor";
 import Mathematics from "@tiptap-pro/extension-mathematics";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { LinkPreview } from "./LinkPreview";
 import UniqueId from "@tiptap-pro/extension-unique-id";
 import Details from "@tiptap-pro/extension-details";
 import IconButton from "@/components/ui/IconButton";
@@ -110,6 +111,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         transformPastedText: true,
         transformCopiedText: true,
       }),
+      LinkPreview,
     ],
     content: selectedNote.content,
     onUpdate: ({ editor }) => {
