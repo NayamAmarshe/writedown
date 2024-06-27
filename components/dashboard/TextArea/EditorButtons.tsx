@@ -21,7 +21,6 @@ import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
 import Toggle from "@/components/ui/Toggle";
 
-const ModalComponent = () => {};
 
 type EditorButtonsProps = {
   shiftRight?: boolean;
