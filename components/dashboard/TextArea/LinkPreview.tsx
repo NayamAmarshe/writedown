@@ -29,11 +29,12 @@ const LinkPreviewCard = ({ node }: { node: any }) => {
   }, []);
 
   return (
-    <NodeViewWrapper contenteditable="false">
+    <NodeViewWrapper contenteditable="false" id="link-preview">
       <a
         href={url}
         target="_blank"
-        className="not-prose mb-4 flex w-full cursor-pointer items-center gap-4 rounded-lg bg-slate-100 p-3 transition-colors hover:bg-slate-200 "
+        rel="noreferrer"
+        className="not-prose mb-4 flex w-full cursor-pointer items-center gap-4 rounded-lg bg-slate-100 p-3 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 "
       >
         {image && (
           <div className="w-1/3 overflow-hidden">
@@ -90,7 +91,10 @@ export const LinkPreview = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["div", mergeAttributes(HTMLAttributes, {})];
+    return [
+      "div",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+    ];
   },
 
   addNodeView() {

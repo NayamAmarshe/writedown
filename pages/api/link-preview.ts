@@ -7,10 +7,6 @@ export default async function handler(
 ) {
   try {
     const { url } = req.query;
-    if (!isValidUrl(url as string)) {
-      res.status(400).json({ error: 'Invalid URL provided.' });
-      return;
-    }
     const response = await fetch(url as string);
     const data = await response.text();
     const $ = cheerio.load(data);
