@@ -157,12 +157,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
       setSelectedNote((prev) => ({
         ...prev,
+        id: notes[0].id,
         content: notes[0].content,
         title: notes[0].title,
         lastUpdated: notes[0].updatedAt,
         isPublic: notes[0].public,
       }));
-
       return;
     }
     if (!selectedNoteId) return;
@@ -202,6 +202,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           public: selectedNote.isPublic,
         });
         setSynced(true);
+        // refreshNotes();
       }, 3000);
       setSynced(false);
     }
