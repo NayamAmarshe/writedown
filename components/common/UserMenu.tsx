@@ -7,7 +7,6 @@ import {
   BiSun,
 } from "react-icons/bi";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { useTheme } from "next-themes";
 import Popover from "../ui/Popover";
 import { auth } from "@/lib/firebase";
@@ -35,7 +34,6 @@ const UserMenu = ({
   children,
 }: UserMenuProps) => {
   const { theme, setTheme } = useTheme();
-  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   return (
@@ -85,10 +83,9 @@ const UserMenu = ({
         <button
           onClick={() => {
             auth.signOut();
-            setSelectedNoteId("");
-
             setSelectedNote((prev) => ({
               ...prev,
+              id: "",
               isPublic: false,
               title: "",
               content: "",
