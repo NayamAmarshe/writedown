@@ -1,4 +1,4 @@
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { EditorContent, Editor } from "@tiptap/react";
 import { useAtomValue } from "jotai";
@@ -10,21 +10,21 @@ interface editorProps {
 }
 
 const WritedownEditor = ({ notes, editor }: editorProps) => {
-  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
+  const selectedNote = useAtomValue(selectedNoteAtom);
 
   useEffect(() => {
     if (!editor) return;
     // If there are no notes or no selected note, clear the editor
-    if (!notes || !selectedNoteId) {
+    if (!notes || !selectedNote.id) {
       editor.commands.clearContent();
 
       return;
     }
     // Replace the editor content with the current note content
-    const currentNote = notes.find((note) => note.id === selectedNoteId);
+    const currentNote = notes.find((note) => note.id === selectedNote.id);
     if (!currentNote) return;
     editor.commands.setContent(currentNote.content);
-  }, [selectedNoteId, notes]);
+  }, [selectedNote.id, notes]);
 
   return <EditorContent selected editor={editor} />;
 };

@@ -7,7 +7,6 @@ import {
   IoMdTrash,
 } from "react-icons/io";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import { useEffect, useState } from "react";
@@ -53,7 +52,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [downloadLoading, setDownloadLoading] = useState(false);
 
   // ATOMIC STATE
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
@@ -69,17 +67,17 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     if (!selectedNote.lastUpdated) return;
     const formattedDate = formatTimeStamp(selectedNote.lastUpdated);
     setLastUpdated(formattedDate);
-  }, [selectedNote.lastUpdated, selectedNoteId]);
+  }, [selectedNote.lastUpdated, selectedNote.id]);
 
   /**
    * Saves the note if not already synced
    */
   const saveNoteHandler = async () => {
-    if (!selectedNoteId || !notes?.find((note) => note.id === selectedNoteId))
+    if (!selectedNote.id || !notes?.find((note) => note.id === selectedNote.id))
       return;
     setSynced(false);
     await updateNote({
-      id: selectedNoteId,
+      id: selectedNote.id,
       title: selectedNote.title,
       content: selectedNote.content,
       public: selectedNote.isPublic,
@@ -92,13 +90,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
    * Deletes the note and selects the next note in the list
    */
   const deleteNoteHandler = async () => {
-    if (!notes || !selectedNoteId) return;
+    if (!notes || !selectedNote.id) return;
     // Confirm deletion
     const confirm = window.confirm(
       "Are you sure you want to delete this post?"
     );
     if (!confirm) return;
-    await deleteNote(selectedNoteId);
+    await deleteNote(selectedNote.id);
     await refreshNotes();
     toast.success("Deleted Post!", {
       iconTheme: {
@@ -106,9 +104,9 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         secondary: "#ffffff",
       },
     });
-    const noteIndex = notes.findIndex((note) => note.id === selectedNoteId);
+    const noteIndex = notes.findIndex((note) => note.id === selectedNote.id);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
-    setSelectedNoteId(notes[0]?.id || null);
+    setSelectedNote((prev) => ({ ...prev, id: notes[0]?.id || "" }));
   };
 
   const downloadPDFHandler = async () => {
@@ -288,10 +286,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                   isDev
                     ? `http://localhost:3000/${
                         publicUserDetails?.username || publicUserDetails?.uid
-                      }/posts/${selectedNoteId}`
+                      }/posts/${selectedNote.id}`
                     : `https://writedown.app/${
                         publicUserDetails?.username || publicUserDetails?.uid
-                      }/posts/${selectedNoteId}`
+                      }/posts/${selectedNote.id}`
                 );
               }}
             >
@@ -301,7 +299,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                   selectedNote.isPublic &&
                   `https://writedown.app/${
                     publicUserDetails?.username || publicUserDetails?.uid
-                  }/posts/${selectedNoteId}`}
+                  }/posts/${selectedNote.id}`}
                 {process.env.NODE_ENV !== "development" &&
                   !selectedNote.isPublic &&
                   `https://writedown.app/...`}
@@ -310,7 +308,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                   selectedNote.isPublic &&
                   `http://localhost:3000/${
                     publicUserDetails?.username || publicUserDetails?.uid
-                  }/posts/${selectedNoteId}`}
+                  }/posts/${selectedNote.id}`}
                 {process.env.NODE_ENV === "development" &&
                   !selectedNote.isPublic &&
                   `http://localhost:3000/...`}

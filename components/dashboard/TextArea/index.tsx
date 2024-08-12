@@ -1,6 +1,5 @@
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import WritedownEditor from "@/components/ui/WritedownEditor";
@@ -38,10 +37,8 @@ type TextAreaProps = {
 
 const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [user] = useAuthState(auth);
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
-  const [synced, setSynced] = useAtom(isSyncedAtom);
-
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
+  const [synced, setSynced] = useAtom(isSyncedAtom);
 
   const { notes, updateNote, createNote, refreshNotes } = useNotes({
     userId: user?.uid,
@@ -146,17 +143,16 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         if (!id) {
           return;
         }
-        setSelectedNoteId(id);
+        setSelectedNote((prev) => ({ ...prev, id }));
       });
   }, [notes]);
 
   useEffect(() => {
     if (!notes) return;
-    if (notes.length > 0 && !selectedNoteId) {
-      setSelectedNoteId(notes[0].id);
-
+    if (notes.length > 0 && !selectedNote.id) {
       setSelectedNote((prev) => ({
         ...prev,
+        id: notes[0].id,
         content: notes[0].content,
         title: notes[0].title,
         lastUpdated: notes[0].updatedAt,
@@ -165,21 +161,21 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
       return;
     }
-    if (!selectedNoteId) return;
-    const selectedNote = notes.find((note) => note.id === selectedNoteId);
-    if (!selectedNote) return;
+    if (!selectedNote.id) return;
+    const foundExistingNote = notes.find((note) => note.id === selectedNote.id);
+    if (!foundExistingNote) return;
 
     setSelectedNote((prev) => ({
       ...prev,
-      content: selectedNote.content,
-      title: selectedNote.title,
-      lastUpdated: selectedNote.updatedAt,
-      isPublic: selectedNote.public,
+      content: foundExistingNote.content,
+      title: foundExistingNote.title,
+      lastUpdated: foundExistingNote.updatedAt,
+      isPublic: foundExistingNote.public,
     }));
-  }, [notes, selectedNoteId]);
+  }, [notes, selectedNote.id]);
 
   useEffect(() => {
-    if (!selectedNoteId || !user) return;
+    if (!selectedNote.id || !user) return;
     const currentNote = notes?.find(
       (note) =>
         selectedNote.content === note.content &&
@@ -188,7 +184,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         selectedNote.isPublic === note.public
     );
     let debounceSave: NodeJS.Timeout;
-    const isNoteUnchanged = currentNote?.id === selectedNoteId;
+    const isNoteUnchanged = currentNote?.id === selectedNote.id;
     if (isNoteUnchanged) {
       setSynced(true);
       return;
@@ -196,7 +192,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       debounceSave = setTimeout(() => {
         setSynced(false);
         updateNote({
-          id: selectedNoteId,
+          id: selectedNote.id,
           title: selectedNote.title,
           content: selectedNote.content,
           public: selectedNote.isPublic,
@@ -212,7 +208,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   useEffect(() => {
     refreshNotes();
-  }, [selectedNoteId]);
+  }, [selectedNote.id]);
 
   return (
     <div

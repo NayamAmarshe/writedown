@@ -1,9 +1,9 @@
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import Skeleton from "react-loading-skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
 import React from "react";
+import { selectedNoteAtom } from "@/stores/postDataAtom";
 
 type PostRowProps = {
   title: string;
@@ -14,7 +14,7 @@ type PostRowProps = {
 };
 
 const PostRow = ({ title, content, noteId, setShowSidebar }: PostRowProps) => {
-  const [selectedNoteId, setSelectedNoteId] = useAtom(selectedNoteIdAtom);
+  const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
   const synced = useAtomValue(isSyncedAtom);
 
   const switchNotesHandler = async (noteId: string) => {
@@ -24,14 +24,14 @@ const PostRow = ({ title, content, noteId, setShowSidebar }: PostRowProps) => {
       );
       if (!confirm) return;
     }
-    setSelectedNoteId(noteId);
+    setSelectedNote((prev) => ({ ...prev, id: noteId }));
     window.innerWidth <= 768 && setShowSidebar(false);
   };
 
   return (
     <div
       className={`flex cursor-pointer flex-col gap-2 rounded-xl p-4 ${
-        selectedNoteId === noteId
+        selectedNote.id === noteId
           ? "bg-slate-200 dark:bg-slate-700"
           : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
       }`}

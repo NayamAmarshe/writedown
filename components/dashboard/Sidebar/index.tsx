@@ -1,4 +1,3 @@
-import { selectedNoteIdAtom } from "@/stores/selectedChannelIdAtom";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
@@ -39,27 +38,25 @@ const Sidebar = ({
 
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const setSelectedNoteId = useSetAtom(selectedNoteIdAtom);
-  const selectedNoteId = useAtomValue(selectedNoteIdAtom);
   const synced = useAtomValue(isSyncedAtom);
 
   const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
 
   useEffect(() => {
-    if (!selectedNoteId) return;
-    router.push(`/dashboard/?post=${selectedNoteId}`, undefined, {
+    if (!selectedNote.id) return;
+    router.push(`/dashboard/?post=${selectedNote.id}`, undefined, {
       shallow: true,
     });
-  }, [selectedNoteId]);
+  }, [selectedNote.id]);
 
   useEffect(() => {
     if (!router.query.post) return;
-    setSelectedNoteId(router.query.post as string);
+    setSelectedNote((prev) => ({ ...prev, id: router.query.post as string }));
   }, [router.query.post]);
 
   useEffect(() => {
     refreshNotes();
-  }, [synced, selectedNoteId]);
+  }, [synced, selectedNote.id]);
 
   const newPostClickHandler = async () => {
     setCreatePostLoading(true);
@@ -69,7 +66,7 @@ const Sidebar = ({
       toast.error("Failed to create new post");
       return;
     }
-    setSelectedNoteId(newId);
+    setSelectedNote((prev) => ({ ...prev, id: newId }));
     setCreatePostLoading(false);
     window.innerWidth <= 768 && setShowSidebar(false);
   };
