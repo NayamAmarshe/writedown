@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { useAtom } from "jotai";
+import Skeleton from "react-loading-skeleton";
+import { toast } from "react-hot-toast";
 import {
   IoMdCheckmarkCircle,
   IoMdCopy,
@@ -9,16 +14,11 @@ import {
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import { useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
-import Skeleton from "react-loading-skeleton";
-import { useAtom, useAtomValue } from "jotai";
 import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Modal from "@/components/ui/Modal";
-import { toast } from "react-hot-toast";
 import { Editor } from "@tiptap/react";
-import { useTheme } from "next-themes";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
@@ -73,6 +73,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
    * Saves the note if not already synced
    */
   const saveNoteHandler = async () => {
+    setSelectedNote((prev) => ({
+      ...prev,
+      isPublic: !prev.isPublic,
+    }));
     if (!selectedNote.id || !notes?.find((note) => note.id === selectedNote.id))
       return;
     setSynced(false);
@@ -189,7 +193,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Button
           data-testid="save"
           type="button"
-          onClick={saveNoteHandler}
           size="sm"
           variant="green"
           className="w-28"
@@ -247,27 +250,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <label
                 htmlFor="toggle"
                 className="cursor-pointer select-none font-medium dark:text-slate-300"
-                onClick={() => {
-                  setSelectedNote((prev) => ({
-                    ...prev,
-                    isPublic: !prev.isPublic,
-                  }));
-
-                  saveNoteHandler();
-                }}
+                onClick={saveNoteHandler}
               >
                 Enable Public Viewing
               </label>
               <Toggle
                 enabled={selectedNote.isPublic}
-                onChange={() => {
-                  setSelectedNote((prev) => ({
-                    ...prev,
-                    isPublic: !prev.isPublic,
-                  }));
-
-                  saveNoteHandler();
-                }}
+                onChange={saveNoteHandler}
                 screenReaderPrompt="Toggle Public Sharing"
               />
             </div>
@@ -279,7 +268,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               }`}
               onClick={() => {
                 if (!selectedNote.isPublic) return;
-
                 toast.success("Copied link to clipboard!");
                 const isDev = process.env.NODE_ENV === "development";
                 navigator.clipboard.writeText(

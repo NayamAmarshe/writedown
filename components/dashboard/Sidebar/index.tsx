@@ -1,26 +1,22 @@
-import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useAtom, useAtomValue } from "jotai";
+import Skeleton from "react-loading-skeleton";
+import { toast } from "react-hot-toast";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
+import { BsChevronBarLeft } from "react-icons/bs";
+import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 import UserMenu from "@/components/common/UserMenu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
-import React, { useEffect, useState } from "react";
 import BetaBadge from "@/components/ui/BetaBadge";
-import { BsChevronBarLeft } from "react-icons/bs";
 import useUser from "@/components/hooks/useUser";
-import Popover from "@/components/ui/Popover";
-import Skeleton from "react-loading-skeleton";
 import Button from "@/components/ui/Button";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
-import { auth } from "@/lib/firebase";
 import PostRow from "./PostRow";
-import Link from "next/link";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -180,6 +176,11 @@ const Sidebar = ({
                   title={note.title}
                   content={note.content}
                   noteId={note.id}
+                  isPublic={
+                    note.id === selectedNote.id
+                      ? selectedNote.isPublic
+                      : note.public
+                  }
                   setShowSidebar={setShowSidebar}
                 />
               </Link>
