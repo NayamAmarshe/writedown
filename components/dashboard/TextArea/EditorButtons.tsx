@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   LuBold,
   LuLink,
@@ -15,12 +16,10 @@ import {
   LuQuote,
   LuStrikethrough,
 } from "react-icons/lu";
-import React, { useState } from "react";
+import Toggle from "@/components/ui/Toggle";
 import { Editor } from "@tiptap/react";
 import Modal from "../../ui/Modal";
 import Input from "../../ui/Input";
-import Toggle from "@/components/ui/Toggle";
-
 
 type EditorButtonsProps = {
   shiftRight?: boolean;
