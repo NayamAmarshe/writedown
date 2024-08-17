@@ -1,21 +1,19 @@
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Markdown from "react-markdown";
+import { doc, getDoc } from "firebase/firestore";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import remarkGfm from "remark-gfm";
 import { formatTimeStamp } from "@/components/dashboard/TextArea/PostButtons";
 import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
-import Markdown from "react-markdown";
-import UserMenu from "@/components/common/UserMenu";
 import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";
-import { doc, getDoc } from "firebase/firestore";
 import Footer from "@/components/home/Footer";
-import { RiMenu5Fill } from "react-icons/ri";
 import Button from "@/components/ui/Button";
-import { GetServerSideProps } from "next";
 import { db } from "@/lib/firebase";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import Loading from "@/components/ui/Loading";
 import Navbar from "@/components/Navbar";
-import toast from "react-hot-toast";
 
 interface Props {}
 
@@ -153,7 +151,10 @@ export const PostPage = ({}: Props) => {
               </div>
 
               <div className="mb-40 flex items-center justify-center px-4">
-                <Markdown className="prose dark:prose-invert">
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  className="prose dark:prose-invert"
+                >
                   {note?.content}
                 </Markdown>
               </div>

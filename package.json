@@ -51,6 +51,7 @@
     "react-markdown": "^9.0.1",
     "react-scroll-parallax": "^3.4.5",
     "refractor": "^4.8.1",
+    "remark-gfm": "^4.0.0",
     "remove-markdown": "^0.5.0",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.10"
