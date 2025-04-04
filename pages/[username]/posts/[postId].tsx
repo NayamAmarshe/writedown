@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import remarkGfm from "remark-gfm";
-import { formatTimeStamp } from "@/components/dashboard/TextArea/PostButtons";
+import { formatTimeStamp } from "@/components/dashboard/TextArea/post-buttons";
 import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
 import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";

@@ -24,7 +24,7 @@ import Code from "@tiptap/extension-code";
 import Link from "@tiptap/extension-link";
 import { useEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
-import PostButtons from "./PostButtons";
+import PostButtons from "./post-buttons";
 import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
 

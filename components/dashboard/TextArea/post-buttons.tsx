@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useAtom } from "jotai";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import {
   IoMdCheckmarkCircle,
   IoMdCopy,
-  IoMdRefresh,
   IoMdRefreshCircle,
   IoMdSend,
   IoMdTrash,
@@ -15,10 +14,18 @@ import { selectedNoteAtom } from "@/stores/postDataAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import useUser from "@/components/hooks/useUser";
-import Toggle from "@/components/toggle";
 import { Editor } from "@tiptap/react";
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Loader2Icon } from "lucide-react";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
@@ -219,120 +226,128 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
           </span>
         </Button>
 
-        {/* SAVE BUTTON */}
-        <Button
-          data-testid="download"
-          type="button"
-          onClick={() => {
-            setShowPublishModal(true);
-          }}
-          size="sm"
-          variant="default"
-        >
-          <span className="flex items-center justify-center gap-1">
-            <IoMdSend className="h-5 w-5" />
-            <p>Publish</p>
-          </span>
-        </Button>
-
         <Dialog open={showPublishModal} onOpenChange={setShowPublishModal}>
-          <div className="p-2">
-            <div className="mb-4 flex flex-row items-center gap-2">
-              <label
-                htmlFor="toggle"
-                className="cursor-pointer select-none font-medium dark:text-slate-300"
-                onClick={saveNoteHandler}
-              >
-                Enable Public Viewing
-              </label>
-              <Toggle
-                enabled={selectedNote.isPublic}
-                onChange={saveNoteHandler}
-                screenReaderPrompt="Toggle Public Sharing"
-              />
-            </div>
-            <p
-              className={`relative rounded-lg p-2 text-sm transition-all duration-500 ${
-                selectedNote.isPublic
-                  ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
-                  : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
-              }`}
+          <DialogTrigger asChild>
+            {/* SAVE BUTTON */}
+            <Button
+              data-testid="download"
               onClick={() => {
-                if (!selectedNote.isPublic) return;
-                toast.success("Copied link to clipboard!");
-                const isDev = process.env.NODE_ENV === "development";
-                navigator.clipboard.writeText(
-                  isDev
-                    ? `http://localhost:3000/${
-                        publicUserDetails?.username || publicUserDetails?.uid
-                      }/posts/${selectedNote.id}`
-                    : `https://writedown.app/${
-                        publicUserDetails?.username || publicUserDetails?.uid
-                      }/posts/${selectedNote.id}`
-                );
+                setShowPublishModal(true);
               }}
+              size="sm"
+              variant="default"
             >
-              <div className="w-11/12 truncate">
-                {/* PROD */}
-                {process.env.NODE_ENV !== "development" &&
-                  selectedNote.isPublic &&
-                  `https://writedown.app/${
-                    publicUserDetails?.username || publicUserDetails?.uid
-                  }/posts/${selectedNote.id}`}
-                {process.env.NODE_ENV !== "development" &&
-                  !selectedNote.isPublic &&
-                  `https://writedown.app/...`}
-                {/* DEV */}
-                {process.env.NODE_ENV === "development" &&
-                  selectedNote.isPublic &&
-                  `http://localhost:3000/${
-                    publicUserDetails?.username || publicUserDetails?.uid
-                  }/posts/${selectedNote.id}`}
-                {process.env.NODE_ENV === "development" &&
-                  !selectedNote.isPublic &&
-                  `http://localhost:3000/...`}
-              </div>
-              {selectedNote.isPublic && (
-                <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
-              )}
-            </p>
+              <span className="flex items-center justify-center gap-1">
+                <IoMdSend className="h-5 w-5" />
+                <p>Publish</p>
+              </span>
+            </Button>
+          </DialogTrigger>
 
-            <div className="mt-5">
-              <label className="font-medium dark:text-slate-300">
-                {!downloadLoading ? (
-                  "Download Post"
-                ) : (
-                  <div className="flex items-center gap-1">
-                    Downloading
-                    <IoMdRefresh className="h-5 w-5 animate-spin" />
-                  </div>
-                )}
-              </label>
-              <div className="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
-                <Button
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Publish & Share</DialogTitle>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-2 p-2 overflow-hidden">
+              <div className="mb-4 flex flex-row items-center gap-2">
+                <Label htmlFor="toggle" onClick={saveNoteHandler}>
+                  Enable Public Viewing
+                </Label>
+                <Switch
+                  id="toggle"
+                  size="lg"
                   variant="destructive"
-                  size="sm"
-                  onClick={downloadPDFHandler}
-                >
-                  Download PDF
-                </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={downloadMarkdownHandler}
-                >
-                  Download Markdown
-                </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={downloadHTMLHandler}
-                >
-                  Download HTML
-                </Button>
+                  checked={selectedNote.isPublic}
+                  onCheckedChange={saveNoteHandler}
+                />
+              </div>
+              <p
+                className={`relative rounded-sm p-2 text-sm transition-all duration-500 ${
+                  selectedNote.isPublic
+                    ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
+                    : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
+                }`}
+                onClick={() => {
+                  if (!selectedNote.isPublic) return;
+                  toast.success("Copied link to clipboard!");
+                  const isDev = process.env.NODE_ENV === "development";
+                  navigator.clipboard.writeText(
+                    isDev
+                      ? `http://localhost:3000/${
+                          publicUserDetails?.username || publicUserDetails?.uid
+                        }/posts/${selectedNote.id}`
+                      : `https://writedown.app/${
+                          publicUserDetails?.username || publicUserDetails?.uid
+                        }/posts/${selectedNote.id}`
+                  );
+                }}
+              >
+                <div className="w-11/12 truncate">
+                  {/* PROD */}
+                  {process.env.NODE_ENV !== "development" &&
+                    selectedNote.isPublic &&
+                    `https://writedown.app/${
+                      publicUserDetails?.username ||
+                      publicUserDetails?.uid ||
+                      ""
+                    }/posts/${selectedNote.id}`}
+                  {process.env.NODE_ENV !== "development" &&
+                    !selectedNote.isPublic &&
+                    `https://writedown.app/...`}
+                  {/* DEV */}
+                  {process.env.NODE_ENV === "development" &&
+                    selectedNote.isPublic &&
+                    `http://localhost:3000/${
+                      publicUserDetails?.username || publicUserDetails?.uid
+                    }/posts/${selectedNote.id}`}
+                  {process.env.NODE_ENV === "development" &&
+                    !selectedNote.isPublic &&
+                    `http://localhost:3000/...`}
+                </div>
+                {selectedNote.isPublic && (
+                  <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
+                )}
+              </p>
+
+              <div className="mt-5">
+                <Label className="font-medium dark:text-slate-300">
+                  {!downloadLoading ? (
+                    "Download Post"
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      Downloading
+                      <Loader2Icon className="h-5 w-5 animate-spin" />
+                    </div>
+                  )}
+                </Label>
+
+                <div className="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={downloadPDFHandler}
+                  >
+                    Download PDF
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={downloadMarkdownHandler}
+                  >
+                    Download Markdown
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={downloadHTMLHandler}
+                  >
+                    Download HTML
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </DialogContent>
         </Dialog>
       </div>
     </div>
