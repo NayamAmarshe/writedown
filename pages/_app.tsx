@@ -1,10 +1,7 @@
-import { connectAuthEmulator } from "firebase/auth";
 import { ParallaxProvider } from "react-scroll-parallax";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { ThemeProvider } from "next-themes";
 import "react-loading-skeleton/dist/skeleton.css";
-import { auth, db } from "@/lib/firebase";
-import { connectFirestoreEmulator } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
@@ -12,11 +9,11 @@ import "katex/dist/katex.min.css";
 import { Provider } from "jotai";
 import "@/styles/globals.css";
 
-const env = process.env.NODE_ENV;
-if (env === "development") {
-  connectFirestoreEmulator(db, "localhost", 8080);
-  connectAuthEmulator(auth, "http://localhost:9099");
-}
+// const env = process.env.NODE_ENV;
+// if (env === "development") {
+//   connectFirestoreEmulator(db, "localhost", 8080);
+//   connectAuthEmulator(auth, "http://localhost:9099");
+// }
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [theme, setTheme] = useState("light");

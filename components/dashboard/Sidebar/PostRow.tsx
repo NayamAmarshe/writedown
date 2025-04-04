@@ -54,8 +54,11 @@ const PostRow = ({
         </div>
         <button className="flex flex-col gap-2">
           <p className="w-full truncate text-left text-sm text-slate-600 dark:text-slate-400">
-            {content === (undefined || null) && <Skeleton />}
-            {RemoveMarkdown(content.slice(0, 50)) || "Empty Post"}
+            {content === null || content === undefined ? (
+              <Skeleton />
+            ) : (
+              RemoveMarkdown(content.slice(0, 50)) || "Empty Post"
+            )}
           </p>
 
           {/* TODO: Add tags  */}
