@@ -39,7 +39,7 @@ const UserMenu = ({
   return (
     <Popover
       data-testid="logout"
-      buttonStyle="outline-none"
+      buttonStyle="outline-hidden"
       button={<>{children}</>}
       reverse={reverse}
     >

@@ -73,7 +73,7 @@ const Sidebar = ({
 
   return (
     <aside
-      className={`dark:slate-950 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 md:bottom-auto md:left-auto md:right-auto md:top-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 ${
+      className={`dark:slate-950 absolute top-0 right-0 bottom-0 left-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:top-auto md:right-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -81,10 +81,10 @@ const Sidebar = ({
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:!bg-slate-800 !bg-slate-100`}
+        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:bg-slate-800! bg-slate-100!`}
       >
         <BsChevronBarLeft
-          className={`duration-400 h-4 w-4 text-black transition-transform dark:text-slate-100 ${
+          className={`h-4 w-4 text-black transition-transform duration-400 dark:text-slate-100 ${
             showSidebar ? "rotate-0" : "rotate-180"
           }`}
         />
@@ -97,7 +97,7 @@ const Sidebar = ({
         extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
       >
         <BsChevronBarLeft
-          className={`duration-400 h-5 w-5 translate-x-1 text-black transition-transform dark:text-slate-100 ${
+          className={`h-5 w-5 translate-x-1 text-black transition-transform duration-400 dark:text-slate-100 ${
             showSidebar ? "" : "rotate-180"
           }`}
         />
@@ -157,7 +157,7 @@ const Sidebar = ({
       {/* POSTS SECTION */}
       {/* POSTS HEADING */}
       <h6 className="font-semibold">Posts</h6>
-      <div className="scrollbar flex h-full flex-col  gap-3 overflow-y-auto">
+      <div className="scrollbar flex h-full flex-col gap-3 overflow-y-auto">
         {/* POSTS LIST */}
         <div className="mb-64 flex flex-col gap-2 p-1">
           {notes ? (
@@ -188,7 +188,7 @@ const Sidebar = ({
           ) : (
             <Skeleton className="mb-2 h-20 p-4" count={4} />
           )}
-          <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center bg-gradient-to-t from-white pb-32 pt-32 dark:from-slate-900"></div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center bg-linear-to-t from-white pt-32 pb-32 dark:from-slate-900"></div>
         </div>
       </div>
 

@@ -46,7 +46,7 @@ const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm" />
+          <div className="bg-opacity-25 fixed inset-0 bg-black backdrop-blur-xs" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -64,13 +64,13 @@ const Modal = ({
                 {title && (
                   <Dialog.Title
                     as="h3"
-                    className="text-xl font-semibold leading-6 text-slate-900 dark:text-slate-100"
+                    className="text-xl leading-6 font-semibold text-slate-900 dark:text-slate-100"
                   >
                     {title}
                   </Dialog.Title>
                 )}
 
-                <Dialog.Description className="mb-4 mt-2">
+                <Dialog.Description className="mt-2 mb-4">
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     {description}
                   </p>

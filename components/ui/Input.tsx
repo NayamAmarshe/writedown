@@ -20,7 +20,7 @@ const Input = ({
       )}
       <input
         id={id}
-        className={`w-full rounded-xl bg-slate-200 p-2 outline-none dark:bg-slate-900 dark:text-slate-200 ${
+        className={`w-full rounded-xl bg-slate-200 p-2 outline-hidden dark:bg-slate-900 dark:text-slate-200 ${
           small && "text-sm"
         }`}
         {...rest}

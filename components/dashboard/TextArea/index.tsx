@@ -49,7 +49,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     editorProps: {
       attributes: {
         class:
-          "prose !max-h-none min-h-screen !max-w-none p-2 dark:prose-invert focus:outline-none",
+          "prose max-h-none! min-h-screen max-w-none! p-2 dark:prose-invert focus:outline-hidden",
         id: "writedown-editor",
       },
     },
@@ -221,7 +221,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         onClick={() => setShiftRight(true)}
       >
         <BsChevronBarLeft
-          className={`duration-400 h-4 w-4 text-black transition-transform dark:text-slate-100`}
+          className={`h-4 w-4 text-black transition-transform duration-400 dark:text-slate-100`}
         />
       </IconButton>
 
@@ -242,7 +242,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         <input
           data-testid="noteTitle"
           type="text"
-          className="w-full appearance-none border-none p-0 text-5xl font-bold leading-relaxed focus:outline-none focus:ring-0 dark:bg-slate-900 dark:text-slate-200"
+          className="w-full appearance-none border-none p-0 text-5xl leading-relaxed font-bold focus:ring-0 focus:outline-hidden dark:bg-slate-900 dark:text-slate-200"
           onChange={(e) => {
             setSelectedNote((prev) => ({
               ...prev,
@@ -254,7 +254,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         />
 
         {/* SEPARATOR */}
-        <div className="mb-5 mt-2 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+        <div className="mt-2 mb-5 h-0.5 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
 
         <WritedownEditor notes={notes} editor={editor} />
       </div>
