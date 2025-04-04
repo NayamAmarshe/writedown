@@ -54,3 +54,4 @@ firestore-debug.log
 /firebase/**/*
 
 functions/
+.npmrc
