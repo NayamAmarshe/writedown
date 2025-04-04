@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   LuBold,
   LuLink,
-  LuCheckSquare,
   LuCode,
   LuHeading1,
   LuHeading2,
@@ -16,10 +15,18 @@ import {
   LuQuote,
   LuStrikethrough,
 } from "react-icons/lu";
-import Toggle from "@/components/ui/Toggle";
+import Toggle from "@/components/toggle";
 import { Editor } from "@tiptap/react";
-import Modal from "../../ui/Modal";
-import Input from "../../ui/Input";
+import { LucideCheckSquare } from "lucide-react";
+import {
+  Dialog,
+  DialogDescription,
+  DialogTitle,
+  DialogHeader,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 type EditorButtonsProps = {
   shiftRight?: boolean;
@@ -134,7 +141,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
           onClick={() => editor.chain().focus().toggleTaskList().run()}
         >
-          <LuCheckSquare className="dark:text-slate-200" />
+          <LucideCheckSquare className="dark:text-slate-200" />
         </button>
         <button
           className="rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700"
@@ -151,19 +158,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         >
           <LuLink className="dark:text-slate-200" />
         </button>
-        <Modal
-          isOpen={isUrlPromptOpen}
-          setIsOpen={setIsUrlPromptOpen}
-          title="Insert Link"
-          saveText="Insert"
-          closeText="Cancel"
-          saveHandler={() => {
-            isLinkPreview
-              ? editor.chain().setLinkPreview({ url: url }).run()
-              : editor.chain().insertContent(`[${url}](${url})`).run();
-            setIsUrlPromptOpen(false);
-          }}
-        >
+        <Dialog open={isUrlPromptOpen} onOpenChange={setIsUrlPromptOpen}>
           <div className="flex flex-col items-center gap-2">
             <div className="mb-2 inline-flex w-full items-center justify-end gap-4">
               <span>Link Preview: </span>
@@ -179,7 +174,18 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
               onChange={(e) => setUrl(e.target.value)}
             />
           </div>
-        </Modal>
+
+          <button
+            onClick={() => {
+              isLinkPreview
+                ? editor.chain().setLinkPreview({ url: url }).run()
+                : editor.chain().insertContent(`[${url}](${url})`).run();
+              setIsUrlPromptOpen(false);
+            }}
+          >
+            Save
+          </button>
+        </Dialog>
 
         <button
           className="rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700"
@@ -194,31 +200,41 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
           <LuMinus className="dark:text-slate-200" />
         </button>
 
-        <Modal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          title="Insert Image"
-          description="Enter a title and the link to an image."
-          saveText="Insert"
-          closeText="Cancel"
-          saveHandler={() => {
-            editor.chain().focus().setImage({ src: url, title }).run();
-            setIsOpen(false);
-          }}
-        >
-          <div className="flex flex-col items-center gap-2">
-            <Input
-              id="title"
-              placeholder="Enter Title"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <Input
-              id="url"
-              placeholder="Enter URL"
-              onChange={(e) => setUrl(e.target.value)}
-            />
-          </div>
-        </Modal>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <button
+              onClick={() => {
+                editor.chain().focus().setImage({ src: url, title }).run();
+                setIsOpen(false);
+              }}
+            >
+              Insert Image
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Insert Image</DialogTitle>
+              <DialogDescription>
+                Enter a title and the link to an image.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div>
+              <div className="flex flex-col items-center gap-2">
+                <Input
+                  id="title"
+                  placeholder="Enter Title"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <Input
+                  id="url"
+                  placeholder="Enter URL"
+                  onChange={(e) => setUrl(e.target.value)}
+                />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

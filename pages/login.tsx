@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import SignInArea from "@/components/login/SignInArea";
 import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";
-import Loading from "@/components/ui/Loading";
+import Loading from "@/components/loading";
 import { useRouter } from "next/router";
 import React from "react";
 import { auth } from "@/lib/firebase";

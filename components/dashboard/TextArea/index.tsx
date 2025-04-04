@@ -2,7 +2,7 @@ import { selectedNoteAtom } from "@/stores/postDataAtom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
-import WritedownEditor from "@/components/ui/WritedownEditor";
+import WritedownEditor from "@/components/writedown-editor";
 import Mathematics from "@tiptap-pro/extension-mathematics";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { LinkPreview } from "./LinkPreview";

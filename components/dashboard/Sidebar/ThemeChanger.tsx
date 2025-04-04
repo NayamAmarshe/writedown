@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-import Button from "../../ui/Button";
 
 export default function ThemeChanger() {
   const { theme, setTheme } = useTheme();

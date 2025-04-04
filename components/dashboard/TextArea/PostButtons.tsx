@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useAtom } from "jotai";
-import Skeleton from "react-loading-skeleton";
-import { toast } from "react-hot-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import {
   IoMdCheckmarkCircle,
   IoMdCopy,
@@ -15,10 +15,10 @@ import { selectedNoteAtom } from "@/stores/postDataAtom";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import useUser from "@/components/hooks/useUser";
-import Button from "@/components/ui/Button";
-import Toggle from "@/components/ui/Toggle";
-import Modal from "@/components/ui/Modal";
+import Toggle from "@/components/toggle";
 import { Editor } from "@tiptap/react";
+import { Dialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type PostButtonsProps = {
   shiftRight?: boolean;
@@ -102,12 +102,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     if (!confirm) return;
     await deleteNote(selectedNote.id);
     await refreshNotes();
-    toast.success("Deleted Post!", {
-      iconTheme: {
-        primary: "#f00",
-        secondary: "#ffffff",
-      },
-    });
+    toast.success("Deleted Post!");
     const noteIndex = notes.findIndex((note) => note.id === selectedNote.id);
     const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
     setSelectedNote((prev) => ({ ...prev, id: notes[0]?.id || "" }));
@@ -194,7 +189,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
           data-testid="save"
           type="button"
           size="sm"
-          variant="green"
+          variant="default"
           className="w-28"
         >
           {!synced && (
@@ -215,7 +210,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
           data-testid="del"
           type="button"
           onClick={deleteNoteHandler}
-          variant="red"
+          variant="destructive"
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
@@ -232,7 +227,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
             setShowPublishModal(true);
           }}
           size="sm"
-          variant="blue"
+          variant="default"
         >
           <span className="flex items-center justify-center gap-1">
             <IoMdSend className="h-5 w-5" />
@@ -240,11 +235,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
           </span>
         </Button>
 
-        <Modal
-          isOpen={showPublishModal}
-          setIsOpen={setShowPublishModal}
-          title="Publish and Share"
-        >
+        <Dialog open={showPublishModal} onOpenChange={setShowPublishModal}>
           <div className="p-2">
             <div className="mb-4 flex flex-row items-center gap-2">
               <label
@@ -318,23 +309,31 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 )}
               </label>
               <div className="mt-4 flex flex-row flex-wrap items-center justify-center gap-4">
-                <Button variant="red" size="sm" onClick={downloadPDFHandler}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={downloadPDFHandler}
+                >
                   Download PDF
                 </Button>
                 <Button
-                  variant="green"
+                  variant="default"
                   size="sm"
                   onClick={downloadMarkdownHandler}
                 >
                   Download Markdown
                 </Button>
-                <Button variant="blue" size="sm" onClick={downloadHTMLHandler}>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={downloadHTMLHandler}
+                >
                   Download HTML
                 </Button>
               </div>
             </div>
           </div>
-        </Modal>
+        </Dialog>
       </div>
     </div>
   );

@@ -3,17 +3,17 @@ import { useRouter } from "next/router";
 import Markdown from "react-markdown";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import remarkGfm from "remark-gfm";
 import { formatTimeStamp } from "@/components/dashboard/TextArea/PostButtons";
 import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
 import HeadTags from "@/components/common/HeadTags";
 import useUser from "@/components/hooks/useUser";
 import Footer from "@/components/home/Footer";
-import Button from "@/components/ui/Button";
 import { db } from "@/lib/firebase";
-import Loading from "@/components/ui/Loading";
+import Loading from "@/components/loading";
 import Navbar from "@/components/Navbar";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 interface Props {}
 
@@ -143,7 +143,7 @@ export const PostPage = ({}: Props) => {
 
                 {user?.uid === note?.userId && (
                   <Link href={`/dashboard?post=${note?.id}`}>
-                    <Button variant="slate" size="sm">
+                    <Button variant="outline" size="sm">
                       Edit Post
                     </Button>
                   </Link>
@@ -153,7 +153,7 @@ export const PostPage = ({}: Props) => {
               <div className="mb-40 flex items-center justify-center px-4">
                 <Markdown
                   remarkPlugins={[remarkGfm]}
-                  className="prose dark:prose-invert"
+                  // className="prose dark:prose-invert"
                 >
                   {note?.content}
                 </Markdown>

@@ -1,5 +1,4 @@
-import { Switch } from "@headlessui/react";
-import { useState } from "react";
+import { Switch } from "./ui/switch";
 
 type ToggleProps = {
   enabled: boolean;
@@ -16,7 +15,7 @@ export default function Toggle({
     <Switch
       name="toggle"
       checked={enabled}
-      onChange={onChange}
+      onCheckedChange={onChange}
       className={`${!enabled ? "bg-rose-500" : "bg-emerald-400"} focus-visible:ring-opacity-75 relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-500 ease-in-out focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white`}
     >
       <span className="sr-only">{screenReaderPrompt}</span>

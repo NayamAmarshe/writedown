@@ -3,10 +3,10 @@ import { FiMoon, FiSun } from "react-icons/fi";
 import BetaBadge from "../ui/BetaBadge";
 import { useTheme } from "next-themes";
 import { auth } from "@/lib/firebase";
-import Button from "../ui/Button";
-import Link from "next/link";
 import React from "react";
 import useMounted from "../hooks/useMounted";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();

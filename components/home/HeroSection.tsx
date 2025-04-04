@@ -1,8 +1,9 @@
 import { Parallax } from "react-scroll-parallax";
 import { auth } from "@/lib/firebase";
-import Button from "../ui/Button";
 import Link from "next/link";
 import React from "react";
+import { Button } from "../ui/button";
+import { LinkIcon } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -23,7 +24,10 @@ const HeroSection = () => {
 
           <div>
             <Link href="/login">
-              <Button>{auth.currentUser ? "Write Down" : "Try Now"}</Button>
+              <Button>
+                {auth.currentUser ? "Write Down" : "Try Now"}
+                <LinkIcon className="ml-2 h-4 w-4" />
+              </Button>
             </Link>
           </div>
         </div>

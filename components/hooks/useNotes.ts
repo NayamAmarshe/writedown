@@ -2,7 +2,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   orderBy,
   query,
   setDoc,
@@ -13,10 +12,10 @@ import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/utils/firestoreDataConverter";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 
 type UseNotesProps = {
   userId: string | undefined;

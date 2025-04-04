@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "react-loading-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
 import { BiGlobe } from "react-icons/bi";

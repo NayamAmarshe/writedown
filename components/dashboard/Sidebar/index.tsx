@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAtom, useAtomValue } from "jotai";
-import Skeleton from "react-loading-skeleton";
-import { toast } from "react-hot-toast";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { BsChevronBarLeft } from "react-icons/bs";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
@@ -15,8 +13,10 @@ import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import BetaBadge from "@/components/ui/BetaBadge";
 import useUser from "@/components/hooks/useUser";
-import Button from "@/components/ui/Button";
 import PostRow from "./PostRow";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -117,7 +117,7 @@ const Sidebar = ({
                 className="h-10 w-10 rounded-full object-cover"
               />
             ) : (
-              <Skeleton className="h-10 w-10" circle={true} />
+              <Skeleton className="h-10 w-10" />
             )}
             {user ? (
               <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
@@ -151,7 +151,7 @@ const Sidebar = ({
           </span>
         </Button>
       ) : (
-        <Skeleton className="h-9 w-full" borderRadius={50} />
+        <Skeleton className="h-9 w-full" />
       )}
 
       {/* POSTS SECTION */}
@@ -186,7 +186,7 @@ const Sidebar = ({
               </Link>
             ))
           ) : (
-            <Skeleton className="mb-2 h-20 p-4" count={4} />
+            <Skeleton className="mb-2 h-20 p-4" />
           )}
           <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center bg-linear-to-t from-white pt-32 pb-32 dark:from-slate-900"></div>
         </div>

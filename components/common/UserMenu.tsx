@@ -8,11 +8,11 @@ import {
 } from "react-icons/bi";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 import { useTheme } from "next-themes";
-import Popover from "../ui/Popover";
 import { auth } from "@/lib/firebase";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import Link from "next/link";
 import React from "react";
+import { Popover, PopoverTrigger } from "../ui/Popover";
 
 type UserMenuProps = {
   reverse?: boolean;
@@ -37,12 +37,7 @@ const UserMenu = ({
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   return (
-    <Popover
-      data-testid="logout"
-      buttonStyle="outline-hidden"
-      button={<>{children}</>}
-      reverse={reverse}
-    >
+    <Popover data-testid="logout">
       {dashboard && auth.currentUser && (
         <Link
           href="/dashboard"
@@ -96,6 +91,11 @@ const UserMenu = ({
           <BiLogOutCircle className="" /> Logout
         </button>
       )}
+      <PopoverTrigger asChild>
+        <button className="flex items-center gap-2 rounded-md p-2 text-left text-sm font-medium hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700">
+          {children}
+        </button>
+      </PopoverTrigger>
     </Popover>
   );
 };

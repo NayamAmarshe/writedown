@@ -1,7 +1,7 @@
 import darkLoadingAnimation from "@/animations/pencil-write-dark.json";
 import loadingAnimation from "@/animations/pencil-write.json";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
-import BetaBadge from "./BetaBadge";
+import BetaBadge from "./ui/BetaBadge";
 import Lottie from "lottie-react";
 import React from "react";
 

@@ -5,11 +5,10 @@ import {
 import { authErrorCodes } from "@/constants/firebase-auth-error-codes";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import React, { useEffect } from "react";
-import BetaBadge from "../ui/BetaBadge";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { auth } from "@/lib/firebase";
-import Button from "../ui/Button";
+import { Button } from "../ui/button";
 import Link from "next/link";
 
 const SignInArea = () => {
