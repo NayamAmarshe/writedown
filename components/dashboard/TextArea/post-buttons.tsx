@@ -192,13 +192,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
       {/* ACTION BUTTONS */}
       <div className="flex flex-wrap items-center justify-center gap-4 md:items-start">
         {/* SAVE BUTTON */}
-        <Button
-          data-testid="save"
-          type="button"
-          size="sm"
-          variant="default"
-          className="w-28"
-        >
+        <Button type="button" size="sm" variant="default" className="w-28">
           {!synced && (
             <span className="flex items-center justify-center gap-1">
               <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
@@ -214,7 +208,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         </Button>
 
         <Button
-          data-testid="del"
           type="button"
           onClick={deleteNoteHandler}
           variant="destructive"
@@ -229,14 +222,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Dialog open={showPublishModal} onOpenChange={setShowPublishModal}>
           <DialogTrigger asChild>
             {/* SAVE BUTTON */}
-            <Button
-              data-testid="download"
-              onClick={() => {
-                setShowPublishModal(true);
-              }}
-              size="sm"
-              variant="default"
-            >
+            <Button size="sm" variant="default">
               <span className="flex items-center justify-center gap-1">
                 <IoMdSend className="h-5 w-5" />
                 <p>Publish</p>
@@ -249,7 +235,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <DialogTitle>Publish & Share</DialogTitle>
             </DialogHeader>
 
-            <div className="flex flex-col gap-2 p-2 overflow-hidden">
+            <div className="flex flex-col p-2 overflow-hidden">
               <div className="mb-4 flex flex-row items-center gap-2">
                 <Label htmlFor="toggle" onClick={saveNoteHandler}>
                   Enable Public Viewing
@@ -317,7 +303,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                   ) : (
                     <div className="flex items-center gap-1">
                       Downloading
-                      <Loader2Icon className="h-5 w-5 animate-spin" />
+                      <Loader2Icon className="size-4 animate-spin" />
                     </div>
                   )}
                 </Label>
@@ -331,14 +317,14 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                     Download PDF
                   </Button>
                   <Button
-                    variant="default"
+                    variant="green"
                     size="sm"
                     onClick={downloadMarkdownHandler}
                   >
                     Download Markdown
                   </Button>
                   <Button
-                    variant="default"
+                    variant="blue"
                     size="sm"
                     onClick={downloadHTMLHandler}
                   >

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const switchVariants = cva(
-  "peer inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50",
+  "peer inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 shadow-2xl shadow-inner shadow-black cursor-pointer",
   {
     variants: {
       variant: {
@@ -15,7 +15,7 @@ const switchVariants = cva(
       },
       size: {
         default: "h-[1.15rem] w-8",
-        lg: "h-7 w-11",
+        lg: "h-7 w-12",
       },
     },
     defaultVariants: {
@@ -26,19 +26,19 @@ const switchVariants = cva(
 );
 
 const thumbVariants = cva(
-  "pointer-events-none block rounded-full ring-0 transition-transform",
+  "pointer-events-none block rounded-full ring-0 transition-transform shadow-md",
   {
     variants: {
       variant: {
         default:
           "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground",
         destructive:
-          "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-destructive-foreground",
+          "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-destructive",
       },
       size: {
         default:
           "size-4 data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0",
-        lg: "size-5 data-[state=checked]:translate-x-[calc(100%-0px)] data-[state=unchecked]:translate-x-0.5",
+        lg: "size-6 data-[state=checked]:translate-x-[calc(100%-4px)] data-[state=unchecked]:translate-x-0.5",
       },
     },
     defaultVariants: {

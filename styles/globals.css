@@ -138,8 +138,8 @@ label > input[type="checkbox"] {
 */
 
 :root {
-  --radius: 1rem;
-  --background: oklch(1 0 0);
+  --radius: 1.2rem;
+  --background: oklch(0.98 0.0029 264.54);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
@@ -153,7 +153,7 @@ label > input[type="checkbox"] {
   --muted-foreground: oklch(0.554 0.046 257.417);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.58 0.2386 28.4);
+  --destructive: oklch(64.5% 0.246 16.439);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
   --ring: oklch(0.704 0.04 256.788);
@@ -177,7 +177,7 @@ label > input[type="checkbox"] {
 */
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  --background: oklch(27.9% 0.041 260.031);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -191,7 +191,7 @@ label > input[type="checkbox"] {
   --muted-foreground: oklch(0.704 0.04 256.788);
   --accent: oklch(0.279 0.041 260.031);
   --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(71.2% 0.194 13.428);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);
@@ -258,7 +258,7 @@ label > input[type="checkbox"] {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 duration-300;
   }
   body {
     @apply bg-background text-foreground;
