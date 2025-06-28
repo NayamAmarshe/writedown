@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import useUser from "../hooks/useUser";
-import { Input } from "../ui/input";
 import {
   DialogContent,
   DialogDescription,
@@ -11,6 +10,7 @@ import {
   Dialog,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { Input } from "../ui/Input";
 
 const CheckUsername = ({
   show,

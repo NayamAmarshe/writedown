@@ -10,23 +10,22 @@ const HeroSection = () => {
     <div className="my-32 h-full w-full">
       <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-4">
         <div className="flex flex-col items-center justify-center gap-5">
-          <h1 className="flex flex-col gap-5 text-center text-4xl font-semibold leading-tight text-slate-900 dark:text-slate-50 xs:text-5xl sm:text-7xl">
+          <h1 className="xs:text-5xl flex flex-col gap-5 text-center text-4xl leading-tight font-semibold text-slate-900 sm:text-7xl dark:text-slate-50">
             <span className="whitespace-nowrap">Upgrade Your</span>
-            <span className="text-pacifico whitespace-nowrap font-light">
+            <span className="text-pacifico font-light whitespace-nowrap">
               Dear Diary
             </span>
           </h1>
 
-          <p className="mt-4 max-w-lg text-center text-base font-medium text-slate-800 dark:text-slate-200 xs:text-xl">
+          <p className="xs:text-xl mt-4 max-w-lg text-center text-base font-medium text-slate-800 dark:text-slate-200">
             All your notes, synced on all your devices. <br />
             Free, easy and fast.
           </p>
 
           <div>
             <Link href="/login">
-              <Button>
-                {auth.currentUser ? "Write Down" : "Try Now"}
-                <LinkIcon className="ml-2 h-4 w-4" />
+              <Button variant="outline" size="lg">
+                {auth.currentUser ? "Write Now" : "Try Now"}
               </Button>
             </Link>
           </div>

@@ -26,7 +26,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";
 
 type EditorButtonsProps = {
   shiftRight?: boolean;
@@ -46,7 +46,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
 
   return (
     <div
-      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 dark:bg-slate-900 sm:justify-start ${
+      className={`m-4 flex w-full max-w-3xl items-center justify-center rounded-xl bg-white p-1 transition-transform duration-300 sm:justify-start dark:bg-slate-900 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
@@ -158,6 +158,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
         >
           <LuLink className="dark:text-slate-200" />
         </button>
+
         <Dialog open={isUrlPromptOpen} onOpenChange={setIsUrlPromptOpen}>
           <div className="flex flex-col items-center gap-2">
             <div className="mb-2 inline-flex w-full items-center justify-end gap-4">

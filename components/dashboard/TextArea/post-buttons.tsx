@@ -176,13 +176,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
   return (
     <div
-      className={`mt-14 flex w-full max-w-3xl select-none flex-col gap-4 transition-transform duration-300 md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
+      className={`mt-14 flex w-full max-w-3xl flex-col gap-4 transition-transform duration-300 select-none md:mt-52 md:flex-row md:items-center md:justify-between md:px-4 ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
       {/* LAST UPDATED */}
       {lastUpdated ? (
-        <p className="flex items-center justify-center text-xs font-medium text-slate-500 dark:text-slate-400 md:text-sm">
+        <p className="flex items-center justify-center text-xs font-medium text-slate-500 md:text-sm dark:text-slate-400">
           Last Updated {lastUpdated}
         </p>
       ) : (
@@ -192,7 +192,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
       {/* ACTION BUTTONS */}
       <div className="flex flex-wrap items-center justify-center gap-4 md:items-start">
         {/* SAVE BUTTON */}
-        <Button type="button" size="sm" variant="default" className="w-28">
+        <Button type="button" size="sm" variant="green" className="w-28">
           {!synced && (
             <span className="flex items-center justify-center gap-1">
               <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
@@ -210,7 +210,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Button
           type="button"
           onClick={deleteNoteHandler}
-          variant="destructive"
+          variant="red"
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
@@ -222,7 +222,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Dialog open={showPublishModal} onOpenChange={setShowPublishModal}>
           <DialogTrigger asChild>
             {/* SAVE BUTTON */}
-            <Button size="sm" variant="default">
+            <Button size="sm" variant="blue">
               <span className="flex items-center justify-center gap-1">
                 <IoMdSend className="h-5 w-5" />
                 <p>Publish</p>
@@ -235,7 +235,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
               <DialogTitle>Publish & Share</DialogTitle>
             </DialogHeader>
 
-            <div className="flex flex-col p-2 overflow-hidden">
+            <div className="flex flex-col overflow-hidden p-2">
               <div className="mb-4 flex flex-row items-center gap-2">
                 <Label htmlFor="toggle" onClick={saveNoteHandler}>
                   Enable Public Viewing
@@ -252,7 +252,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 className={`relative rounded-sm p-2 text-sm transition-all duration-500 ${
                   selectedNote.isPublic
                     ? "cursor-pointer bg-emerald-50 text-slate-900 ring-2 ring-emerald-300 hover:scale-95 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400"
-                    : "select-none bg-slate-200 text-slate-400 ring-2 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
+                    : "bg-slate-200 text-slate-400 ring-2 ring-slate-300 select-none dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-500"
                 }`}
                 onClick={() => {
                   if (!selectedNote.isPublic) return;
@@ -292,7 +292,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                     `http://localhost:3000/...`}
                 </div>
                 {selectedNote.isPublic && (
-                  <IoMdCopy className="absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2" />
+                  <IoMdCopy className="absolute top-1/2 right-2 h-5 w-5 -translate-y-1/2" />
                 )}
               </p>
 

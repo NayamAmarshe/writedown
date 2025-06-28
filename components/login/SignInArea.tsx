@@ -50,16 +50,19 @@ const SignInArea = () => {
         <Button
           className="hover:!border-slate- flex gap-2 border-2 px-10! text-slate-900! dark:text-slate-50!"
           data-testid="google-login"
+          variant="outline"
+          size="xl"
           onClick={() => login("google")}
         >
-          <FcGoogle className="h-6 w-6" /> Sign in with Google
+          <FcGoogle className="size-6" /> Sign in with Google
         </Button>
         <Button
           className="flex gap-2 border-2 bg-slate-900! px-10! text-slate-50! hover:border-slate-600! hover:bg-slate-600! hover:text-slate-50! dark:text-slate-50! dark:hover:border-slate-300! dark:hover:bg-slate-300! dark:hover:text-slate-900!"
+          size="xl"
           data-testid="github-login"
           onClick={() => login("github")}
         >
-          <AiFillGithub className="h-6 w-6" /> Sign in with GitHub
+          <AiFillGithub className="size-6" /> Sign in with GitHub
         </Button>
       </div>
     </div>
