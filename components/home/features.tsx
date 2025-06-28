@@ -1,18 +1,11 @@
 import {
-  FiBox,
   FiCloudLightning,
   FiEye,
-  FiGithub,
   FiGlobe,
-  FiPackage,
-  FiRefreshCcw,
   FiSmile,
-  FiSun,
-  FiUserCheck,
   FiWifiOff,
 } from "react-icons/fi";
 import FeatureCard from "./feature-card";
-import React from "react";
 
 const Features = () => {
   return (
