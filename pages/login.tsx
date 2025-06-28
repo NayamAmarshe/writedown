@@ -1,7 +1,7 @@
-import InfoSidebar from "@/components/login/InfoSidebar";
+import InfoSidebar from "@/components/login/info-sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
-import SignInArea from "@/components/login/SignInArea";
-import HeadTags from "@/components/common/HeadTags";
+import SignInArea from "@/components/login/signin-area";
+import HeadTags from "@/components/common/head-tags";
 import useUser from "@/components/hooks/useUser";
 import Loading from "@/components/loading";
 import { useRouter } from "next/router";

@@ -10,9 +10,9 @@ import {
   Dialog,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Input } from "../ui/Input";
+import { Input } from "../ui/input";
 
-const CheckUsername = ({
+const SetUsernameDialog = ({
   show,
   onSetShow,
 }: {
@@ -92,4 +92,4 @@ const CheckUsername = ({
     </Dialog>
   );
 };
-export default CheckUsername;
+export default SetUsernameDialog;

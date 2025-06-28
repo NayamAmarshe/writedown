@@ -1,9 +1,9 @@
-import CheckUsername from "@/components/dashboard/CheckUsername";
+import SetUsernameDialog from "@/components/dashboard/set-username-dialog";
 import { useAuthState } from "react-firebase-hooks/auth";
-import TextArea from "@/components/dashboard/TextArea";
-import Sidebar from "@/components/dashboard/Sidebar";
-import HeadTags from "@/components/common/HeadTags";
-import React, { useEffect, useState } from "react";
+import TextArea from "@/components/dashboard/text-area";
+import Sidebar from "@/components/dashboard/side-bar";
+import HeadTags from "@/components/common/head-tags";
+import { useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
 import { useRouter } from "next/router";
 import { auth } from "@/lib/firebase";
@@ -55,7 +55,7 @@ const Dashboard = () => {
         />
         <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         <TextArea shiftRight={showSidebar} setShiftRight={setShowSidebar} />
-        <CheckUsername
+        <SetUsernameDialog
           show={showUsernameModal}
           onSetShow={(state) => {
             setShowUsernameModal(state);

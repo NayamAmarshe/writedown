@@ -7,7 +7,7 @@ import { BsChevronBarLeft } from "react-icons/bs";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
-import UserMenu from "@/components/common/UserMenu";
+import UserMenu from "@/components/common/user-menu";
 import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
@@ -72,8 +72,8 @@ const Sidebar = ({
   }, []);
 
   return (
-    <aside
-      className={`dark:slate-950 absolute top-0 right-0 bottom-0 left-0 z-50 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:top-auto md:right-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
+    <div
+      className={`z-40 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:top-auto md:right-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -81,7 +81,7 @@ const Sidebar = ({
       <IconButton
         id="new"
         onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden dark:bg-slate-800! bg-slate-100!`}
+        extraClasses={`fixed z-50 ml-auto top-[10px] right-[15px] md:hidden dark:bg-slate-800! bg-slate-100!`}
       >
         <BsChevronBarLeft
           className={`h-4 w-4 text-black transition-transform duration-400 dark:text-slate-100 ${
@@ -103,34 +103,30 @@ const Sidebar = ({
         />
       </IconButton>
 
-      {/* USER  GREETING SECTION */}
-      <div className="relative min-w-fit">
-        <UserMenu home logout themeOption showImageAsButton>
-          <div className="flex flex-row items-center gap-2">
-            {user ? (
-              <img
-                src={
-                  user?.photoURL ||
-                  `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
-                }
-                alt="User Photo"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            ) : (
-              <Skeleton className="h-10 w-10" />
-            )}
-            {user ? (
-              <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
-                Hi there,{" "}
-                <span className="text-slate-900 dark:text-slate-100">
-                  {user?.displayName}{" "}
-                </span>
-              </h4>
-            ) : (
-              <Skeleton className="w-32" />
-            )}
-          </div>
-        </UserMenu>
+      {/* USER GREETING SECTION */}
+      <div className="relative min-w-fit flex items-center gap-2">
+        <UserMenu
+          home
+          logout
+          themeOption
+          showImageAsButton
+          avatarSrc={
+            user?.photoURL ||
+            `https://ui-avatars.com/api/?name=${user?.displayName}&rounded=true&format=svg&background=random`
+          }
+          avatarAlt="User Photo"
+          avatarFallback={user?.displayName?.charAt(0) || "U"}
+        />
+        {user ? (
+          <h4 className="truncate text-xl font-semibold text-slate-500 dark:text-slate-300">
+            Hi there,{" "}
+            <span className="text-slate-900 dark:text-slate-100">
+              {user?.displayName}{" "}
+            </span>
+          </h4>
+        ) : (
+          <Skeleton className="w-32" />
+        )}
       </div>
 
       {/* CREATE NEW POST BUTTON */}
@@ -140,12 +136,14 @@ const Sidebar = ({
           onClick={newPostClickHandler}
           disabled={createPostLoading}
           className="disabled:cursor-not-allowed"
+          variant="outline"
+          size="lg"
         >
           <span className="flex items-center justify-center gap-1">
             {createPostLoading ? (
-              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
+              <IoMdRefreshCircle className="size-5 animate-spin" />
             ) : (
-              <IoMdAddCircle className="h-5 w-5" />
+              <IoMdAddCircle className="size-5" />
             )}
             Create New Post
           </span>
@@ -198,7 +196,7 @@ const Sidebar = ({
           {FEATURE_FLAGS.beta && <BetaBadge pulse />}
         </p>
       </div>
-    </aside>
+    </div>
   );
 };
 

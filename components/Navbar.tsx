@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import UserMenu from "./common/UserMenu";
+import UserMenu from "./common/user-menu";
 import { RiMenu5Fill } from "react-icons/ri";
 import useUser from "./hooks/useUser";
 

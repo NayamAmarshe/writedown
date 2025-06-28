@@ -1,8 +1,8 @@
 import HeroSection from "@/components/home/HeroSection";
-import HeadTags from "@/components/common/HeadTags";
-import Features from "@/components/home/Features";
+import HeadTags from "@/components/common/head-tags";
+import Features from "@/components/home/features-new";
 import Navbar from "@/components/home/Navbar";
-import Footer from "@/components/home/Footer";
+import Footer from "@/components/home/footer-component";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {

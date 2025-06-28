@@ -11,7 +11,7 @@ import {
   FiUserCheck,
   FiWifiOff,
 } from "react-icons/fi";
-import FeatureCard from "./FeatureCard";
+import FeatureCard from "./feature-card";
 import React from "react";
 
 const Features = () => {

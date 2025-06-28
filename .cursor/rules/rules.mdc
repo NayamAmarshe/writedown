@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Write with minimal, but robust code. Think step by step about whether there exists a less over-engineered and yet simpler, more elegant and shorter solution to the problem that accords with KISS and DRY principles. Focus on delivering minimum viable functionality. No excessive fail safe checks that we already handled earlier. Use KISS, DRY, SOLID, YAGNI, SINE, TDD, SRP, SoC - Clean Code, Claude - keep everything to a minimum!
+
+DON'T USE OVERENGINEERED TECHNIQUES.
+
+USE LATEST MODERN patterns instead of outdated patterns!

@@ -115,28 +115,6 @@ label > input[type="checkbox"] {
   border-radius: 0.25rem;
 }
 
-/* .milkdown {
-  width: 100%;
-  height: 100%;
-}
-
-[data-milkdown-root="true"] {
-  width: 100%;
-  height: 100%;
-}
-
-.ProseMirror {
-  @apply max-h-none max-w-none;
-}
-
-.milkdown .editor {
-  height: 100% !important;
-} */
-
-/*
-  ---break---
-*/
-
 :root {
   --radius: 1.2rem;
   --background: oklch(0.98 0.0029 264.54);
@@ -250,19 +228,6 @@ label > input[type="checkbox"] {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-}
-
-/*
-  ---break---
-*/
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50 duration-300;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
 }
 
 /*
