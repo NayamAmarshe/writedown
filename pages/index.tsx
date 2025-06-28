@@ -1,7 +1,7 @@
-import HeroSection from "@/components/home/HeroSection";
+import HeroSection from "@/components/home/hero-section";
 import HeadTags from "@/components/common/head-tags";
 import Features from "@/components/home/features-new";
-import Navbar from "@/components/home/Navbar";
+import Navbar from "@/components/home/navbar-new";
 import Footer from "@/components/home/footer-component";
 import type { NextPage } from "next";
 

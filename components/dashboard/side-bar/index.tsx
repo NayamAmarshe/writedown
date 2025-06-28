@@ -13,7 +13,7 @@ import useNotes from "@/components/hooks/useNotes";
 import { isSyncedAtom } from "@/stores/syncedAtom";
 import BetaBadge from "@/components/ui/BetaBadge";
 import useUser from "@/components/hooks/useUser";
-import PostRow from "./PostRow";
+import PostRow from "./post-row";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
