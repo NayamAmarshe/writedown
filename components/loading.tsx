@@ -1,5 +1,5 @@
-import darkLoadingAnimation from "@/animations/pencil-write-dark.json";
-import loadingAnimation from "@/animations/pencil-write.json";
+import darkLoadingAnimation from "@/lottie/pencil-write-dark.json";
+import loadingAnimation from "@/lottie/pencil-write.json";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import BetaBadge from "./ui/BetaBadge";
 import Lottie from "lottie-react";

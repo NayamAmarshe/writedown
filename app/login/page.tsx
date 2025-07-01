@@ -1,10 +1,12 @@
+"use client";
+
 import InfoSidebar from "@/components/login/info-sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SignInArea from "@/components/login/signin-area";
 import HeadTags from "@/components/common/head-tags";
 import useUser from "@/components/hooks/useUser";
 import Loading from "@/components/loading";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { auth } from "@/lib/firebase";
 

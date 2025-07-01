@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import Markdown from "react-markdown";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
@@ -11,7 +13,7 @@ import useUser from "@/components/hooks/useUser";
 import Footer from "@/components/home/footer-component";
 import { db } from "@/lib/firebase";
 import Loading from "@/components/loading";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/nav-bar";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -19,12 +21,14 @@ interface Props {}
 
 export const PostPage = ({}: Props) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const postId = searchParams.get("postId");
+  const username = searchParams.get("username");
 
   const [note, setNote] = useState<NoteDocument | null>(null);
   const [name, setName] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const { username, postId } = router.query;
 
   const fetchData = async () => {
     let user: UserDocument | null = null;

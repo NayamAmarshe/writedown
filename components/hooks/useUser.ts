@@ -1,5 +1,5 @@
 import { deleteDoc, doc, getDoc, writeBatch } from "firebase/firestore";
-import { userDocConverter } from "@/utils/firestoreDataConverter";
+import { userDocConverter } from "@/lib/firestoreDataConverter";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { UserDocument } from "@/types/utils/firebaseOperations";
 import { useAuthState } from "react-firebase-hooks/auth";

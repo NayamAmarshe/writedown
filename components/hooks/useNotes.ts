@@ -1,3 +1,5 @@
+"use client";
+
 import {
   collection,
   deleteDoc,
@@ -9,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
-import { notesConverter } from "@/utils/firestoreDataConverter";
+import { notesConverter } from "@/lib/firestoreDataConverter";
 import { selectedNoteAtom } from "@/stores/postDataAtom";
 
 import { toast } from "sonner";

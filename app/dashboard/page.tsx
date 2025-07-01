@@ -1,3 +1,5 @@
+"use client";
+
 import SetUsernameDialog from "@/components/dashboard/set-username-dialog";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TextArea from "@/components/dashboard/text-area";
@@ -5,7 +7,7 @@ import Sidebar from "@/components/dashboard/side-bar";
 import HeadTags from "@/components/common/head-tags";
 import { useEffect, useState } from "react";
 import useUser from "@/components/hooks/useUser";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 
 const Dashboard = () => {

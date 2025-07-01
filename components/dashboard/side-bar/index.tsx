@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { BsChevronBarLeft } from "react-icons/bs";
@@ -28,6 +28,9 @@ const Sidebar = ({
   setShowSidebar,
 }: SidebarProps & IFirebaseAuth) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const post = searchParams.get("post");
+
   const { user, publicUserDetails } = useUser();
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
@@ -40,15 +43,15 @@ const Sidebar = ({
 
   useEffect(() => {
     if (!selectedNote.id) return;
-    router.push(`/dashboard/?post=${selectedNote.id}`, undefined, {
-      shallow: true,
+    router.push(`/dashboard/?post=${selectedNote.id}`, {
+      scroll: false,
     });
   }, [selectedNote.id]);
 
   useEffect(() => {
-    if (!router.query.post) return;
-    setSelectedNote((prev) => ({ ...prev, id: router.query.post as string }));
-  }, [router.query.post]);
+    if (!post) return;
+    setSelectedNote((prev) => ({ ...prev, id: post as string }));
+  }, [post]);
 
   useEffect(() => {
     refreshNotes();

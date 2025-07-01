@@ -1,3 +1,5 @@
+"use client";
+
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
