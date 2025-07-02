@@ -82,6 +82,22 @@ layer(base);
   -webkit-text-stroke: 4px black;
 }
 
+/* Scrolling text animation */
+@keyframes scrollText {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-text {
+  display: inline-block;
+  animation: scrollText 20s linear infinite;
+  padding-left: 100%;
+}
+
 ul[data-type="taskList"] {
   list-style: none;
   padding: 0;

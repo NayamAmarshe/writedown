@@ -10,9 +10,9 @@ import {
   IoMdSend,
   IoMdTrash,
 } from "react-icons/io";
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import useNotes from "@/components/hooks/useNotes";
-import { isSyncedAtom } from "@/stores/syncedAtom";
+import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import useUser from "@/components/hooks/useUser";
 import { Editor } from "@tiptap/react";
 import {
@@ -190,7 +190,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
       )}
 
       {/* ACTION BUTTONS */}
-      <div className="flex flex-wrap items-center justify-center gap-4 md:items-start">
+      <div className="flex flex-wrap items-center justify-center gap-2 md:items-start">
         {/* SAVE BUTTON */}
         <Button type="button" size="sm" variant="green" className="w-28">
           {!synced && (

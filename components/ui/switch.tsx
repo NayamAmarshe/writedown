@@ -12,15 +12,17 @@ const switchVariants = cva(
           "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
         destructive:
           "data-[state=checked]:bg-destructive data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+        wd: "data-[state=checked]:bg-emerald-400 data-[state=unchecked]:bg-rose-500 focus-visible:ring-opacity-75 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white",
       },
       size: {
         default: "h-[1.15rem] w-8",
         lg: "h-7 w-12",
+        wd: "h-7.5 w-12",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "wd",
+      size: "wd",
     },
   }
 );
@@ -34,16 +36,18 @@ const thumbVariants = cva(
           "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground",
         destructive:
           "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-destructive",
+        wd: "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground",
       },
       size: {
         default:
           "size-4 data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0",
         lg: "size-6 data-[state=checked]:translate-x-[calc(100%-4px)] data-[state=unchecked]:translate-x-0.5",
+        wd: "size-6 data-[state=checked]:translate-x-[calc(100%-4px)] data-[state=unchecked]:translate-x-0.5",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "wd",
+      size: "wd",
     },
   }
 );

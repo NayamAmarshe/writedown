@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAtom, useAtomValue } from "jotai";
@@ -6,17 +6,17 @@ import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
 import { BsChevronBarLeft } from "react-icons/bs";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import UserMenu from "@/components/common/user-menu";
-import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
-import { isSyncedAtom } from "@/stores/syncedAtom";
+import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import BetaBadge from "@/components/ui/BetaBadge";
 import useUser from "@/components/hooks/useUser";
 import PostRow from "./post-row";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import CollapseSidebarButton from "./collapse-sidebar-button";
 
 interface SidebarProps {
   showSidebar: boolean;
@@ -34,12 +34,41 @@ const Sidebar = ({
   const { user, publicUserDetails } = useUser();
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
+  const [isFadeVisible, setIsFadeVisible] = useState({
+    top: false,
+    bottom: false,
+  });
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
   const synced = useAtomValue(isSyncedAtom);
 
   const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const isScrolledToBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px threshold
+    setIsFadeVisible({
+      top: scrollTop > 10,
+      bottom: !isScrolledToBottom && scrollHeight > clientHeight,
+    });
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Check initial state
+    handleScroll();
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [notes]);
 
   useEffect(() => {
     if (!selectedNote.id) return;
@@ -76,35 +105,11 @@ const Sidebar = ({
 
   return (
     <div
-      className={`z-40 flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 md:top-auto md:right-auto md:bottom-auto md:left-auto md:m-4 md:h-[calc(96%)] md:w-96 md:rounded-xl md:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
+      className={`z-40 absolute max-w-screen flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 sm:top-auto sm:right-auto sm:bottom-auto sm:left-auto sm:m-4 sm:h-[calc(96%)] sm:w-96 sm:rounded-xl sm:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      {/* MOBILE - SIDEBAR TOGGLE BUTTON */}
-      <IconButton
-        id="new"
-        onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses={`fixed z-50 ml-auto top-[10px] right-[15px] md:hidden dark:bg-slate-800! bg-slate-100!`}
-      >
-        <BsChevronBarLeft
-          className={`h-4 w-4 text-black transition-transform duration-400 dark:text-slate-100 ${
-            showSidebar ? "rotate-0" : "rotate-180"
-          }`}
-        />
-      </IconButton>
-
-      {/* DESKTOP - SIDEBAR TOGGLE BUTTON */}
-      <IconButton
-        data-testid="sidebarToggle"
-        onClick={() => setShowSidebar(!showSidebar)}
-        extraClasses="absolute top-1/2 -right-5 z-10 hidden md:block"
-      >
-        <BsChevronBarLeft
-          className={`h-5 w-5 translate-x-1 text-black transition-transform duration-400 dark:text-slate-100 ${
-            showSidebar ? "" : "rotate-180"
-          }`}
-        />
-      </IconButton>
+      <CollapseSidebarButton />
 
       {/* USER GREETING SECTION */}
       <div className="relative min-w-fit flex items-center gap-2">
@@ -158,39 +163,52 @@ const Sidebar = ({
       {/* POSTS SECTION */}
       {/* POSTS HEADING */}
       <h6 className="font-semibold">Posts</h6>
-      <div className="scrollbar flex h-full flex-col gap-3 overflow-y-auto">
-        {/* POSTS LIST */}
-        <div className="mb-64 flex flex-col gap-2 p-1">
-          {notes ? (
-            notes.map((note) => (
-              <Link
-                href={`/dashboard/?post=${note.slug}`}
-                key={note.id}
-                as={
-                  note.public
-                    ? `/${publicUserDetails?.username}/posts/${note.slug}`
-                    : `/dashboard/?post=${note.slug}`
-                }
-              >
-                <PostRow
-                  userId={user?.uid}
-                  title={note.title}
-                  content={note.content}
-                  noteId={note.id}
-                  isPublic={
-                    note.id === selectedNote.id
-                      ? selectedNote.isPublic
-                      : note.public
-                  }
-                  setShowSidebar={setShowSidebar}
-                />
-              </Link>
-            ))
-          ) : (
-            <Skeleton className="mb-2 h-20 p-4" />
+      <div className="relative flex flex-1 flex-col min-h-0">
+        <div
+          ref={scrollContainerRef}
+          className="scrollbar flex flex-1 flex-col gap-3 overflow-y-auto z-10"
+        >
+          {isFadeVisible.top && (
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white to-transparent dark:from-slate-900 z-20"></div>
           )}
-          <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center bg-linear-to-t from-white pt-32 pb-32 dark:from-slate-900"></div>
+
+          {/* POSTS LIST */}
+          <div className="flex flex-col gap-2 p-1">
+            {notes ? (
+              notes.map((note) => (
+                <Link
+                  href={`/dashboard/?post=${note.slug}`}
+                  key={note.id}
+                  as={
+                    note.public
+                      ? `/${publicUserDetails?.username}/posts/${note.slug}`
+                      : `/dashboard/?post=${note.slug}`
+                  }
+                >
+                  <PostRow
+                    userId={user?.uid}
+                    title={note.title}
+                    content={note.content}
+                    noteId={note.id}
+                    isPublic={
+                      note.id === selectedNote.id
+                        ? selectedNote.isPublic
+                        : note.public
+                    }
+                    setShowSidebar={setShowSidebar}
+                  />
+                </Link>
+              ))
+            ) : (
+              <Skeleton className="mb-2 h-20 p-4" />
+            )}
+          </div>
         </div>
+
+        {/** BOTTOM FADE EFFECT - Only show when not scrolled to bottom */}
+        {isFadeVisible.bottom && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent dark:from-slate-900 z-20"></div>
+        )}
       </div>
 
       <div className="mt-auto">

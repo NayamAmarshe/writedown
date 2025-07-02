@@ -12,7 +12,7 @@ import {
 import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/lib/firestoreDataConverter";
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";

@@ -2,9 +2,53 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
-import { BiGlobe } from "react-icons/bi";
-import { isSyncedAtom } from "@/stores/syncedAtom";
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { isSyncedAtom } from "@/lib/atoms/sync-atom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
+import { GlobeIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Scrolling text component
+const ScrollingText = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const [isOverflowing, setIsOverflowing] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const textRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const checkOverflow = () => {
+      if (containerRef.current && textRef.current) {
+        setIsOverflowing(
+          textRef.current.scrollWidth > containerRef.current.clientWidth
+        );
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [children]);
+
+  return (
+    <div ref={containerRef} className={`${className} overflow-hidden`}>
+      <div
+        ref={textRef}
+        className={`whitespace-nowrap ${isOverflowing ? "animate-scroll-text" : ""}`}
+      >
+        <span>{children}</span>
+        {isOverflowing && <span className="pl-10">{children}</span>}
+      </div>
+    </div>
+  );
+};
 
 type PostRowProps = {
   title: string;
@@ -46,11 +90,25 @@ const PostRow = ({
       onClick={() => switchNotesHandler(noteId)}
     >
       <div
-        className="flex w-full cursor-pointer flex-col gap-2 truncate"
+        className="flex w-full cursor-pointer flex-col gap-2"
         onClick={() => switchNotesHandler(noteId)}
       >
-        <div className="w-full truncate font-medium dark:text-slate-200">
-          {title === "" ? "Untitled" : title || <Skeleton className="w-1/2" />}
+        <div className="flex w-full items-center gap-2">
+          {isPublic && (
+            <Tooltip>
+              <TooltipTrigger>
+                <GlobeIcon className="size-4 shrink-0 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>This post is public</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          <ScrollingText className="flex-1 min-w-0 font-medium dark:text-slate-200">
+            {title === ""
+              ? "Untitled"
+              : title || <Skeleton className="w-1/2" />}
+          </ScrollingText>
         </div>
         <button className="flex flex-col gap-2">
           <p className="w-full truncate text-left text-sm text-slate-600 dark:text-slate-400">
@@ -69,7 +127,6 @@ const PostRow = ({
         </div> */}
         </button>
       </div>
-      {isPublic && <BiGlobe title="Public" size={25} />}
     </div>
   );
 };

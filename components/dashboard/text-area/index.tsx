@@ -1,4 +1,4 @@
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
@@ -12,7 +12,7 @@ import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/useNotes";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
-import { isSyncedAtom } from "@/stores/syncedAtom";
+import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import { BsChevronBarLeft } from "react-icons/bs";
 import Emoji from "@tiptap-pro/extension-emoji";
 import StarterKit from "@tiptap/starter-kit";
@@ -27,6 +27,8 @@ import React, { useEffect } from "react";
 import PostButtons from "./post-buttons";
 import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
+import { SidebarOpenIcon } from "lucide-react";
+import CollapseSidebarButton from "../side-bar/collapse-sidebar-button";
 
 const lowlight = createLowlight();
 
@@ -214,16 +216,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
     <div
       className={`scrollbar flex w-full flex-col items-center justify-start overflow-x-hidden overflow-y-scroll p-2 md:p-5`}
     >
-      <IconButton
-        extraClasses={`fixed z-10 ml-auto top-[10px] right-[15px] md:hidden transition-transform duration-400 rotate-180 ${
-          shiftRight ? "translate-x-52" : "translate-x-0"
-        }`}
-        onClick={() => setShiftRight(true)}
-      >
-        <BsChevronBarLeft
-          className={`h-4 w-4 text-black transition-transform duration-400 dark:text-slate-100`}
-        />
-      </IconButton>
+      <CollapseSidebarButton className="right-auto left-[15px] bg-white dark:bg-slate-700 sm:hidden" />
 
       {/*BUTTONS AND OTHER STATUS ELEMENTS*/}
       <PostButtons shiftRight={shiftRight} editor={editor} />

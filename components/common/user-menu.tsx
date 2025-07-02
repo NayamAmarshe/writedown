@@ -1,4 +1,4 @@
-import { selectedNoteAtom } from "@/stores/postDataAtom";
+import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import { useTheme } from "next-themes";
 import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
