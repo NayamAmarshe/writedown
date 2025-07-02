@@ -16,12 +16,7 @@ const CollapseSidebarButton = ({ className }: { className?: string }) => {
       )}
       data-testid="sidebarToggle"
     >
-      <ChevronLeftIcon
-        className={cn(
-          `size-5 dark:text-slate-100`,
-          showSidebar ? "translate-x-1" : "-translate-x-1"
-        )}
-      />
+      <ChevronLeftIcon className={cn(`size-5 dark:text-slate-100`)} />
     </button>
   );
 };
