@@ -58,7 +58,7 @@ const UserMenu = ({
           </Avatar>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 translate-x-8 !text-slate-900 dark:!text-slate-50 font-medium">
+      <DropdownMenuContent className="w-56 translate-x-8 text-slate-900! dark:text-slate-50! font-medium">
         {dashboard && auth.currentUser && (
           <DropdownMenuItem asChild>
             <Link href="/dashboard" className="flex items-center gap-2">
@@ -76,7 +76,7 @@ const UserMenu = ({
         {home && (
           <DropdownMenuItem asChild>
             <Link href="/" className="flex items-center gap-2 font-medium">
-              <HomeIcon className="size-4 !text-slate-900 dark:!text-slate-50" />
+              <HomeIcon className="size-4 text-slate-900! dark:text-slate-50!" />
               Home
             </Link>
           </DropdownMenuItem>

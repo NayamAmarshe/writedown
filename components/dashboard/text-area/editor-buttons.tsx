@@ -85,7 +85,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
       <div className="relative flex w-full">
         {/* Left fade effect */}
         {isFadeVisible.left && (
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-slate-200/80 via-slate-200/40 to-transparent dark:from-slate-800/80 dark:via-slate-800/40 z-20"></div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-linear-to-r from-slate-200/80 via-slate-200/40 to-transparent dark:from-slate-800/80 dark:via-slate-800/40 z-20"></div>
         )}
 
         <div
@@ -271,7 +271,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
 
         {/* Right fade effect */}
         {isFadeVisible.right && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-slate-200/80 via-slate-200/40 to-transparent dark:from-slate-800/80 dark:via-slate-800/40 z-20"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-linear-to-l from-slate-200/80 via-slate-200/40 to-transparent dark:from-slate-800/80 dark:via-slate-800/40 z-20"></div>
         )}
       </div>
 

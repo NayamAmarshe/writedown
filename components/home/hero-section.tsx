@@ -1,9 +1,17 @@
 import { Parallax } from "react-scroll-parallax";
 import { auth } from "@/lib/firebase";
 import Link from "next/link";
-import React from "react";
 import { Button } from "../ui/button";
-import { LinkIcon } from "lucide-react";
+import {
+  Poppins as PoppinsFont,
+  Pacifico as PacificoFont,
+} from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const pacifico = PacificoFont({
+  subsets: ["latin"],
+  weight: ["400"],
+});
 
 const HeroSection = () => {
   return (
@@ -12,7 +20,9 @@ const HeroSection = () => {
         <div className="flex flex-col items-center justify-center gap-5">
           <h1 className="xs:text-5xl flex flex-col gap-5 text-center text-4xl leading-tight font-semibold text-slate-900 sm:text-7xl dark:text-slate-50">
             <span className="whitespace-nowrap">Upgrade Your</span>
-            <span className="text-pacifico font-light whitespace-nowrap">
+            <span
+              className={cn("font-light whitespace-nowrap", pacifico.className)}
+            >
               Dear Diary
             </span>
           </h1>

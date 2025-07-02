@@ -13,12 +13,12 @@ const InfoSidebar = () => {
       <img
         src="/writedown.png"
         alt="Writedown Screenshot"
-        className="ml-10 mt-5 h-96 origin-top-left rounded-l-xl object-cover object-left-top shadow-lg shadow-slate-900/50 dark:hidden dark:shadow-black/30 md:ml-20 md:mt-10 md:h-[70vh]"
+        className="ml-10 mt-5 h-96 origin-top-left rounded-l-xl object-cover object-top-left shadow-lg shadow-slate-900/50 dark:hidden dark:shadow-black/30 md:ml-20 md:mt-10 md:h-[70vh]"
       />
       <img
         src="/writedown-dark.png"
         alt="Writedown Screenshot"
-        className="ml-10 mt-5 hidden h-96 origin-top-left rounded-l-xl object-cover object-left-top shadow-lg shadow-slate-900/50 dark:block dark:shadow-black/30 md:ml-20 md:mt-10 md:h-[70vh]"
+        className="ml-10 mt-5 hidden h-96 origin-top-left rounded-l-xl object-cover object-top-left shadow-lg shadow-slate-900/50 dark:block dark:shadow-black/30 md:ml-20 md:mt-10 md:h-[70vh]"
       />
     </div>
   );

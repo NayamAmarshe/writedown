@@ -169,7 +169,7 @@ const Sidebar = ({
           className="scrollbar flex flex-1 flex-col gap-3 overflow-y-auto z-10"
         >
           {isFadeVisible.top && (
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white to-transparent dark:from-slate-900 z-20"></div>
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-linear-to-b from-white to-transparent dark:from-slate-900 z-20"></div>
           )}
 
           {/* POSTS LIST */}
@@ -207,7 +207,7 @@ const Sidebar = ({
 
         {/** BOTTOM FADE EFFECT - Only show when not scrolled to bottom */}
         {isFadeVisible.bottom && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent dark:from-slate-900 z-20"></div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-white to-transparent dark:from-slate-900 z-20"></div>
         )}
       </div>
 
