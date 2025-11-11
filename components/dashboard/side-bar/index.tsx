@@ -147,7 +147,7 @@ const Sidebar = ({
           variant="outline"
           size="lg"
         >
-          <span className="flex items-center justify-center gap-1">
+          <span className="flex items-center justify-center gap-1 font-medium">
             {createPostLoading ? (
               <IoMdRefreshCircle className="size-5 animate-spin" />
             ) : (
