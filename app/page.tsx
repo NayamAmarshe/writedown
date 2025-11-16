@@ -1,10 +1,11 @@
 "use client";
 
-import HeroSection from "@/components/home/hero-section";
 import HeadTags from "@/components/common/head-tags";
 import Features from "@/components/home/features";
 import Navbar from "@/components/home/navbar-new";
 import Footer from "@/components/home/footer-component";
+import HeroSection from "../components/hero-section-1";
+import FeaturesSection from "../components/features-8";
 
 const Home = () => {
   return (
@@ -15,9 +16,10 @@ const Home = () => {
         ogImage="https://writedown.app/og-image.png"
         ogUrl="https://writedown.app"
       />
-      <Navbar />
+      {/* <Navbar /> */}
       <HeroSection />
-      <Features />
+      {/* <Features /> */}
+      <FeaturesSection />
       <Footer />
     </div>
   );
