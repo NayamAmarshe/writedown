@@ -65,7 +65,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const { user, publicUserDetails } = useUser();
 
   // CUSTOM HOOKS
-  const { notes, updateNote, deleteNote, refreshNotes } = useNotes({
+  const { notes, updateNote, deleteNote } = useNotes({
     userId: user?.uid,
   });
 
@@ -93,7 +93,6 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
       content: selectedNote.content,
       public: selectedNote.isPublic,
     });
-    refreshNotes();
     setSynced(true);
   };
 
@@ -108,11 +107,14 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
     );
     if (!confirm) return;
     await deleteNote(selectedNote.id);
-    await refreshNotes();
     toast.success("Deleted Post!");
-    const noteIndex = notes.findIndex((note) => note.id === selectedNote.id);
-    const newIndex = noteIndex > 0 ? noteIndex - 1 : noteIndex + 1;
-    setSelectedNote((prev) => ({ ...prev, id: notes[0]?.id || "" }));
+    const remainingNotes =
+      notes?.filter((note) => note.id !== selectedNote.id) ?? [];
+    const fallbackNote = remainingNotes[0];
+    setSelectedNote((prev) => ({
+      ...prev,
+      id: fallbackNote?.id || "",
+    }));
   };
 
   const downloadPDFHandler = async () => {
@@ -195,13 +197,13 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
         <Button type="button" size="sm" variant="green" className="w-28">
           {!synced && (
             <span className="flex items-center justify-center gap-1">
-              <IoMdRefreshCircle className="h-5 w-5 animate-spin" />
+              <IoMdRefreshCircle className="size-5 animate-spin" />
               <p>Saving</p>
             </span>
           )}
           {synced && (
             <span className="flex items-center justify-center gap-1">
-              <IoMdCheckmarkCircle className="h-5 w-5" />
+              <IoMdCheckmarkCircle className="size-5" />
               <p>Saved</p>
             </span>
           )}
@@ -214,7 +216,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
           size="sm"
         >
           <span className="flex items-center justify-center gap-1">
-            <IoMdTrash className="h-5 w-5" />
+            <IoMdTrash className="size-5" />
             <p>Delete Post</p>
           </span>
         </Button>
@@ -224,7 +226,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
             {/* SAVE BUTTON */}
             <Button size="sm" variant="blue">
               <span className="flex items-center justify-center gap-1">
-                <IoMdSend className="h-5 w-5" />
+                <IoMdSend className="size-5" />
                 <p>Publish</p>
               </span>
             </Button>
@@ -243,7 +245,8 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 <Switch
                   id="toggle"
                   size="lg"
-                  variant="destructive"
+                  variant="default"
+                  className="data-[state=checked]:bg-green-500 dark:data-[state=checked]:bg-green-400"
                   checked={selectedNote.isPublic}
                   onCheckedChange={saveNoteHandler}
                 />
@@ -292,7 +295,7 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                     `http://localhost:3000/...`}
                 </div>
                 {selectedNote.isPublic && (
-                  <IoMdCopy className="absolute top-1/2 right-2 h-5 w-5 -translate-y-1/2" />
+                  <IoMdCopy className="absolute top-1/2 right-2 size-5 -translate-y-1/2" />
                 )}
               </p>
 

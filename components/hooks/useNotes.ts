@@ -9,7 +9,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useCollectionDataOnce } from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/lib/firestoreDataConverter";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { useCallback } from "react";
 import { useAtom } from "jotai";
+import { generateSlug } from "random-word-slugs";
 
 type UseNotesProps = {
   userId: string | undefined;
@@ -26,7 +27,7 @@ type UseNotesProps = {
 export const useNotes = ({ userId }: UseNotesProps) => {
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const [notes, loading, error, snapshot, refreshNotes] = useCollectionDataOnce(
+  const [notes, loading, error, snapshot] = useCollectionData(
     userId
       ? query(
           collection(db, "users", userId, "notes"),
@@ -38,27 +39,27 @@ export const useNotes = ({ userId }: UseNotesProps) => {
   const createNote = useCallback(async () => {
     if (!userId) return;
 
-    const id = crypto.randomUUID();
     const currentTime = new Date().getTime();
+    const title = generateSlug(2, { format: "title" });
+    const slug = title.toLowerCase().replace(/ /g, "-");
 
     const noteData: NoteDocument = {
-      id,
+      id: slug,
       content: "",
       public: false,
-      slug: id,
-      title: "",
+      slug,
+      title,
       userId,
       createdAt: currentTime,
       updatedAt: currentTime,
     };
 
-    const notesRef = doc(db, "users", userId, "notes", id);
+    const notesRef = doc(db, "users", userId, "notes", slug);
 
     try {
       // Create a document inside channelsRef array
       await setDoc(notesRef, noteData, { merge: true });
-      refreshNotes();
-      return id;
+      return noteData;
     } catch (error) {
       toast.error("Failed to create post, please try again later.");
     }
@@ -90,7 +91,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
         toast.error("Failed to update post, please try again later.");
       }
     },
-    [userId]
+    [userId, setSelectedNote]
   );
 
   const deleteNote = useCallback(
@@ -102,7 +103,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       try {
         // Create a document inside channelsRef array
         await deleteDoc(notesRef);
-        refreshNotes();
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
       }
@@ -112,7 +112,6 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
   return {
     notes,
-    refreshNotes,
     notesLoading: loading,
     notesError: error,
     notesSnapshot: snapshot,

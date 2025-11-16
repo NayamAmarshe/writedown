@@ -59,7 +59,7 @@ type PostRowProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const PostRow = ({
+const PostItem = ({
   title,
   content,
   noteId,
@@ -84,8 +84,8 @@ const PostRow = ({
     <div
       className={`flex items-center justify-between rounded-xl p-4 ${
         selectedNote.id === noteId
-          ? "bg-slate-200 dark:bg-slate-700"
-          : "bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
+          ? "bg-slate-300 dark:bg-slate-700"
+          : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors duration-300 ease-in-out"
       }`}
       onClick={() => switchNotesHandler(noteId)}
     >
@@ -131,4 +131,4 @@ const PostRow = ({
   );
 };
 
-export default PostRow;
+export default PostItem;

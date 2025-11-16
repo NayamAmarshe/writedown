@@ -42,7 +42,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 
-  const { notes, updateNote, createNote, refreshNotes } = useNotes({
+  const { notes, updateNote, createNote } = useNotes({
     userId: user?.uid,
   });
 
@@ -141,11 +141,17 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   useEffect(() => {
     if (!notes) return;
     notes.length === 0 &&
-      createNote().then((id) => {
-        if (!id) {
+      createNote().then((note) => {
+        if (!note) {
           return;
         }
-        setSelectedNote((prev) => ({ ...prev, id }));
+        setSelectedNote({
+          id: note.id,
+          title: note.title,
+          content: note.content,
+          isPublic: note.public,
+          lastUpdated: note.updatedAt,
+        });
       });
   }, [notes]);
 
@@ -207,10 +213,6 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       clearTimeout(debounceSave);
     };
   }, [notes, selectedNote.title, selectedNote.content, selectedNote.isPublic]);
-
-  useEffect(() => {
-    refreshNotes();
-  }, [selectedNote.id]);
 
   return (
     <div

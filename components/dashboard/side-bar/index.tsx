@@ -1,18 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
-import { BsChevronBarLeft } from "react-icons/bs";
 import { IFirebaseAuth } from "@/types/components/firebase-hooks";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import UserMenu from "@/components/common/user-menu";
 import useNotes from "@/components/hooks/useNotes";
-import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import BetaBadge from "@/components/ui/BetaBadge";
 import useUser from "@/components/hooks/useUser";
-import PostRow from "./post-row";
+import PostItem from "./post-item";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -43,9 +41,7 @@ const Sidebar = ({
 
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const synced = useAtomValue(isSyncedAtom);
-
-  const { notes, createNote, refreshNotes } = useNotes({ userId: user?.uid });
+  const { notes, createNote } = useNotes({ userId: user?.uid });
 
   const handleScroll = () => {
     const container = scrollContainerRef.current;
@@ -82,21 +78,27 @@ const Sidebar = ({
     setSelectedNote((prev) => ({ ...prev, id: post as string }));
   }, [post]);
 
-  useEffect(() => {
-    refreshNotes();
-  }, [synced, selectedNote.id]);
-
   const newPostClickHandler = async () => {
     setCreatePostLoading(true);
-    const newId = await createNote();
-    await refreshNotes();
-    if (!newId) {
-      toast.error("Failed to create new post");
-      return;
+    try {
+      const newNote = await createNote();
+      if (!newNote) {
+        toast.error("Failed to create new post");
+        return;
+      }
+      setSelectedNote({
+        id: newNote.id,
+        title: newNote.title,
+        content: newNote.content,
+        isPublic: newNote.public,
+        lastUpdated: newNote.updatedAt,
+      });
+      if (window.innerWidth <= 768) {
+        setShowSidebar(false);
+      }
+    } finally {
+      setCreatePostLoading(false);
     }
-    setSelectedNote((prev) => ({ ...prev, id: newId }));
-    setCreatePostLoading(false);
-    window.innerWidth <= 768 && setShowSidebar(false);
   };
 
   useEffect(() => {
@@ -105,7 +107,7 @@ const Sidebar = ({
 
   return (
     <div
-      className={`z-40 absolute max-w-screen flex h-full flex-col gap-y-5 bg-white p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 sm:top-auto sm:right-auto sm:bottom-auto sm:left-auto sm:m-4 sm:h-[calc(96%)] sm:w-96 sm:rounded-xl sm:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
+      className={`z-40 absolute max-w-screen flex h-full flex-col gap-y-5 bg-slate-50 p-2 shadow-2xl shadow-slate-400 transition-transform duration-300 sm:top-auto sm:right-auto sm:bottom-auto sm:left-auto sm:m-4 sm:h-[calc(96%)] sm:w-96 sm:rounded-xl sm:p-5 dark:bg-slate-900 dark:text-slate-50 dark:shadow-slate-950 ${
         showSidebar ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -143,7 +145,7 @@ const Sidebar = ({
           data-testid="new-note"
           onClick={newPostClickHandler}
           disabled={createPostLoading}
-          className="disabled:cursor-not-allowed"
+          className="disabled:cursor-not-allowed border-muted-foreground!"
           variant="outline"
           size="lg"
         >
@@ -185,7 +187,7 @@ const Sidebar = ({
                       : `/dashboard/?post=${note.slug}`
                   }
                 >
-                  <PostRow
+                  <PostItem
                     userId={user?.uid}
                     title={note.title}
                     content={note.content}

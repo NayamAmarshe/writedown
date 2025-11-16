@@ -22,7 +22,10 @@ const WritedownEditor = ({ notes, editor }: editorProps) => {
     }
     // Replace the editor content with the current note content
     const currentNote = notes.find((note) => note.id === selectedNote.id);
-    if (!currentNote) return;
+    if (!currentNote) {
+      editor.commands.clearContent();
+      return;
+    }
     editor.commands.setContent(currentNote.content);
   }, [selectedNote.id, notes]);
 

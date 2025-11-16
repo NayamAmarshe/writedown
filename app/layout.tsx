@@ -4,13 +4,18 @@ import Providers from "@/components/providers";
 import {
   Poppins as PoppinsFont,
   Pacifico as PacificoFont,
+  Leckerli_One as LeckerliOneFont,
 } from "next/font/google";
 
 const poppins = PoppinsFont({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 const pacifico = PacificoFont({
+  subsets: ["latin"],
+  weight: ["400"],
+});
+const leckerliOne = LeckerliOneFont({
   subsets: ["latin"],
   weight: ["400"],
 });
@@ -22,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`}>
+      <body className={`antialiased ${poppins.className}`}>
         <Providers>{children}</Providers>
       </body>
     </html>
