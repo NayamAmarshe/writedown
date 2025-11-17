@@ -1,8 +1,6 @@
 "use client";
 
 import HeadTags from "@/components/common/head-tags";
-import Features from "@/components/home/features";
-import Navbar from "@/components/home/navbar-new";
 import Footer from "@/components/home/footer-component";
 import HeroSection from "../components/hero-section-1";
 import FeaturesSection from "../components/features-8";

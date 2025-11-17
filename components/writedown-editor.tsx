@@ -29,7 +29,16 @@ const WritedownEditor = ({ notes, editor }: editorProps) => {
     editor.commands.setContent(currentNote.content);
   }, [selectedNote.id, notes]);
 
-  return <EditorContent selected editor={editor} />;
+  return (
+    <div className="relative">
+      {selectedNote.content === "" && (
+        <span className="absolute top-2.5 left-2 text-muted-foreground italic h-screen">
+          Start writing here...
+        </span>
+      )}
+      <EditorContent selected editor={editor} />
+    </div>
+  );
 };
 
 export default WritedownEditor;

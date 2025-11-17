@@ -64,7 +64,7 @@
     "katex": "^0.16.21",
     "lottie-react": "^2.4.1",
     "lowlight": "^3.3.0",
-    "lucide-react": "^0.487.0",
+    "lucide-react": "^0.553.0",
     "motion": "^12.23.24",
     "next": "^14.2.30",
     "next-pwa": "^5.6.0",

@@ -58,7 +58,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
 
     try {
       // Create a document inside channelsRef array
-      await setDoc(notesRef, noteData, { merge: true });
+      setDoc(notesRef, noteData, { merge: true });
       return noteData;
     } catch (error) {
       toast.error("Failed to create post, please try again later.");
