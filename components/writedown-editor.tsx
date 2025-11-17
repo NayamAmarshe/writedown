@@ -30,7 +30,7 @@ const WritedownEditor = ({ notes, editor }: editorProps) => {
   }, [selectedNote.id, notes]);
 
   return (
-    <div className="relative">
+    <div className="relative min-h-screen">
       {selectedNote.content === "" && (
         <span className="absolute top-2.5 left-2 text-muted-foreground italic h-screen">
           Start writing here...

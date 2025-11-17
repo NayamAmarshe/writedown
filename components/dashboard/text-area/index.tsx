@@ -216,7 +216,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
 
   return (
     <div
-      className={`scrollbar flex w-full flex-col items-center justify-start overflow-x-hidden overflow-y-scroll p-2 md:p-5`}
+      className={`scrollbar flex w-full gap-4 flex-col items-center justify-start overflow-x-hidden overflow-y-scroll p-2 md:p-5`}
     >
       <CollapseSidebarButton className="right-auto left-[15px] bg-white dark:bg-slate-700 sm:hidden" />
 

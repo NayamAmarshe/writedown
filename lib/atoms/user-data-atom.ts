@@ -1,3 +1,3 @@
-import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-export const showSidebarAtom = atom(false);
+export const showSidebarAtom = atomWithStorage("showSidebar", true);

@@ -53,7 +53,11 @@ const UserMenu = ({
       <DropdownMenuTrigger asChild>
         <div>
           <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity ring-none focus:ring-0">
-            <AvatarImage src={avatarSrc} alt={avatarAlt} />
+            <AvatarImage
+              src={avatarSrc}
+              alt={avatarAlt}
+              referrerPolicy="no-referrer"
+            />
             <AvatarFallback>{avatarFallback}</AvatarFallback>
           </Avatar>
         </div>

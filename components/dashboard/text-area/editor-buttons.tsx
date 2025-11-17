@@ -74,11 +74,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (!editor) return <></>;
-
   return (
     <div
-      className={`my-2 p-2 sticky top-0 z-30 flex self-start sm:self-center w-full sm:w-fit max-w-3xl items-center justify-center transition-transform duration-300 sm:justify-start ${
+      className={`sticky top-0 z-30 flex self-start sm:self-center w-full sm:w-fit max-w-3xl items-center justify-center transition-transform duration-300 sm:justify-start ${
         shiftRight ? "translate-x-52" : "translate-x-0"
       }`}
     >
@@ -97,9 +95,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("heading", { level: 1 })}
+              pressed={editor?.isActive("heading", { level: 1 })}
               onPressedChange={() =>
-                editor.chain().focus().toggleHeading({ level: 1 }).run()
+                editor?.chain().focus().toggleHeading({ level: 1 }).run()
               }
               className="rounded-none border-0 first:rounded-l-md"
             >
@@ -108,9 +106,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("heading", { level: 2 })}
+              pressed={editor?.isActive("heading", { level: 2 })}
               onPressedChange={() =>
-                editor.chain().focus().toggleHeading({ level: 2 }).run()
+                editor?.chain().focus().toggleHeading({ level: 2 }).run()
               }
               className="rounded-none border-0 border-l"
             >
@@ -119,9 +117,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("heading", { level: 3 })}
+              pressed={editor?.isActive("heading", { level: 3 })}
               onPressedChange={() =>
-                editor.chain().focus().toggleHeading({ level: 3 }).run()
+                editor?.chain().focus().toggleHeading({ level: 3 }).run()
               }
               className="rounded-none border-0 border-l"
             >
@@ -130,9 +128,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("heading", { level: 4 })}
+              pressed={editor?.isActive("heading", { level: 4 })}
               onPressedChange={() =>
-                editor.chain().focus().toggleHeading({ level: 4 }).run()
+                editor?.chain().focus().toggleHeading({ level: 4 }).run()
               }
               className="rounded-none border-0 border-l last:rounded-r-md"
             >
@@ -145,8 +143,8 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("bold")}
-              onPressedChange={() => editor.chain().focus().toggleBold().run()}
+              pressed={editor?.isActive("bold")}
+              onPressedChange={() => editor?.chain().focus().toggleBold().run()}
               className="rounded-none border-0 first:rounded-l-md"
             >
               <BoldIcon />
@@ -154,9 +152,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("italic")}
+              pressed={editor?.isActive("italic")}
               onPressedChange={() =>
-                editor.chain().focus().toggleItalic().run()
+                editor?.chain().focus().toggleItalic().run()
               }
               className="rounded-none border-0 border-l"
             >
@@ -165,9 +163,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("strike")}
+              pressed={editor?.isActive("strike")}
               onPressedChange={() =>
-                editor.chain().focus().toggleStrike().run()
+                editor?.chain().focus().toggleStrike().run()
               }
               className="rounded-none border-0 border-l last:rounded-r-md"
             >
@@ -180,9 +178,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("blockquote")}
+              pressed={editor?.isActive("blockquote")}
               onPressedChange={() =>
-                editor.chain().focus().toggleBlockquote().run()
+                editor?.chain().focus().toggleBlockquote().run()
               }
               className="rounded-none border-0 first:rounded-l-md"
             >
@@ -191,9 +189,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("codeBlock")}
+              pressed={editor?.isActive("codeBlock")}
               onPressedChange={() =>
-                editor.chain().focus().setCodeBlock().run()
+                editor?.chain().focus().setCodeBlock().run()
               }
               className="rounded-none border-0 border-l last:rounded-r-md"
             >
@@ -206,9 +204,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("orderedList")}
+              pressed={editor?.isActive("orderedList")}
               onPressedChange={() =>
-                editor.chain().focus().toggleOrderedList().run()
+                editor?.chain().focus().toggleOrderedList().run()
               }
               className="rounded-none border-0 first:rounded-l-md"
             >
@@ -217,9 +215,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("bulletList")}
+              pressed={editor?.isActive("bulletList")}
               onPressedChange={() =>
-                editor.chain().focus().toggleBulletList().run()
+                editor?.chain().focus().toggleBulletList().run()
               }
               className="rounded-none border-0 border-l"
             >
@@ -228,9 +226,9 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
             <Toggle
               variant="wd"
               size="sm"
-              pressed={editor.isActive("taskList")}
+              pressed={editor?.isActive("taskList")}
               onPressedChange={() =>
-                editor.chain().focus().toggleTaskList().run()
+                editor?.chain().focus().toggleTaskList().run()
               }
               className="rounded-none border-0 border-l last:rounded-r-md"
             >
@@ -260,7 +258,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
               variant="wd"
               size="sm"
               onPressedChange={() =>
-                editor.chain().focus().setHorizontalRule().run()
+                editor?.chain().focus().setHorizontalRule().run()
               }
               className="rounded-none border-0 border-l last:rounded-r-md"
             >
@@ -308,8 +306,8 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
                 onClick={() => {
                   if (url) {
                     isLinkPreview
-                      ? editor.chain().setLinkPreview({ url: url }).run()
-                      : editor.chain().insertContent(`[${url}](${url})`).run();
+                      ? editor?.chain().setLinkPreview({ url: url }).run()
+                      : editor?.chain().insertContent(`[${url}](${url})`).run();
                     setIsUrlPromptOpen(false);
                     setUrl("");
                   }
@@ -354,7 +352,7 @@ const EditorButtons = ({ shiftRight, editor }: EditorButtonsProps) => {
                 variant="blue"
                 onClick={() => {
                   if (url) {
-                    editor.chain().focus().setImage({ src: url, title }).run();
+                    editor?.chain().focus().setImage({ src: url, title }).run();
                     setIsOpen(false);
                     setTitle("");
                     setUrl("");
