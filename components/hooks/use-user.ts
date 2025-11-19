@@ -53,24 +53,6 @@ export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
 
-  const setUsernameCallable = useMemo(
-    () =>
-      httpsCallable<{ username: string }, { username: string }>(
-        functions,
-        "setUsername"
-      ),
-    [functions]
-  );
-
-  const checkUsernameCallable = useMemo(
-    () =>
-      httpsCallable<{ username: string }, { available: boolean }>(
-        functions,
-        "checkUsernameAvailability"
-      ),
-    [functions]
-  );
-
   const userDocumentRef = useMemo(() => {
     if (!user) return null;
     return doc(db, "users", user.uid).withConverter(userDocConverter);
@@ -110,9 +92,13 @@ export const useUser = () => {
         throw new Error("Username not provided");
       }
 
-      await setUsernameCallable({ username: trimmedUsername });
+      const callable = httpsCallable<
+        { username: string },
+        { username: string }
+      >(functions, "setUsername");
+      await callable({ username: trimmedUsername });
     },
-    [setUsernameCallable]
+    [functions]
   );
 
   /**
@@ -124,12 +110,15 @@ export const useUser = () => {
       const trimmedUsername = userName.trim();
       if (!trimmedUsername) return false;
 
-      const response = await checkUsernameCallable({
-        username: trimmedUsername,
-      });
+      const callable = httpsCallable<
+        { username: string },
+        { available: boolean }
+      >(functions, "checkUsernameAvailability");
+
+      const response = await callable({ username: trimmedUsername });
       return Boolean(response.data.available);
     },
-    [checkUsernameCallable]
+    [functions]
   );
 
   /**
@@ -150,16 +139,58 @@ export const useUser = () => {
     }
   };
 
-  const signInWithGoogle = (): ProviderHookState => {
-    const provider = useMemo(() => new GoogleAuthProvider(), []);
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      // Open popup immediately without async delay to prevent Safari blocking
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      if (credential === null) throw new Error("Credential is null");
+      return {
+        success: true,
+        user: result.user,
+      };
+    } catch (error: any) {
+      console.error("Error in Google sign in:", error);
 
-    return useSignInWithProvider(provider);
+      // Handle popup blocked error specifically
+      if (error.code === "auth/popup-blocked") {
+        return {
+          success: false,
+          error:
+            "Popup was blocked by your browser. Please allow popups for this site or try again.",
+        };
+      }
+
+      if (error.message.includes("auth/popup-closed-by-user")) {
+        return {
+          success: false,
+          error: "Google sign in cancelled",
+        };
+      }
+
+      return {
+        success: false,
+        error: error.message || "Google sign in failed",
+      };
+    }
   };
 
-  const signInWithGithub = (): ProviderHookState => {
-    const provider = useMemo(() => new GithubAuthProvider(), []);
-
-    return useSignInWithProvider(provider);
+  const signInWithGithub = async () => {
+    const provider = new GithubAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      return {
+        success: true,
+        user: result.user,
+      };
+    } catch (error: any) {
+      console.error("Error in Github sign in:", error);
+      return {
+        success: false,
+        error: error.message || "Github sign in failed",
+      };
+    }
   };
 
   return {

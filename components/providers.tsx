@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 import { Provider } from "jotai";
 import { Toaster } from "sonner";
+import AuthProvider from "@/components/providers/auth-provider";
 
 const Providers = ({
   children,
@@ -28,7 +29,9 @@ const Providers = ({
         {/* EXTRA DIV IS BECAUSE OF TOAST */}
         <Toaster position="top-center" />
 
-        <ParallaxProvider>{children}</ParallaxProvider>
+        <ParallaxProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ParallaxProvider>
       </ThemeProvider>
     </Provider>
   );
