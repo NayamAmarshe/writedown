@@ -7,7 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import remarkGfm from "remark-gfm";
 import { formatTimeStamp } from "@/components/dashboard/text-area/post-buttons";
-import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
+import { NoteDocument, UserDocument } from "@/lib/types/db";
 import HeadTags from "@/components/common/head-tags";
 import useUser from "@/components/hooks/use-user";
 import Footer from "@/components/home/footer-component";

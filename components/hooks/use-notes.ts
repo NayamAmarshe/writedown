@@ -9,7 +9,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { NoteDocument } from "@/types/utils/firebaseOperations";
+import { NoteDocument } from "@/lib/types/db";
 import { notesConverter } from "@/lib/firestoreDataConverter";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 

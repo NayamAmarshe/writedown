@@ -130,3 +130,25 @@ export const setUsername = onCall({ region: REGION }, async (request) => {
     );
   }
 });
+
+export const getUsernameStatus = onCall({ region: REGION }, async (request) => {
+  const uid = request.data?.uid ?? request.auth?.uid;
+
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "Authentication required.");
+  }
+
+  const userRef = db.collection("users").doc(uid);
+  const userSnap = await userRef.get();
+
+  if (!userSnap.exists) {
+    return { hasUsername: false, username: null };
+  }
+
+  const username = userSnap.data()?.username ?? null;
+
+  return {
+    hasUsername: Boolean(username),
+    username,
+  };
+});

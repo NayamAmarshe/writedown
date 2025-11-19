@@ -1,5 +1,5 @@
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
-import { NoteDocument } from "@/types/utils/firebaseOperations";
+import { NoteDocument } from "@/lib/types/db";
 import { EditorContent, Editor } from "@tiptap/react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";

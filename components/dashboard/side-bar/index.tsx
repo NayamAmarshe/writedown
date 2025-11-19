@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAtom } from "jotai";
 import { IoMdAddCircle, IoMdRefreshCircle } from "react-icons/io";
-import { IFirebaseAuth } from "@/types/components/firebase-hooks";
+import { IFirebaseAuth } from "@/lib/types/firebase-hooks";
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 import UserMenu from "@/components/common/user-menu";
@@ -29,7 +29,7 @@ const Sidebar = ({
   const searchParams = useSearchParams();
   const post = searchParams.get("post");
 
-  const { user, publicUserDetails } = useUser();
+  const { user, userDocument } = useUser();
   const [mounted, setMounted] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
   const [isFadeVisible, setIsFadeVisible] = useState({
@@ -183,7 +183,7 @@ const Sidebar = ({
                   key={note.id}
                   as={
                     note.public
-                      ? `/${publicUserDetails?.username}/posts/${note.slug}`
+                      ? `/${userDocument?.username}/posts/${note.slug}`
                       : `/dashboard/?post=${note.slug}`
                   }
                 >

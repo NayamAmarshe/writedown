@@ -9,10 +9,11 @@ import { logger } from "../utils/logger";
 
 const REGION = "us-central1";
 
-export const handleAuthUserCreate = beforeUserCreated(
+export const createUser = beforeUserCreated(
   { region: REGION },
   async (event: AuthBlockingEvent) => {
     const user = event.data;
+    logger.info("Creating user", { user });
 
     if (!user) {
       logger.warn("Auth blocking event missing user payload.");

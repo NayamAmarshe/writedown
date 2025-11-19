@@ -8,13 +8,13 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { userDocConverter } from "@/lib/firestoreDataConverter";
-import { UserDocument } from "@/types/utils/firebaseOperations";
 import { db, auth, functions } from "@/lib/firebase";
 import { useDocumentData } from "@/components/hooks/firebase-hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { UserDocument } from "../../lib/types/db";
 
 type ProviderHookState = readonly [
   () => Promise<UserCredential | null>,
@@ -51,15 +51,32 @@ export const useSignInWithProvider = (
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [userDocument, setUserDocument] = useState<UserDocument | null>(null);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
 
-  const userDocumentRef = useMemo(() => {
-    if (!user) return null;
-    return doc(db, "users", user.uid).withConverter(userDocConverter);
-  }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    const userDocumentRef = doc(db, "users", user.uid).withConverter(
+      userDocConverter
+    );
+    const unsubscribe = onSnapshot(
+      userDocumentRef,
+      (snapshot) => {
+        setUserDocument(snapshot.data() as UserDocument);
+      },
+      (error) => {
+        console.error(error);
+        setUserDocument(null);
+      },
+      () => {
+        setIsUserLoading(false);
+      }
+    );
 
-  const [publicUserDetails, isPublicUserDetailsLoading] =
-    useDocumentData(userDocumentRef);
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
 
   useEffect(() => {
     setIsUserLoading(true);
@@ -116,28 +133,10 @@ export const useUser = () => {
       >(functions, "checkUsernameAvailability");
 
       const response = await callable({ username: trimmedUsername });
-      return Boolean(response.data.available);
+      return !!response.data.available;
     },
     [functions]
   );
-
-  /**
-   * Check if a user has a username
-   * @param user
-   */
-  const hasUsername = async (user: User) => {
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const userRef = doc(db, "users", user.uid);
-    try {
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data() as UserDocument;
-      return userData && userData.username ? true : false;
-    } catch (error) {
-      throw error;
-    }
-  };
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -197,11 +196,9 @@ export const useUser = () => {
     user,
     isUserLoading,
     /** The user document with public details */
-    publicUserDetails,
-    isPublicUserDetailsLoading,
+    userDocument,
     setUsername,
     checkUsernameValidity,
-    hasUsername,
     signInWithGoogle,
     signInWithGithub,
   };

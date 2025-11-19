@@ -19,7 +19,7 @@ const SetUsernameDialog = ({
   show: boolean;
   onSetShow: (state: boolean) => void;
 }) => {
-  const { user, setUsername, checkUsernameValidity } = useUser();
+  const { setUsername, checkUsernameValidity } = useUser();
   const [input, setInput] = useState("");
   const [invalidUsername, setInvalidUsername] = useState(false);
 

@@ -10,7 +10,7 @@ import { showSidebarAtom } from "@/lib/atoms/user-data-atom";
 import { useAtom } from "jotai";
 
 const Dashboard = () => {
-  const { user, hasUsername } = useUser();
+  const { user, userDocument } = useUser();
 
   const [showUsernameModal, setShowUsernameModal] = useState(false);
   const [showSidebar, setShowSidebar] = useAtom(showSidebarAtom);
@@ -20,7 +20,7 @@ const Dashboard = () => {
       const user = auth.currentUser;
       if (!user) return;
       try {
-        const userHasUsername = await hasUsername(user);
+        const userHasUsername = !!userDocument?.username;
         if (!userHasUsername) {
           setShowUsernameModal(true);
         }
