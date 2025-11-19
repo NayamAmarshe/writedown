@@ -3,8 +3,6 @@ import { FieldValue } from "firebase-admin/firestore";
 import db from "../utils/db";
 import { logger } from "../utils/logger";
 
-const REGION = "us-central1";
-
 const USERNAME_REGEX = /^[a-z][a-z0-9]*([._-][a-z0-9]+)*$/;
 
 const sanitizeUsername = (username: string) => username.trim();
@@ -15,7 +13,7 @@ const isUsernameValid = (username: string) =>
   USERNAME_REGEX.test(username);
 
 export const checkUsernameAvailability = onCall(
-  { region: REGION },
+  { cors: true },
   async (request) => {
     const requestedUsername = request.data?.username;
 
@@ -39,7 +37,7 @@ export const checkUsernameAvailability = onCall(
   }
 );
 
-export const setUsername = onCall({ region: REGION }, async (request) => {
+export const setUsername = onCall({ cors: true }, async (request) => {
   if (!request.auth) {
     throw new HttpsError("unauthenticated", "Authentication required.");
   }
@@ -131,7 +129,7 @@ export const setUsername = onCall({ region: REGION }, async (request) => {
   }
 });
 
-export const getUsernameStatus = onCall({ region: REGION }, async (request) => {
+export const getUsernameStatus = onCall({ cors: true }, async (request) => {
   const uid = request.data?.uid ?? request.auth?.uid;
 
   if (!uid) {

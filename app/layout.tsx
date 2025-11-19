@@ -22,7 +22,7 @@ const leckerliOne = LeckerliOneFont({
   weight: ["400"],
 });
 
-connectFunctionsEmulator(functions, "localhost", 5001);
+connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 export default function RootLayout({
   children,
