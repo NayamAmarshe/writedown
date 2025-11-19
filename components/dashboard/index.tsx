@@ -4,7 +4,7 @@ import SetUsernameDialog from "@/components/dashboard/set-username-dialog";
 import TextArea from "@/components/dashboard/text-area";
 import Sidebar from "@/components/dashboard/side-bar";
 import { useEffect, useState } from "react";
-import useUser from "@/components/hooks/useUser";
+import useUser from "@/components/hooks/use-user";
 import { auth } from "@/lib/firebase";
 import { showSidebarAtom } from "@/lib/atoms/user-data-atom";
 import { useAtom } from "jotai";

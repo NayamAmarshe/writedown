@@ -1,40 +1,25 @@
-import {
-  useSignInWithGithub,
-  useSignInWithGoogle,
-} from "react-firebase-hooks/auth";
 import { authErrorCodes } from "@/constants/firebase-auth-error-codes";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { auth } from "@/lib/firebase";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import useUser from "../hooks/use-user";
+import type { error } from "console";
 
 const SignInArea = () => {
   // GOOGLE SIGN IN HOOK
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
-    useSignInWithGoogle(auth);
-  // GITHUB SIGN IN HOOK
-  const [signInWithGithub, githubUser, githubLoading, githubError] =
-    useSignInWithGithub(auth);
+  const { signInWithGoogle, signInWithGithub } = useUser();
 
-  const login = (type: "google" | "github") => {
-    if (type === "google") {
-      signInWithGoogle();
-    } else if (type === "github") {
-      signInWithGithub();
-    }
-  };
+  // useEffect(() => {
+  //   const authError = githubError || error;
 
-  useEffect(() => {
-    const error = githubError || googleError;
-
-    if (!error) return;
-    toast.error(
-      authErrorCodes[error.code as keyof typeof authErrorCodes] || error.message
-    );
-  }, [githubError, googleError]);
+  //   if (!authError) return;
+  //   toast.error(
+  //     authErrorCodes[error.code as keyof typeof authErrorCodes] || error.message
+  //   );
+  // }, [githubError, error]);
 
   return (
     <div className="flex h-1/2 w-full flex-col items-center justify-end gap-4 bg-slate-300 md:h-full md:w-1/2 dark:bg-slate-600 dark:text-slate-50">
@@ -52,7 +37,7 @@ const SignInArea = () => {
           data-testid="google-login"
           variant="outline"
           size="xl"
-          onClick={() => login("google")}
+          onClick={() => signInWithGoogle()}
         >
           <FcGoogle className="size-6" /> Sign in with Google
         </Button>
@@ -60,7 +45,7 @@ const SignInArea = () => {
           className="flex gap-2 border-2 bg-slate-900! px-10! text-slate-50! hover:border-slate-600! hover:bg-slate-600! hover:text-slate-50! dark:text-slate-50! dark:hover:border-slate-300! dark:hover:bg-slate-300! dark:hover:text-slate-900!"
           size="xl"
           data-testid="github-login"
-          onClick={() => login("github")}
+          onClick={() => signInWithGithub()}
         >
           <AiFillGithub className="size-6" /> Sign in with GitHub
         </Button>

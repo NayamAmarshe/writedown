@@ -1,16 +1,30 @@
 {
   "firestore": {
+    "database": "(default)",
+    "location": "us-east4",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
   "emulators": {
-    "auth": {
-      "port": 9099,
-      "host": "127.0.0.1"
-    },
-    "firestore": {
-      "port": 8080,
-      "host": "127.0.0.1"
+    "functions": {
+      "port": 5001
     },
     "ui": {
       "enabled": true

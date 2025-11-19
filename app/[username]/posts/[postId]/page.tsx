@@ -9,7 +9,7 @@ import remarkGfm from "remark-gfm";
 import { formatTimeStamp } from "@/components/dashboard/text-area/post-buttons";
 import { NoteDocument, UserDocument } from "@/types/utils/firebaseOperations";
 import HeadTags from "@/components/common/head-tags";
-import useUser from "@/components/hooks/useUser";
+import useUser from "@/components/hooks/use-user";
 import Footer from "@/components/home/footer-component";
 import { db } from "@/lib/firebase";
 import Loading from "@/components/loading";

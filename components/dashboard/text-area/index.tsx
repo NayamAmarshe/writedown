@@ -4,12 +4,11 @@ import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import WritedownEditor from "@/components/writedown-editor";
 import Mathematics from "@tiptap-pro/extension-mathematics";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { LinkPreview } from "./line-preview";
 import UniqueId from "@tiptap-pro/extension-unique-id";
 import Details from "@tiptap-pro/extension-details";
 import IconButton from "@/components/ui/IconButton";
-import useNotes from "@/components/hooks/useNotes";
+import useNotes from "@/components/hooks/use-notes";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { isSyncedAtom } from "@/lib/atoms/sync-atom";
@@ -29,7 +28,7 @@ import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
 import { SidebarOpenIcon } from "lucide-react";
 import CollapseSidebarButton from "../side-bar/collapse-sidebar-button";
-
+import useUser from "../../hooks/use-user";
 const lowlight = createLowlight();
 
 type TextAreaProps = {
@@ -38,7 +37,7 @@ type TextAreaProps = {
 };
 
 const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
-  const [user] = useAuthState(auth);
+  const { user } = useUser();
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
 

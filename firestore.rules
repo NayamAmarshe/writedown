@@ -1,39 +1,18 @@
-rules_version = '2';
+rules_version='2'
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    match /users/{userId} {
-      allow update: if request.auth.uid == userId;
-      allow create: if request.auth != null;
-      allow read;
+    match /{document=**} {
+      // This rule allows anyone with your database reference to view, edit,
+      // and delete all data in your database. It is useful for getting
+      // started, but it is configured to expire after 30 days because it
+      // leaves your app open to attackers. At that time, all client
+      // requests to your database will be denied.
+      //
+      // Make sure to write security rules for your app before that time, or
+      // else all client requests to your database will be denied until you
+      // update your rules.
+      allow read, write: if request.time < timestamp.date(2025, 12, 18);
     }
-
-    match /users/{userId}/{document=**} {
-      allow read, write: if request.auth.uid == userId;
-    }
-
-    function isValidUsername(username) {
-      let isOwner = request.auth.uid == request.resource.data.uid;
-      let isValidLength = username.size() >= 3 && username.size() <= 15;
-      let isValidRegex = username.matches("^[a-z][a-z0-9]*([._-][a-z0-9]+)*$");
-      let isValidUserDoc = exists(/databases/$(database)/documents/users/$(request.auth.uid));
-
-      return isOwner && isValidLength && isValidRegex && isValidUserDoc;
-    }
-
-    match /usernames/{username} {
-      allow read;
-      allow create: if isValidUsername(username);
-    }
-
-    match /users/{userId}/notes/{noteId} {
-      allow write: if request.auth.uid == userId;
-      allow read: if isPublicNote() || request.auth.uid == userId;
-    }
-
-    function isPublicNote() {
-      return resource.data.public == true;
-    }
-
   }
 }

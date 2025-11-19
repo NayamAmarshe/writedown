@@ -1,41 +1,23 @@
 "use client";
 
 import InfoSidebar from "@/components/login/info-sidebar";
-import { useAuthState } from "react-firebase-hooks/auth";
 import SignInArea from "@/components/login/signin-area";
 import HeadTags from "@/components/common/head-tags";
-import useUser from "@/components/hooks/useUser";
+import useUser from "@/components/hooks/use-user";
 import Loading from "@/components/loading";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { auth } from "@/lib/firebase";
 
 const LoginPage = () => {
   // NEXT ROUTER
   const router = useRouter();
-  const { createUser, checkUserExists } = useUser();
 
   // AUTH STATE HOOK
-  const [authUser, authLoading, authError] = useAuthState(auth, {
-    onUserChanged: async (user) => {
-      if (!user) return;
-      const existingUser = await checkUserExists(user);
-      !existingUser && createUser(user);
-    },
-  });
+  const { user, isUserLoading } = useUser();
 
-  if (authError) {
-    return (
-      <div>
-        <p>Error: {authError.message}</p>
-      </div>
-    );
-  }
-
-  if (authLoading || authUser) {
-    authUser && router.push("/dashboard");
-    return <Loading />;
-  }
+  // if (isUserLoading || user) {
+  //   user && router.push("/dashboard");
+  //   return <Loading />;
+  // }
 
   return (
     <div className="flex min-h-screen flex-col overflow-y-auto bg-slate-200 text-slate-900 sm:bg-slate-50">

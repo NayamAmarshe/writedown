@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import useUser from "../hooks/useUser";
+import useUser from "../hooks/use-user";
 import {
   DialogContent,
   DialogDescription,
@@ -24,9 +24,8 @@ const SetUsernameDialog = ({
   const [invalidUsername, setInvalidUsername] = useState(false);
 
   const onUsernameSet = async (username: string) => {
-    if (!user) return;
     try {
-      await setUsername(user.uid, username);
+      await setUsername(username);
       onSetShow(false);
     } catch (error) {
       toast.error("Error setting username");

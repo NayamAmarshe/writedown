@@ -11,9 +11,9 @@ import {
   IoMdTrash,
 } from "react-icons/io";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
-import useNotes from "@/components/hooks/useNotes";
+import useNotes from "@/components/hooks/use-notes";
 import { isSyncedAtom } from "@/lib/atoms/sync-atom";
-import useUser from "@/components/hooks/useUser";
+import useUser from "@/components/hooks/use-user";
 import { Editor } from "@tiptap/react";
 import {
   Dialog,

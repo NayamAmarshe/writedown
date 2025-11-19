@@ -9,16 +9,16 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { NoteDocument } from "@/types/utils/firebaseOperations";
 import { notesConverter } from "@/lib/firestoreDataConverter";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
 
 import { toast } from "sonner";
 import { db } from "@/lib/firebase";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useAtom } from "jotai";
 import { generateSlug } from "random-word-slugs";
+import { useCollectionData } from "@/components/hooks/firebase-hooks";
 
 type UseNotesProps = {
   userId: string | undefined;
@@ -27,14 +27,15 @@ type UseNotesProps = {
 export const useNotes = ({ userId }: UseNotesProps) => {
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const [notes, loading, error, snapshot] = useCollectionData(
-    userId
-      ? query(
-          collection(db, "users", userId, "notes"),
-          orderBy("updatedAt", "desc")
-        ).withConverter(notesConverter)
-      : null
-  );
+  const notesQuery = useMemo(() => {
+    if (!userId) return null;
+    return query(
+      collection(db, "users", userId, "notes"),
+      orderBy("updatedAt", "desc")
+    ).withConverter(notesConverter);
+  }, [userId]);
+
+  const [notes, loading, error, snapshot] = useCollectionData(notesQuery);
 
   const createNote = useCallback(async () => {
     if (!userId) return;

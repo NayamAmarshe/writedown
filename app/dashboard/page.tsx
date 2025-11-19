@@ -1,26 +1,21 @@
 "use client";
 
-import { useAuthState } from "react-firebase-hooks/auth";
 import HeadTags from "@/components/common/head-tags";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
 import Dashboard from "@/components/dashboard";
+import useUser from "../../components/hooks/use-user";
+import { useEffect } from "react";
 
 const DashboardPage = () => {
   // NEXT ROUTER
   const router = useRouter();
+  const { user, isUserLoading } = useUser();
 
-  // AUTH STATE HOOK
-  useAuthState(auth, {
-    onUserChanged: async (user) => {
-      console.log("🚀 => user:", user);
-
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-    },
-  });
+  useEffect(() => {
+    if (!user && !isUserLoading) {
+      router.push("/login");
+    }
+  }, [user, isUserLoading]);
 
   return (
     <>
