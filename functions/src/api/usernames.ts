@@ -1,21 +1,25 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { FieldValue } from "firebase-admin/firestore";
-import db from "../utils/db";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "../utils/logger";
 
 const USERNAME_REGEX = /^[a-z][a-z0-9]*([._-][a-z0-9]+)*$/;
-
-const sanitizeUsername = (username: string) => username.trim();
 
 const isUsernameValid = (username: string) =>
   username.length >= 3 &&
   username.length <= 15 &&
   USERNAME_REGEX.test(username);
 
+const db = getFirestore();
+
 export const checkUsernameAvailability = onCall(
-  { cors: true },
+  { cors: true, timeoutSeconds: 60, region: ["us-central1"] },
   async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Authentication required.");
+    }
+
     const requestedUsername = request.data?.username;
+    logger.info("🚀 => requestedUsername:", requestedUsername);
 
     if (typeof requestedUsername !== "string") {
       throw new HttpsError(
@@ -24,7 +28,7 @@ export const checkUsernameAvailability = onCall(
       );
     }
 
-    const username = sanitizeUsername(requestedUsername);
+    const username = requestedUsername.trim();
 
     if (!isUsernameValid(username)) {
       return { available: false };
@@ -52,7 +56,7 @@ export const setUsername = onCall({ cors: true }, async (request) => {
     );
   }
 
-  const username = sanitizeUsername(requestedUsername);
+  const username = requestedUsername.trim();
 
   if (!isUsernameValid(username)) {
     throw new HttpsError("invalid-argument", "Username format is invalid.");

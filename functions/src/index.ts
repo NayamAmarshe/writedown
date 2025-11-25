@@ -1,10 +1,13 @@
-import { initializeApp } from "firebase-admin/app";
+import { getApps, initializeApp } from "firebase-admin/app";
 
-initializeApp();
+if (!getApps().length) {
+  initializeApp();
+}
 
-export { createUser as handleAuthUserCreate } from "./auth/on-user-create";
+export { hello } from "./api/hello";
+export { createUser } from "./auth/on-user-create";
 export {
   checkUsernameAvailability,
-  setUsername,
   getUsernameStatus,
+  setUsername,
 } from "./api/usernames";

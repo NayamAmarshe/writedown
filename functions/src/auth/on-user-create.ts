@@ -3,14 +3,10 @@ import {
   HttpsError,
   beforeUserCreated,
 } from "firebase-functions/v2/identity";
-import { FieldValue } from "firebase-admin/firestore";
-import db from "../utils/db";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { logger } from "../utils/logger";
 
-const REGION = "us-central1";
-
 export const createUser = beforeUserCreated(
-  { region: REGION },
   async (event: AuthBlockingEvent) => {
     const user = event.data;
     logger.info("Creating user", { user });
@@ -23,6 +19,7 @@ export const createUser = beforeUserCreated(
       );
     }
 
+    const db = getFirestore();
     const batch = db.batch();
 
     const userRef = db.collection("users").doc(user.uid);
@@ -33,14 +30,6 @@ export const createUser = beforeUserCreated(
         photoURL: user.photoURL ?? "",
         displayName: user.displayName ?? "",
         updatedAt: FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
-
-    const privateExtrasRef = userRef.collection("extras").doc("private");
-    batch.set(
-      privateExtrasRef,
-      {
         email: user.email ?? "",
         createdAt: FieldValue.serverTimestamp(),
       },

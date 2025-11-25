@@ -202,7 +202,7 @@ const Sidebar = ({
                 </Link>
               ))
             ) : (
-              <Skeleton className="mb-2 h-20 p-4" />
+              <Skeleton />
             )}
           </div>
         </div>

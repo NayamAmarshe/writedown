@@ -6,8 +6,6 @@ import {
   Pacifico as PacificoFont,
   Leckerli_One as LeckerliOneFont,
 } from "next/font/google";
-import { firebaseApp, functions } from "../lib/firebase";
-import { connectFunctionsEmulator } from "firebase/functions";
 
 const poppins = PoppinsFont({
   subsets: ["latin"],
@@ -21,8 +19,6 @@ const leckerliOne = LeckerliOneFont({
   subsets: ["latin"],
   weight: ["400"],
 });
-
-connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 
 export default function RootLayout({
   children,

@@ -5,19 +5,19 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
-    "dev": "npm run build:watch & firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
+    "clean": "rm -rf lib",
+    "dev": "npm run clean && npm run build && (npm run build:watch & firebase emulators:start --only functions,auth,firestore)",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^7.0.0"
+    "firebase-functions": "^6.0.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.0",
@@ -28,5 +28,7 @@
     "firebase-functions-test": "^3.1.0",
     "typescript": "^5.7.3"
   },
-  "private": true
+  "volta": {
+    "node": "22.21.1"
+  }
 }

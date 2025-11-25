@@ -12,8 +12,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { userDocConverter } from "@/lib/firestoreDataConverter";
 import { db, auth, functions } from "@/lib/firebase";
-import { useDocumentData } from "@/components/hooks/firebase-hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { UserDocument } from "../../lib/types/db";
 
 type ProviderHookState = readonly [
