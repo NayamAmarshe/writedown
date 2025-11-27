@@ -206,21 +206,14 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
       {/* ACTION BUTTONS */}
       <div className="flex flex-wrap items-center justify-center gap-2 md:items-start">
-        {/* SAVE BUTTON */}
-        <Button type="button" size="sm" variant="green" className="w-28">
-          {!synced && (
+        {!synced && (
+          <Button type="button" size="sm" variant="green" className="w-28">
             <span className="flex items-center justify-center gap-1">
               <IoMdRefreshCircle className="size-5 animate-spin" />
               <p>Saving</p>
             </span>
-          )}
-          {synced && (
-            <span className="flex items-center justify-center gap-1">
-              <IoMdCheckmarkCircle className="size-5" />
-              <p>Saved</p>
-            </span>
-          )}
-        </Button>
+          </Button>
+        )}
 
         <Button
           type="button"

@@ -7,12 +7,10 @@ import Mathematics from "@tiptap-pro/extension-mathematics";
 import { LinkPreview } from "./line-preview";
 import UniqueId from "@tiptap-pro/extension-unique-id";
 import Details from "@tiptap-pro/extension-details";
-import IconButton from "@/components/ui/IconButton";
 import useNotes from "@/components/hooks/use-notes";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import { isSyncedAtom } from "@/lib/atoms/sync-atom";
-import { BsChevronBarLeft } from "react-icons/bs";
 import Emoji from "@tiptap-pro/extension-emoji";
 import StarterKit from "@tiptap/starter-kit";
 import { createLowlight } from "lowlight";
@@ -32,6 +30,7 @@ const lowlight = createLowlight();
 const DEFAULT_EDITOR_WIDTH = 768;
 const MIN_EDITOR_WIDTH = 768;
 const MAX_EDITOR_WIDTH = 1200;
+const AUTOSAVE_DELAY_MS = 1500;
 
 type TextAreaProps = {
   shiftRight: boolean;
@@ -44,6 +43,12 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const dragCleanupRef = useRef<(() => void) | null>(null);
+  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedSnapshotRef = useRef({
+    title: selectedNote.title,
+    content: selectedNote.content,
+    isPublic: selectedNote.isPublic,
+  });
   const [editorWidth, setEditorWidth] = useState(DEFAULT_EDITOR_WIDTH);
 
   const clampWidth = useCallback((value: number) => {
@@ -72,6 +77,9 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   useEffect(() => {
     return () => {
       dragCleanupRef.current?.();
+      if (autosaveTimeoutRef.current) {
+        clearTimeout(autosaveTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -243,36 +251,63 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   }, [notes, selectedNote.id]);
 
   useEffect(() => {
+    lastSavedSnapshotRef.current = {
+      title: selectedNote.title,
+      content: selectedNote.content,
+      isPublic: selectedNote.isPublic,
+    };
+    if (autosaveTimeoutRef.current) {
+      clearTimeout(autosaveTimeoutRef.current);
+      autosaveTimeoutRef.current = null;
+    }
+    setSynced(true);
+  }, [selectedNote.id, selectedNote.lastUpdated]);
+
+  useEffect(() => {
     if (!selectedNote.id || !user) return;
-    const currentNote = notes?.find(
-      (note) =>
-        selectedNote.content === note.content &&
-        selectedNote.title === note.title &&
-        selectedNote.lastUpdated === note.updatedAt &&
-        selectedNote.isPublic === note.isPublic
-    );
-    let debounceSave: NodeJS.Timeout;
-    const isNoteUnchanged = currentNote?.id === selectedNote.id;
-    if (isNoteUnchanged) {
+    const hasPendingChanges =
+      selectedNote.title !== lastSavedSnapshotRef.current.title ||
+      selectedNote.content !== lastSavedSnapshotRef.current.content ||
+      selectedNote.isPublic !== lastSavedSnapshotRef.current.isPublic;
+
+    if (!hasPendingChanges) {
       setSynced(true);
       return;
-    } else {
-      debounceSave = setTimeout(() => {
-        setSynced(false);
-        updateNote({
-          id: selectedNote.id,
-          title: selectedNote.title,
-          content: selectedNote.content,
-          isPublic: selectedNote.isPublic,
-        });
-        setSynced(true);
-      }, 3000);
-      setSynced(false);
     }
-    return () => {
-      clearTimeout(debounceSave);
+
+    const payload = {
+      id: selectedNote.id,
+      title: selectedNote.title,
+      content: selectedNote.content,
+      isPublic: selectedNote.isPublic,
     };
-  }, [notes, selectedNote.title, selectedNote.content, selectedNote.isPublic]);
+
+    const timeoutId = setTimeout(() => {
+      setSynced(false);
+      updateNote(payload).finally(() => {
+        lastSavedSnapshotRef.current = {
+          title: payload.title,
+          content: payload.content,
+          isPublic: payload.isPublic,
+        };
+        setSynced(true);
+        autosaveTimeoutRef.current = null;
+      });
+    }, AUTOSAVE_DELAY_MS);
+
+    autosaveTimeoutRef.current = timeoutId;
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [
+    selectedNote.content,
+    selectedNote.id,
+    selectedNote.isPublic,
+    selectedNote.title,
+    updateNote,
+    user?.uid,
+  ]);
 
   return (
     <div
