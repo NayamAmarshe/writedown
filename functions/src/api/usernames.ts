@@ -91,10 +91,16 @@ export const setUsername = onCall({ cors: true }, async (request) => {
         transaction.delete(previousUsernameRef);
       }
 
-      transaction.set(usernameRef, {
+      const userData = userSnap.data() ?? {};
+      const publicProfile = {
         uid,
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+        displayName:
+          userData.displayName ?? request?.auth?.token?.name ?? "Anonymous",
+        photoURL: userData.photoURL ?? request?.auth?.token?.picture ?? "",
+        bio: userData.bio ?? "",
+      };
+
+      transaction.set(usernameRef, publicProfile);
 
       transaction.set(
         userRef,

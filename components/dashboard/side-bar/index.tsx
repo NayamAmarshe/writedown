@@ -41,7 +41,11 @@ const Sidebar = ({
 
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const { notes, createNote } = useNotes({ userId: user?.uid });
+  const { notes, createNote, deleteNote, toggleNoteVisibility } = useNotes({
+    userId: user?.uid,
+  });
+
+  const username = userDocument?.username ?? "";
 
   const handleScroll = () => {
     const container = scrollContainerRef.current;
@@ -90,7 +94,7 @@ const Sidebar = ({
         id: newNote.id,
         title: newNote.title,
         content: newNote.content,
-        isPublic: newNote.public,
+        isPublic: newNote.isPublic,
         lastUpdated: newNote.updatedAt,
       });
       if (window.innerWidth <= 768) {
@@ -181,23 +185,22 @@ const Sidebar = ({
                 <Link
                   href={`/dashboard/?post=${note.slug}`}
                   key={note.id}
-                  as={
-                    note.public
-                      ? `/${userDocument?.username}/posts/${note.slug}`
-                      : `/dashboard/?post=${note.slug}`
-                  }
+                  {...(note.isPublic && username
+                    ? { as: `/post/${username}/${note.slug}` }
+                    : {})}
                 >
                   <PostItem
-                    userId={user?.uid}
                     title={note.title}
                     content={note.content}
                     noteId={note.id}
                     isPublic={
                       note.id === selectedNote.id
                         ? selectedNote.isPublic
-                        : note.public
+                        : note.isPublic
                     }
                     setShowSidebar={setShowSidebar}
+                    onDelete={deleteNote}
+                    onToggleVisibility={toggleNoteVisibility}
                   />
                 </Link>
               ))

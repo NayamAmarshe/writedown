@@ -62,12 +62,16 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   const [synced, setSynced] = useAtom(isSyncedAtom);
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
 
-  const { user, publicUserDetails } = useUser();
+  const { user, userDocument } = useUser();
 
   // CUSTOM HOOKS
   const { notes, updateNote, deleteNote } = useNotes({
     userId: user?.uid,
   });
+
+  const shareUsername = userDocument?.username ?? "";
+  const isDev = process.env.NODE_ENV === "development";
+  const shareOrigin = isDev ? "http://localhost:3000" : "https://writedown.app";
 
   // EFFECTS
   useEffect(() => {
@@ -79,19 +83,28 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
   /**
    * Saves the note if not already synced
    */
-  const saveNoteHandler = async () => {
+  const saveNoteHandler = async (nextValue?: boolean) => {
+    if (
+      !selectedNote.id ||
+      !notes?.find((note) => note.id === selectedNote.id)
+    ) {
+      return;
+    }
+
+    const targetValue =
+      typeof nextValue === "boolean" ? nextValue : !selectedNote.isPublic;
+
     setSelectedNote((prev) => ({
       ...prev,
-      isPublic: !prev.isPublic,
+      isPublic: targetValue,
     }));
-    if (!selectedNote.id || !notes?.find((note) => note.id === selectedNote.id))
-      return;
+
     setSynced(false);
     await updateNote({
       id: selectedNote.id,
       title: selectedNote.title,
       content: selectedNote.content,
-      public: selectedNote.isPublic,
+      isPublic: targetValue,
     });
     setSynced(true);
   };
@@ -239,7 +252,10 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
 
             <div className="flex flex-col overflow-hidden p-2">
               <div className="mb-4 flex flex-row items-center gap-2">
-                <Label htmlFor="toggle" onClick={saveNoteHandler}>
+                <Label
+                  htmlFor="toggle"
+                  onClick={() => saveNoteHandler(!selectedNote.isPublic)}
+                >
                   Enable Public Viewing
                 </Label>
                 <Switch
@@ -259,42 +275,23 @@ const PostButtons = ({ shiftRight, editor }: PostButtonsProps) => {
                 }`}
                 onClick={() => {
                   if (!selectedNote.isPublic) return;
+                  if (!shareUsername) {
+                    toast.error("Add a username to share your post publicly.");
+                    return;
+                  }
+                  const shareUrl = `${shareOrigin}/post/${shareUsername}/${selectedNote.id}`;
+                  navigator.clipboard.writeText(shareUrl);
                   toast.success("Copied link to clipboard!");
-                  const isDev = process.env.NODE_ENV === "development";
-                  navigator.clipboard.writeText(
-                    isDev
-                      ? `http://localhost:3000/${
-                          publicUserDetails?.username || publicUserDetails?.uid
-                        }/posts/${selectedNote.id}`
-                      : `https://writedown.app/${
-                          publicUserDetails?.username || publicUserDetails?.uid
-                        }/posts/${selectedNote.id}`
-                  );
                 }}
               >
                 <div className="w-11/12 truncate">
-                  {/* PROD */}
-                  {process.env.NODE_ENV !== "development" &&
-                    selectedNote.isPublic &&
-                    `https://writedown.app/${
-                      publicUserDetails?.username ||
-                      publicUserDetails?.uid ||
-                      ""
-                    }/posts/${selectedNote.id}`}
-                  {process.env.NODE_ENV !== "development" &&
-                    !selectedNote.isPublic &&
-                    `https://writedown.app/...`}
-                  {/* DEV */}
-                  {process.env.NODE_ENV === "development" &&
-                    selectedNote.isPublic &&
-                    `http://localhost:3000/${
-                      publicUserDetails?.username || publicUserDetails?.uid
-                    }/posts/${selectedNote.id}`}
-                  {process.env.NODE_ENV === "development" &&
-                    !selectedNote.isPublic &&
-                    `http://localhost:3000/...`}
+                  {selectedNote.isPublic && shareUsername
+                    ? `${shareOrigin}/post/${shareUsername}/${selectedNote.id}`
+                    : selectedNote.isPublic
+                      ? "Add a username to share publicly"
+                      : `${shareOrigin}/...`}
                 </div>
-                {selectedNote.isPublic && (
+                {selectedNote.isPublic && shareUsername && (
                   <IoMdCopy className="absolute top-1/2 right-2 size-5 -translate-y-1/2" />
                 )}
               </p>

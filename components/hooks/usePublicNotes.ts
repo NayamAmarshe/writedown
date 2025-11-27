@@ -1,40 +1,32 @@
 "use client";
 
-import { useDocumentData } from "@/components/hooks/firebase-hooks";
-import { doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useCollectionData } from "@/components/hooks/firebase-hooks";
 import { useMemo } from "react";
+import { collection, orderBy, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { notesConverter } from "@/lib/firestoreDataConverter";
 
-type UseNotesProps = {
-  noteId: string;
+type UsePublicNotesProps = {
+  ownerUid?: string;
 };
 
-export const usePublicNotes = ({ noteId }: UseNotesProps) => {
-  const publicNotesRef = useMemo(
-    () => (noteId ? doc(db, "public_notes", noteId) : null),
-    [noteId]
-  );
+export const usePublicNotes = ({ ownerUid }: UsePublicNotesProps) => {
+  const publicNotesQuery = useMemo(() => {
+    if (!ownerUid) return null;
+    return query(
+      collection(db, "users", ownerUid, "notes"),
+      where("isPublic", "==", true),
+      orderBy("updatedAt", "desc")
+    ).withConverter(notesConverter);
+  }, [ownerUid]);
 
-  const [publicNotes, loading, error, snapshot] =
-    useDocumentData(publicNotesRef);
-
-  const noteRef = useMemo(() => {
-    if (!publicNotes) return null;
-    return doc(db, "users", publicNotes.userId, "notes", noteId);
-  }, [noteId, publicNotes]);
-
-  const [note, note_loading, note_error, note_snapshot] =
-    useDocumentData(noteRef);
+  const [notes, loading, error, snapshot] = useCollectionData(publicNotesQuery);
 
   return {
-    publicNotes,
-    note,
-    publicNotesLoading: loading,
-    publicNotesError: error,
-    publicNotesSnapshot: snapshot,
-    notesLoading: note_loading,
-    notesError: note_error,
-    notesSnapshot: note_snapshot,
+    notes,
+    loading,
+    error,
+    snapshot,
   };
 };
 

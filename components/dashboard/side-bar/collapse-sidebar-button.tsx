@@ -10,7 +10,7 @@ const CollapseSidebarButton = ({ className }: { className?: string }) => {
     <button
       onClick={() => setShowSidebar(!showSidebar)}
       className={cn(
-        "fixed select-none z-20 ml-auto top-[10px] right-[15px] sm:absolute sm:top-1/2 sm:-right-5 sm:z-10 sm:block rounded-full p-2 bg-slate-100 dark:bg-slate-800 sm:bg-white sm:dark:bg-slate-900 cursor-pointer focus:outline-none focus:ring-0",
+        "fixed select-none z-20 ml-auto top-[10px] right-[15px] sm:absolute sm:top-1/2 sm:-right-5 sm:z-10 sm:block rounded-full p-2 bg-slate-100 dark:bg-slate-800 sm:bg-slate-50 sm:dark:bg-slate-900 cursor-pointer focus:outline-none focus:ring-0",
         showSidebar ? "rotate-0" : "rotate-180",
         className
       )}

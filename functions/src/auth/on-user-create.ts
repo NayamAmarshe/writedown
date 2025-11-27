@@ -32,6 +32,7 @@ export const createUser = beforeUserCreated(
         updatedAt: FieldValue.serverTimestamp(),
         email: user.email ?? "",
         createdAt: FieldValue.serverTimestamp(),
+        bio: "",
       },
       { merge: true }
     );

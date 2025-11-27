@@ -3,6 +3,7 @@
 import {
   collection,
   deleteDoc,
+  deleteField,
   doc,
   orderBy,
   query,
@@ -47,7 +48,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     const noteData: NoteDocument = {
       id: slug,
       content: "",
-      public: false,
+      isPublic: false,
       slug,
       title,
       userId,
@@ -71,18 +72,28 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       id: string;
       title: string;
       content: string;
-      public?: boolean;
+      isPublic?: boolean;
+      publishedAt?: number;
     }) => {
       if (!userId || !note) return;
 
       const notesRef = doc(db, "users", userId, "notes", note.id);
       const currentTime = new Date().getTime();
-      const updatedContent = note.public
-        ? { ...note, updatedAt: currentTime, publishedAt: currentTime }
-        : { ...note, updatedAt: currentTime };
+      const shouldBePublic = !!note.isPublic;
+      const publishedAtTimestamp = shouldBePublic
+        ? (note.publishedAt ?? currentTime)
+        : undefined;
+      const updatedContent: Record<string, unknown> = {
+        ...note,
+        isPublic: shouldBePublic,
+        updatedAt: currentTime,
+      };
+
+      updatedContent.publishedAt = shouldBePublic
+        ? publishedAtTimestamp
+        : deleteField();
 
       try {
-        // Create a document inside channelsRef array
         await updateDoc(notesRef, updatedContent);
         setSelectedNote((prev) => ({
           ...prev,
@@ -102,13 +113,47 @@ export const useNotes = ({ userId }: UseNotesProps) => {
       const notesRef = doc(db, "users", userId, "notes", noteId);
 
       try {
-        // Create a document inside channelsRef array
         await deleteDoc(notesRef);
       } catch (error) {
         toast.error("Failed to delete post, please try again later.");
       }
     },
     [userId]
+  );
+
+  const toggleNoteVisibility = useCallback(
+    async (noteId: string, makePublic: boolean) => {
+      if (!userId || !noteId) return;
+
+      const notesRef = doc(db, "users", userId, "notes", noteId);
+      const currentTime = new Date().getTime();
+      const visibilityPayload: Record<string, unknown> = makePublic
+        ? {
+            isPublic: true,
+            publishedAt: currentTime,
+            updatedAt: currentTime,
+          }
+        : {
+            isPublic: false,
+            updatedAt: currentTime,
+            publishedAt: deleteField(),
+          };
+
+      try {
+        await updateDoc(notesRef, visibilityPayload);
+
+        setSelectedNote((prev) =>
+          prev.id === noteId
+            ? { ...prev, isPublic: makePublic, lastUpdated: currentTime }
+            : prev
+        );
+      } catch (error) {
+        toast.error(
+          "Failed to update post visibility, please try again later."
+        );
+      }
+    },
+    [userId, setSelectedNote]
   );
 
   return {
@@ -119,6 +164,7 @@ export const useNotes = ({ userId }: UseNotesProps) => {
     createNote,
     updateNote,
     deleteNote,
+    toggleNoteVisibility,
   };
 };
 

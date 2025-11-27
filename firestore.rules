@@ -1,18 +1,63 @@
-rules_version='2'
+rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2026, 12, 18);
+    // True when the request carries a Firebase Auth ID token.
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Checks if the caller owns the document under users/{uid}.
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Guards note writes so owners can’t spoof or drop required fields.
+    function validNoteWrite(uid) {
+      return request.resource.data.userId == uid &&
+        request.resource.data.isPublic is bool;
+    }
+
+    // Allows only public-safe fields inside usernames/{username}.
+    function validUsernamePayload() {
+      return request.resource.data.keys().hasOnly(['uid', 'displayName', 'photoURL', 'bio']) &&
+        request.resource.data.keys().hasAll(['uid', 'displayName', 'photoURL', 'bio']) &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.displayName is string &&
+        request.resource.data.photoURL is string &&
+        request.resource.data.bio is string;
+    }
+
+    // Public profiles keyed by username.
+    match /usernames/{username} {
+      // Anyone can read public profile data.
+      allow read: if true;
+
+      // Only the owner can create/update a profile doc; resource == null covers the create case.
+      allow create, update: if isSignedIn() &&
+        validUsernamePayload() &&
+        (resource == null || resource.data.uid == request.auth.uid);
+
+      // Only the owner can delete their username doc.
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // Private user namespace.
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      // Notes live under each user.
+      match /notes/{noteId} {
+        // Owners read everything; others only when the note is marked public.
+        allow read: if isOwner(uid) || (resource != null && resource.data.isPublic == true);
+
+        // Only owners can write, and the schema guard must pass.
+        allow create: if isOwner(uid) && validNoteWrite(uid);
+        allow update: if isOwner(uid) && validNoteWrite(uid);
+
+        // Only owners can delete.
+        allow delete: if isOwner(uid);
+      }
     }
   }
 }

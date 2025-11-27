@@ -7,11 +7,7 @@ export type NoteDocument = {
   content: string;
   userId: string;
   slug: string;
-  public: boolean;
-};
-
-export type PublicNoteDocument = {
-  userId: string;
+  isPublic: boolean;
 };
 
 export type UserDocument = {
@@ -19,9 +15,20 @@ export type UserDocument = {
   photoURL: string;
   uid: string;
   username?: string;
+  createdAt: number;
+  updatedAt: number;
+  email: string;
+  bio?: string;
 };
 
 export type UserPrivateDocument = {
   createdAt: number;
   email: string;
+};
+
+export type UsernameDocument = {
+  uid: string;
+  displayName: string;
+  photoURL: string;
+  bio: string;
 };

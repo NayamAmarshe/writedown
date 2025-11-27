@@ -4,12 +4,20 @@ import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
 import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
-import { GlobeIcon } from "lucide-react";
+import { GlobeIcon, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Scrolling text component
 const ScrollingText = ({
@@ -54,9 +62,13 @@ type PostRowProps = {
   title: string;
   content: string;
   noteId: string;
-  userId: string | undefined;
   isPublic: boolean;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  onDelete: (noteId: string) => Promise<void> | void;
+  onToggleVisibility: (
+    noteId: string,
+    makePublic: boolean
+  ) => Promise<void> | void;
 };
 
 const PostItem = ({
@@ -65,9 +77,13 @@ const PostItem = ({
   noteId,
   isPublic,
   setShowSidebar,
+  onDelete,
+  onToggleVisibility,
 }: PostRowProps) => {
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
   const synced = useAtomValue(isSyncedAtom);
+  const [publishLoading, setPublishLoading] = React.useState(false);
+  const [deleteLoading, setDeleteLoading] = React.useState(false);
 
   const switchNotesHandler = async (noteId: string) => {
     if (!synced) {
@@ -80,19 +96,53 @@ const PostItem = ({
     window.innerWidth <= 768 && setShowSidebar(false);
   };
 
+  const handleToggleVisibility = async () => {
+    if (publishLoading) return;
+    setPublishLoading(true);
+    try {
+      await onToggleVisibility(noteId, !isPublic);
+    } finally {
+      setPublishLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (deleteLoading) return;
+    const confirm = window.confirm("Delete this post?");
+    if (!confirm) return;
+    setDeleteLoading(true);
+    try {
+      await onDelete(noteId);
+      setSelectedNote((prev) =>
+        prev.id === noteId
+          ? {
+              id: "",
+              title: "",
+              content: "",
+              isPublic: false,
+              lastUpdated: null,
+            }
+          : prev
+      );
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const stopPropagation = (event: { stopPropagation: () => void }) => {
+    event.stopPropagation();
+  };
+
   return (
     <div
-      className={`flex items-center justify-between rounded-xl p-4 ${
+      className={`flex items-start justify-between gap-3 rounded-xl p-4 ${
         selectedNote.id === noteId
           ? "bg-slate-300 dark:bg-slate-700"
           : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors duration-300 ease-in-out"
       }`}
       onClick={() => switchNotesHandler(noteId)}
     >
-      <div
-        className="flex w-full cursor-pointer flex-col gap-2"
-        onClick={() => switchNotesHandler(noteId)}
-      >
+      <div className="flex w-full cursor-pointer flex-col gap-2">
         <div className="flex w-full items-center gap-2">
           {isPublic && (
             <Tooltip>
@@ -110,7 +160,7 @@ const PostItem = ({
               : title || <Skeleton className="w-1/2" />}
           </ScrollingText>
         </div>
-        <button className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <p className="w-full truncate text-left text-sm text-slate-600 dark:text-slate-400">
             {content === null || content === undefined ? (
               <Skeleton />
@@ -118,15 +168,63 @@ const PostItem = ({
               RemoveMarkdown(content.slice(0, 50)) || "Empty Post"
             )}
           </p>
-
-          {/* TODO: Add tags  */}
-          {/* <div className="flex flex-row flex-wrap gap-1">
-          <Badge color="yellow">UI</Badge>
-          <Badge color="green">Development</Badge>
-          <Badge color="red">UX</Badge>
-        </div> */}
-        </button>
+        </div>
       </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            aria-label="Post actions"
+            className="rounded-full p-2 text-slate-500 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-700"
+            onClick={stopPropagation}
+          >
+            <MoreHorizontal className="size-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" sideOffset={6} className="w-44">
+          <DropdownMenuLabel>Quick actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={(event) => {
+              stopPropagation(event);
+              handleToggleVisibility();
+            }}
+            disabled={publishLoading}
+          >
+            {publishLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Updating...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <GlobeIcon className="size-4" />
+                {isPublic ? "Unpublish" : "Publish"}
+              </span>
+            )}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-destructive focus:text-destructive"
+            onSelect={(event) => {
+              stopPropagation(event);
+              handleDelete();
+            }}
+            disabled={deleteLoading}
+          >
+            {deleteLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Removing...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Trash2 className="size-4" />
+                Delete
+              </span>
+            )}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

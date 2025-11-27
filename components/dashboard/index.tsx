@@ -16,19 +16,16 @@ const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useAtom(showSidebarAtom);
 
   useEffect(() => {
-    (async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-      try {
-        const userHasUsername = !!userDocument?.username;
-        if (!userHasUsername) {
-          setShowUsernameModal(true);
-        }
-      } catch (error) {
-        console.log("Error checking username: ", error);
+    if (!user) return;
+    try {
+      const userHasUsername = userDocument?.username;
+      if (!userHasUsername) {
+        setShowUsernameModal(true);
       }
-    })();
-  }, [user]);
+    } catch (error) {
+      console.log("Error checking username: ", error);
+    }
+  }, [userDocument]);
 
   return (
     <>

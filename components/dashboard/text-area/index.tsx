@@ -24,9 +24,7 @@ import Link from "@tiptap/extension-link";
 import { useEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
 import PostButtons from "./post-buttons";
-import { auth } from "@/lib/firebase";
 import { useAtom } from "jotai";
-import { SidebarOpenIcon } from "lucide-react";
 import CollapseSidebarButton from "../side-bar/collapse-sidebar-button";
 import useUser from "../../hooks/use-user";
 const lowlight = createLowlight();
@@ -148,7 +146,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           id: note.id,
           title: note.title,
           content: note.content,
-          isPublic: note.public,
+          isPublic: note.isPublic,
           lastUpdated: note.updatedAt,
         });
       });
@@ -163,7 +161,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         content: notes[0].content,
         title: notes[0].title,
         lastUpdated: notes[0].updatedAt,
-        isPublic: notes[0].public,
+        isPublic: notes[0].isPublic,
       }));
 
       return;
@@ -177,7 +175,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       content: foundExistingNote.content,
       title: foundExistingNote.title,
       lastUpdated: foundExistingNote.updatedAt,
-      isPublic: foundExistingNote.public,
+      isPublic: foundExistingNote.isPublic,
     }));
   }, [notes, selectedNote.id]);
 
@@ -188,7 +186,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         selectedNote.content === note.content &&
         selectedNote.title === note.title &&
         selectedNote.lastUpdated === note.updatedAt &&
-        selectedNote.isPublic === note.public
+        selectedNote.isPublic === note.isPublic
     );
     let debounceSave: NodeJS.Timeout;
     const isNoteUnchanged = currentNote?.id === selectedNote.id;
@@ -202,7 +200,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
           id: selectedNote.id,
           title: selectedNote.title,
           content: selectedNote.content,
-          public: selectedNote.isPublic,
+          isPublic: selectedNote.isPublic,
         });
         setSynced(true);
       }, 3000);

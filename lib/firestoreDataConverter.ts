@@ -1,4 +1,4 @@
-import { NoteDocument, PublicNoteDocument, UserDocument } from "@/lib/types/db";
+import { NoteDocument, UserDocument, UsernameDocument } from "@/lib/types/db";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 
 export const converter = <T>() => ({
@@ -7,5 +7,16 @@ export const converter = <T>() => ({
 });
 
 export const userDocConverter = converter<UserDocument>();
-export const notesConverter = converter<NoteDocument>();
-export const publicNotesConverter = converter<PublicNoteDocument>();
+
+export const notesConverter = {
+  toFirestore: (data: NoteDocument) => data,
+  fromFirestore: (snap: QueryDocumentSnapshot) => {
+    const data = snap.data() as NoteDocument & { public?: boolean };
+    return {
+      ...data,
+      isPublic: data.isPublic ?? data.public ?? false,
+    };
+  },
+};
+
+export const usernameDocConverter = converter<UsernameDocument>();
