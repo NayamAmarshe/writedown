@@ -22,12 +22,16 @@ import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import Link from "@tiptap/extension-link";
 import { useEditor } from "@tiptap/react";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import PostButtons from "./post-buttons";
 import { useAtom } from "jotai";
 import CollapseSidebarButton from "../side-bar/collapse-sidebar-button";
 import useUser from "../../hooks/use-user";
 const lowlight = createLowlight();
+
+const DEFAULT_EDITOR_WIDTH = 768;
+const MIN_EDITOR_WIDTH = 768;
+const MAX_EDITOR_WIDTH = 1200;
 
 type TextAreaProps = {
   shiftRight: boolean;
@@ -38,6 +42,65 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
   const { user } = useUser();
   const [selectedNote, setSelectedNote] = useAtom(selectedNoteAtom);
   const [synced, setSynced] = useAtom(isSyncedAtom);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
+  const dragCleanupRef = useRef<(() => void) | null>(null);
+  const [editorWidth, setEditorWidth] = useState(DEFAULT_EDITOR_WIDTH);
+
+  const clampWidth = useCallback((value: number) => {
+    const parentWidth =
+      editorContainerRef.current?.parentElement?.getBoundingClientRect()
+        .width ??
+      (typeof window !== "undefined" ? window.innerWidth : MAX_EDITOR_WIDTH);
+    const effectiveMax = parentWidth - 40;
+    const effectiveMin = Math.min(MIN_EDITOR_WIDTH, effectiveMax);
+    return Math.min(Math.max(value, effectiveMin), effectiveMax);
+  }, []);
+
+  useEffect(() => {
+    setEditorWidth((current) => clampWidth(current));
+  }, [clampWidth]);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setEditorWidth((current) => clampWidth(current));
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, [clampWidth]);
+
+  useEffect(() => {
+    return () => {
+      dragCleanupRef.current?.();
+    };
+  }, []);
+
+  const startResize =
+    (direction: "left" | "right") => (event: React.MouseEvent) => {
+      event.preventDefault();
+      const startX = event.clientX;
+      const startWidth =
+        editorContainerRef.current?.getBoundingClientRect().width ??
+        editorWidth;
+
+      const handleMouseMove = (moveEvent: MouseEvent) => {
+        const delta = moveEvent.clientX - startX;
+        const nextWidth =
+          direction === "left" ? startWidth - delta : startWidth + delta;
+        setEditorWidth(clampWidth(nextWidth));
+      };
+
+      const stop = () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", stop);
+        dragCleanupRef.current = null;
+      };
+
+      dragCleanupRef.current?.();
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", stop);
+      dragCleanupRef.current = stop;
+    };
 
   const { notes, updateNote, createNote } = useNotes({
     userId: user?.uid,
@@ -226,10 +289,28 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
       <div
         tabIndex={0}
         id="editor"
-        className={`mb-64 w-full max-w-3xl flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
+        ref={editorContainerRef}
+        style={{ width: editorWidth }}
+        className={`group relative mb-64 flex flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >
+        <button
+          type="button"
+          aria-label="Resize editor"
+          onMouseDown={startResize("left")}
+          className="absolute left-0 top-0 z-10 flex h-full w-3 -translate-x-1/2 cursor-ew-resize items-center justify-center rounded-full opacity-0 transition-opacity duration-150 focus-visible:opacity-100 focus-visible:outline-hidden group-hover:opacity-100"
+        >
+          <span className="h-16 w-1 rounded-full bg-slate-400/20 dark:bg-slate-500/20 dark:hover:bg-slate-500 animate" />
+        </button>
+        <button
+          type="button"
+          aria-label="Resize editor"
+          onMouseDown={startResize("right")}
+          className="absolute right-0 top-0 z-10 flex h-full w-3 translate-x-1/2 cursor-ew-resize items-center justify-center rounded-full opacity-0 transition-opacity duration-150 focus-visible:opacity-100 focus-visible:outline-hidden group-hover:opacity-100"
+        >
+          <span className="h-16 w-1 rounded-full bg-slate-400/20 dark:bg-slate-500/20 dark:hover:bg-slate-500 animate" />
+        </button>
         {/* TITLE OF THE POST */}
         <input
           data-testid="noteTitle"
