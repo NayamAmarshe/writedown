@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Download,
+  Loader2,
+} from "lucide-react";
 import {
   collection,
   doc,
@@ -22,10 +30,18 @@ import Footer from "@/components/home/footer-component";
 import Navbar from "@/components/nav-bar";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Toggle } from "@/components/ui/toggle";
 import useUser from "@/components/hooks/use-user";
 import { db } from "@/lib/firebase";
 import { notesConverter } from "@/lib/firestoreDataConverter";
 import type { NoteDocument, UsernameDocument } from "@/lib/types/db";
+import { cn } from "../../lib/utils";
 
 type PublicProfile = UsernameDocument & { username: string };
 
@@ -64,6 +80,16 @@ const getProfileByUid = async (uid: string): Promise<PublicProfile | null> => {
 const buildAvatarFallback = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&rounded=true&background=random`;
 
+const ALIGNMENT_OPTIONS = [
+  { value: "left", label: "Left", icon: AlignLeft },
+  { value: "center", label: "Center", icon: AlignCenter },
+  { value: "right", label: "Right", icon: AlignRight },
+  { value: "justify", label: "Justify", icon: AlignJustify },
+] as const;
+
+type AlignmentOption = (typeof ALIGNMENT_OPTIONS)[number]["value"];
+type DownloadFormat = "markdown" | "html" | "pdf";
+
 const PublicPostPage = () => {
   const params = useParams<Record<string, string>>();
   const usernameParam = params?.username;
@@ -74,6 +100,9 @@ const PublicPostPage = () => {
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [shareHandle, setShareHandle] = useState<string>("");
+  const [alignment, setAlignment] = useState<AlignmentOption>("left");
+  const [downloading, setDownloading] = useState(false);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!slugParam) return;
@@ -154,6 +183,90 @@ const PublicPostPage = () => {
 
   const { user } = useUser();
 
+  const buildFilename = (extension: string) => {
+    const safeTitle = note?.title
+      ?.trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/(^-|-$)/g, "");
+
+    const fallback = slugParam || note?.id || "post";
+    return `${safeTitle || fallback}.${extension}`;
+  };
+
+  const triggerDownload = (
+    data: string,
+    mimeType: string,
+    extension: string
+  ) => {
+    const blob = new Blob([data], { type: `${mimeType};charset=utf-8` });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = buildFilename(extension);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownload = async (format: DownloadFormat) => {
+    if (!note) return;
+
+    try {
+      setDownloading(true);
+
+      if (format === "markdown") {
+        triggerDownload(note.content ?? "", "text/markdown", "md");
+        return;
+      }
+
+      if (format === "html") {
+        const renderedContent =
+          contentRef.current?.innerHTML || `<pre>${note.content ?? ""}</pre>`;
+
+        const htmlDocument = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>${note.title ?? "Post"} - writedown</title>
+  </head>
+  <body>
+    ${renderedContent}
+  </body>
+</html>`;
+
+        triggerDownload(htmlDocument, "text/html", "html");
+        return;
+      }
+
+      if (format === "pdf") {
+        const content = contentRef.current;
+        if (!content) return;
+        const originalBackground = content.style.backgroundColor;
+        content.style.backgroundColor = "#fff";
+        try {
+          const html2pdf = (await import("html2pdf.js")).default;
+          await html2pdf()
+            .set({
+              margin: 0.5,
+              filename: buildFilename("pdf"),
+              image: { type: "jpeg", quality: 0.98 },
+              pagebreak: { mode: ["css", "legacy"] },
+            })
+            .from(content)
+            .save();
+        } finally {
+          content.style.backgroundColor = originalBackground;
+        }
+      }
+    } catch (_error) {
+      toast.error("Failed to download post");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -206,17 +319,99 @@ const PublicPostPage = () => {
                   Published {formatTimeStamp(note.publishedAt)}
                 </p>
 
-                {user?.uid === note.userId && (
-                  <Link href={`/dashboard?post=${note.id}`}>
-                    <Button variant="outline" size="sm">
-                      Edit Post
-                    </Button>
-                  </Link>
-                )}
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="flex rounded-full border-primary border-2">
+                      {ALIGNMENT_OPTIONS.map(
+                        ({ value, label, icon: Icon }, index) => (
+                          <Button
+                            key={value}
+                            variant="outline"
+                            disabled={alignment === value}
+                            aria-pressed={alignment === value}
+                            aria-label={`${label} alignment`}
+                            title={`${label} alignment`}
+                            className={cn(
+                              index === 0 && "rounded-r-none",
+                              index === ALIGNMENT_OPTIONS.length - 1 &&
+                                "rounded-l-none",
+                              index !== 0 &&
+                                index !== ALIGNMENT_OPTIONS.length - 1 &&
+                                "rounded-none",
+                              "border-0 h-8"
+                            )}
+                            onClick={() => setAlignment(value)}
+                          >
+                            <Icon className="size-4" />
+                          </Button>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {user?.uid === note.userId && (
+                    <Link href={`/dashboard?post=${note.id}`}>
+                      <Button variant="outline">Edit Post</Button>
+                    </Link>
+                  )}
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2"
+                        disabled={!note || downloading}
+                      >
+                        {downloading ? (
+                          <>
+                            <Loader2 className="size-4 animate-spin" />
+                            Preparing...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="size-4" />
+                            Download
+                          </>
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="w-44">
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("pdf");
+                        }}
+                      >
+                        PDF (.pdf)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("markdown");
+                        }}
+                      >
+                        Markdown (.md)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("html");
+                        }}
+                      >
+                        HTML (.html)
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               <div className="mb-40 flex items-center justify-center px-4">
-                <Markdown remarkPlugins={[remarkGfm]}>{note.content}</Markdown>
+                <div
+                  ref={contentRef}
+                  className="w-full max-w-6xl text-lg leading-relaxed prose prose-slate dark:prose-invert"
+                  style={{ textAlign: alignment }}
+                >
+                  <Markdown remarkPlugins={[remarkGfm]}>
+                    {note.content}
+                  </Markdown>
+                </div>
               </div>
             </div>
           </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { FEATURE_FLAGS } from "@/constants/feature-flags";
 import BetaBadge from "../ui/BetaBadge";
 import { useTheme } from "next-themes";
