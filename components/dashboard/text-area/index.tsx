@@ -326,7 +326,7 @@ const TextArea = ({ shiftRight, setShiftRight }: TextAreaProps) => {
         id="editor"
         ref={editorContainerRef}
         style={{ width: editorWidth }}
-        className={`group relative mb-64 flex flex-col rounded-xl bg-white p-5 transition-transform duration-300 dark:bg-slate-900 ${
+        className={`group relative mb-64 flex flex-col rounded-xl bg-white shadow-lg p-5 transition-transform duration-300 dark:bg-slate-900 dark:shadow-black/30 ${
           shiftRight ? "translate-x-52" : "translate-x-0"
         }`}
       >

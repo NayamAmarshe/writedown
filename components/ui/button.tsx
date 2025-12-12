@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary/5 border-primary text-primary hover:bg-primary/10 border-2 shadow-xs",
-        blue: "border-2 border-blue-500 bg-blue-50 text-blue-500 shadow-xs hover:bg-blue-500/10 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900",
+          "bg-primary/5 border-primary text-primary hover:bg-primary/10 border-2 shadow-md",
+        blue: "border-2 border-blue-500 bg-blue-50 text-blue-500 shadow-md shadow-blue-500/20 hover:bg-blue-500/10 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900",
         green:
-          "border-2 border-green-500 bg-green-50 text-green-500 shadow-xs hover:bg-green-100 dark:border-green-400 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900",
-        red: "border-2 border-red-500 bg-red-50 text-red-500 shadow-xs hover:bg-red-100 dark:border-red-400 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900",
+          "border-2 border-green-500 bg-green-50 text-green-500 shadow-md shadow-green-500/20 hover:bg-green-100 dark:border-green-400 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900",
+        red: "border-2 border-red-500 bg-red-50 text-red-500 shadow-md shadow-red-500/20 hover:bg-red-100 dark:border-red-400 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900",
         destructive:
           "bg-destructive/5 border-destructive text-destructive hover:bg-destructive/10 focus-visible:ring-destructive/20 dark:hover:bg-destructive/20 border-2 shadow-xs",
         outline:
           "border-2 border-slate-900 bg-slate-50 text-slate-900 shadow-xs hover:bg-slate-200 dark:border-slate-50 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-700",
         secondary:
-          "bg-secondary/5 text-secondary-foreground hover:bg-secondary/80 shadow-xs",
+          "bg-secondary/5 text-secondary-foreground hover:bg-secondary/80",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
@@ -31,6 +31,8 @@ const buttonVariants = cva(
         lg: "h-10 rounded-full px-6 has-[>svg]:px-4",
         xl: "h-12 rounded-full px-8 has-[>svg]:px-6",
         icon: "size-9",
+        "icon-sm": "size-8",
+        "icon-lg": "size-10",
       },
     },
     defaultVariants: {
@@ -40,24 +42,25 @@ const buttonVariants = cva(
   }
 );
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentProps<"button"> &
-    VariantProps<typeof buttonVariants> & {
-      asChild?: boolean;
-    }
->(({ className, variant, size, asChild = false, ...props }, ref) => {
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  }) {
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
-      ref={ref}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   );
-});
-Button.displayName = "Button";
+}
 
 export { Button, buttonVariants };

@@ -101,7 +101,7 @@
   padding-left: 100%;
 }
 
-ul[data-type="taskList"] {
+/* ul[data-type="taskList"] {
   list-style: none;
   padding: 0;
 }
@@ -128,7 +128,7 @@ ul[data-type="taskList"] li > div {
 
 label > input[type="checkbox"] {
   border-radius: 0.25rem;
-}
+} */
 
 :root {
   --radius: 1.2rem;

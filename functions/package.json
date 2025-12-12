@@ -6,7 +6,7 @@
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "clean": "rm -rf lib",
-    "dev": "npm run clean && npm run build && (npm run build:watch & firebase emulators:start --only functions,auth,firestore)",
+    "dev": "npm run clean && npm run build && (npm run build:watch & firebase emulators:start --only functions,auth,firestore --import=./emulator-data --export-on-exit)",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
