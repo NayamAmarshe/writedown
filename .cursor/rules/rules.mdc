@@ -8,3 +8,6 @@ Write with minimal, but robust code. Think step by step about whether there exis
 DON'T USE OVERENGINEERED TECHNIQUES.
 
 USE LATEST MODERN patterns instead of outdated patterns!
+
+## Library Specic Rules:
+- Always use 'Icon' suffix for Lucide Icons imports

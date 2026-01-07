@@ -4,7 +4,7 @@ import { useAtom, useAtomValue } from "jotai";
 import RemoveMarkdown from "remove-markdown";
 import { isSyncedAtom } from "@/lib/atoms/sync-atom";
 import { selectedNoteAtom } from "@/lib/atoms/post-data-atom";
-import { GlobeIcon, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
+import { GlobeIcon, Loader2, MoreHorizontalIcon, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -135,7 +135,7 @@ const PostItem = ({
 
   return (
     <div
-      className={`flex items-start justify-between gap-3 rounded-xl p-4 ${
+      className={`flex relative items-start justify-between gap-3 rounded-xl p-4 ${
         selectedNote.id === noteId
           ? "bg-slate-300 dark:bg-slate-700"
           : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors duration-300 ease-in-out"
@@ -175,10 +175,10 @@ const PostItem = ({
           <button
             type="button"
             aria-label="Post actions"
-            className="rounded-full p-2 text-slate-500 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-700"
+            className="absolute z-10 cursor-pointer right-2 top-2 rounded-full p-2 text-slate-500 hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-slate-700 border"
             onClick={stopPropagation}
           >
-            <MoreHorizontal className="size-4" />
+            <MoreHorizontalIcon className="size-4" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={6} className="w-44">

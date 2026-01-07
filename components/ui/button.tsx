@@ -10,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary/5 border-primary text-primary hover:bg-primary/10 border-2 shadow-md",
-        blue: "border-2 border-blue-500 bg-blue-50 text-blue-500 shadow-md shadow-blue-500/20 hover:bg-blue-500/10 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900",
+          "bg-primary/5 border-primary text-primary hover:bg-primary/10 border shadow-md",
+        blue: "border border-blue-500 bg-blue-50 text-blue-500 shadow-md shadow-blue-500/20 hover:bg-blue-500/10 dark:border-blue-400 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900",
         green:
-          "border-2 border-green-500 bg-green-50 text-green-500 shadow-md shadow-green-500/20 hover:bg-green-100 dark:border-green-400 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900",
-        red: "border-2 border-red-500 bg-red-50 text-red-500 shadow-md shadow-red-500/20 hover:bg-red-100 dark:border-red-400 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900",
+          "border border-green-500 bg-green-50 text-green-500 shadow-md shadow-green-500/20 hover:bg-green-100 dark:border-green-400 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900",
+        red: "border border-red-500 bg-red-50 text-red-500 shadow-md shadow-red-500/20 hover:bg-red-100 dark:border-red-400 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900",
         destructive:
-          "bg-destructive/5 border-destructive text-destructive hover:bg-destructive/10 focus-visible:ring-destructive/20 dark:hover:bg-destructive/20 border-2 shadow-xs",
+          "bg-destructive/5 border-destructive text-destructive hover:bg-destructive/10 focus-visible:ring-destructive/20 dark:hover:bg-destructive/20 border shadow-xs",
         outline:
-          "border-2 border-slate-900 bg-slate-50 text-slate-900 shadow-xs hover:bg-slate-200 dark:border-slate-50 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-700",
+          "border border-slate-900 bg-slate-50 text-slate-900 shadow-xs hover:bg-slate-200 dark:border-slate-50 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-700",
         secondary:
           "bg-secondary/5 text-secondary-foreground hover:bg-secondary/80",
         ghost:

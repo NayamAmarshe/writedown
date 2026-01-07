@@ -10,8 +10,9 @@ import {
   AlignJustify,
   AlignLeft,
   AlignRight,
-  Download,
-  Loader2,
+  ChevronDownIcon,
+  DownloadIcon,
+  Loader2Icon,
 } from "lucide-react";
 import {
   collection,
@@ -36,7 +37,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Toggle } from "@/components/ui/toggle";
 import useUser from "@/components/hooks/use-user";
 import { db } from "@/lib/firebase";
 import { notesConverter } from "@/lib/firestoreDataConverter";
@@ -88,7 +88,7 @@ const ALIGNMENT_OPTIONS = [
 ] as const;
 
 type AlignmentOption = (typeof ALIGNMENT_OPTIONS)[number]["value"];
-type DownloadFormat = "markdown" | "html" | "pdf";
+type DownloadFormat = "markdown" | "pdf" | "html" | "txt";
 
 const PublicPostPage = () => {
   const params = useParams<Record<string, string>>();
@@ -218,6 +218,12 @@ const PublicPostPage = () => {
 
       if (format === "markdown") {
         triggerDownload(note.content ?? "", "text/markdown", "md");
+        return;
+      }
+
+      if (format === "txt") {
+        const text = contentRef.current?.innerText || note.content || "";
+        triggerDownload(text, "text/plain", "txt");
         return;
       }
 
@@ -356,6 +362,55 @@ const PublicPostPage = () => {
                   )}
 
                   <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button variant="outline" disabled={!note || downloading}>
+                        {downloading ? (
+                          <>
+                            <Loader2Icon className="size-4 animate-spin" />
+                            Preparing...
+                          </>
+                        ) : (
+                          <>
+                            <DownloadIcon className="size-4" />
+                            Download
+                            <ChevronDownIcon className="size-4" />
+                          </>
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("markdown");
+                        }}
+                      >
+                        Markdown (.md)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("pdf");
+                        }}
+                      >
+                        PDF (.pdf)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("html");
+                        }}
+                      >
+                        HTML (.html)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("txt");
+                        }}
+                      >
+                        Text (.txt)
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="outline"
@@ -378,17 +433,17 @@ const PublicPostPage = () => {
                     <DropdownMenuContent align="center" className="w-44">
                       <DropdownMenuItem
                         onSelect={() => {
-                          void handleDownload("pdf");
-                        }}
-                      >
-                        PDF (.pdf)
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={() => {
                           void handleDownload("markdown");
                         }}
                       >
                         Markdown (.md)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("pdf");
+                        }}
+                      >
+                        PDF (.pdf)
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onSelect={() => {
@@ -397,8 +452,15 @@ const PublicPostPage = () => {
                       >
                         HTML (.html)
                       </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          void handleDownload("txt");
+                        }}
+                      >
+                        Text (.txt)
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
-                  </DropdownMenu>
+                  </DropdownMenu> */}
                 </div>
               </div>
 
